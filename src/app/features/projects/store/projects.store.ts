@@ -10,6 +10,7 @@ import { buildQueryParams } from '@shared/helpers';
 import { FilterProjectCategoriesDto } from '../dto/categories/filter-categories.dto';
 import { ProjectDto } from '../dto/projects/project.dto';
 import { MoveParticipationsDto } from '../dto/phases/move-participations.dto';
+import { FilterParticipationsDto } from '../dto/phases/filter-participations.dto';
 
 interface IProjectsStore {
   isLoading: boolean;
@@ -18,7 +19,7 @@ interface IProjectsStore {
   isManagingParticipations: boolean;
   projects: [IProject[], number];
   project: IProject | null;
-  participations: IProjectParticipation[];
+  participations: [IProjectParticipation[], number];
 }
 
 export const ProjectsStore = signalStore(
@@ -29,7 +30,7 @@ export const ProjectsStore = signalStore(
     isManagingParticipations: false,
     projects: [[], 0],
     project: null,
-    participations: []
+    participations: [[], 0]
   }),
   withProps(() => ({
     _http: inject(HttpClient),
@@ -70,18 +71,21 @@ export const ProjectsStore = signalStore(
         })
       )
     ),
-    loadParticipations: rxMethod<string>(
+    loadParticipations: rxMethod<{ projectId: string; dto: FilterParticipationsDto }>(
       pipe(
-        tap(() => patchState(store, { isLoadingParticipations: true, participations: [] })),
-        switchMap((projectId) =>
-          _http.get<{ data: IProjectParticipation[] }>(`projects/${projectId}/participations`).pipe(
-            map(({ data }) => patchState(store, { participations: data ?? [], isLoadingParticipations: false })),
+        tap(() => patchState(store, { isLoadingParticipations: true, participations: [[], 0] })),
+        switchMap(({ projectId, dto }) => {
+          const params = buildQueryParams(dto);
+          return _http.get<{ data: [IProjectParticipation[], number] }>(`projects/${projectId}/participations`, {
+            params
+          }).pipe(
+            map(({ data }) => patchState(store, { participations: data ?? [[], 0], isLoadingParticipations: false })),
             catchError(() => {
-              patchState(store, { participations: [], isLoadingParticipations: false });
+              patchState(store, { participations: [[], 0], isLoadingParticipations: false });
               return of(null);
             })
-          )
-        )
+          );
+        })
       )
     ),
     moveParticipations: rxMethod<{ dto: MoveParticipationsDto; onSuccess: () => void }>(

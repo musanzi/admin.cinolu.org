@@ -28,6 +28,7 @@ import { PhasesStore } from '@features/projects/store/phases.store';
 import { ProjectsStore } from '@features/projects/store/projects.store';
 import { ParticipationDetail } from './participation-detail/participation-detail';
 import { getParticipationKey } from '@features/projects/helpers';
+import { FilterParticipationsDto } from '@features/projects/dto/phases/filter-participations.dto';
 
 @Component({
   selector: 'app-participations',
@@ -73,7 +74,8 @@ export class Participations {
     const filtered = this.filteredParticipations();
     return filtered.length > 0 && filtered.every((p) => ids.has(getParticipationKey(p)));
   });
-  rawParticipations = computed(() => this.projectsStore.participations());
+  rawParticipations = computed(() => this.projectsStore.participations()[0]);
+  totalServerParticipations = computed(() => this.projectsStore.participations()[1]);
   participationsByPhase = computed(() => {
     const list = this.rawParticipations();
     const phaseId = this.selectedPhase();
@@ -81,25 +83,15 @@ export class Participations {
     return list.filter((p) => p.phases?.some((ph) => ph.id === phaseId) ?? false);
   });
   filteredParticipations = computed(() => {
-    const list = this.participationsByPhase();
-    const q = this.searchQuery().trim().toLowerCase();
-    if (!q) return list;
-    return list.filter(
-      (p) => (p.user.name ?? '').toLowerCase().includes(q) || (p.user.email ?? '').toLowerCase().includes(q)
-    );
+    return this.participationsByPhase();
   });
-  paginatedParticipations = computed(() => {
-    const list = this.filteredParticipations();
-    const page = this.currentPage();
-    const start = (page - 1) * 20;
-    return list.slice(start, start + 20);
-  });
+  paginatedParticipations = computed(() => this.filteredParticipations());
   currentPhase = computed(() => {
     const phaseId = this.selectedPhase();
     if (!phaseId) return null;
     return this.sortedPhases().find((p) => p.id === phaseId) ?? null;
   });
-  totalParticipations = computed(() => this.rawParticipations().length);
+  totalParticipations = computed(() => this.totalServerParticipations());
   phaseCounts = computed(() => {
     const phases = this.sortedPhases();
     const list = this.rawParticipations();
@@ -121,7 +113,6 @@ export class Participations {
     effect(() => {
       const proj = this.project();
       if (proj?.id) {
-        this.projectsStore.loadParticipations(proj.id);
         this.phasesStore.loadAll(proj.id);
       }
     });
@@ -134,6 +125,13 @@ export class Participations {
       this.searchQuery();
       this.selectedPhase();
       this.currentPage.set(1);
+    });
+
+    effect(() => {
+      const proj = this.project();
+      if (!proj?.id) return;
+      const dto: FilterParticipationsDto = { page: this.currentPage(), q: this.normalizedSearchQuery() };
+      this.projectsStore.loadParticipations({ projectId: proj.id, dto });
     });
   }
 
@@ -213,7 +211,15 @@ export class Participations {
 
   private refreshProjectData(proj: IProject): void {
     this.projectsStore.loadOne(proj.slug);
-    if (proj.id) this.projectsStore.loadParticipations(proj.id);
+    if (proj.id) {
+      const dto: FilterParticipationsDto = { page: this.currentPage(), q: this.normalizedSearchQuery() };
+      this.projectsStore.loadParticipations({ projectId: proj.id, dto });
+    }
+  }
+
+  private normalizedSearchQuery(): string | null {
+    const q = this.searchQuery().trim();
+    return q.length > 0 ? q : null;
   }
 
   private getParticipationsIds(): string[] {

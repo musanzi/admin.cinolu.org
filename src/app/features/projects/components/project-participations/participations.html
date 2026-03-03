@@ -368,11 +368,11 @@
           </table>
         </div>
 
-        @if (totalFiltered > 20) {
+        @if (totalCount > 20) {
           <div class="flex justify-center border-t border-slate-100 bg-stone-50/80 px-4 py-4 sm:justify-end sm:px-6">
             <app-ui-pagination
               [currentPage]="currentPage()"
-              [totalItems]="totalFiltered"
+              [totalItems]="totalCount"
               [itemsPerPage]="20"
               (pageChange)="onPageChange($event)" />
           </div>

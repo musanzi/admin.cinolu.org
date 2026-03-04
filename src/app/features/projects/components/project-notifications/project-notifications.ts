@@ -49,6 +49,7 @@ export class ProjectNotifications {
   #confirmationService = inject(ConfirmationService);
   #sanitizer = inject(DomSanitizer);
   #destroyRef = inject(DestroyRef);
+  #defaultFormValue = { title: '', body: '', phase_id: '', notify_mentors: false };
   authStore = inject(AuthStore);
   notificationsStore = inject(NotificationsStore);
   phasesStore = inject(PhasesStore);
@@ -68,20 +69,8 @@ export class ProjectNotifications {
   currentPage = computed(() => this.filterPage() ?? 1);
   itemsPerPage = 10;
   icons = { CircleAlert, Paperclip, Send, Trash2, Pencil, Plus, X, Inbox };
-  phaseOptions = computed(() => {
-    const options = this.phasesStore.sortedPhases().map((phase) => ({
-      label: phase.name,
-      value: phase.id
-    }));
-    return [{ label: 'Tous les participants', value: '' }, ...options];
-  });
-  phaseFilterOptions = computed(() => {
-    const options = this.phasesStore.sortedPhases().map((phase) => ({
-      label: phase.name,
-      value: phase.id
-    }));
-    return [{ label: 'Toutes les phases', value: '' }, ...options];
-  });
+  phaseOptions = computed(() => this.#buildPhaseOptions('Tous les participants'));
+  phaseFilterOptions = computed(() => this.#buildPhaseOptions('Toutes les phases'));
   statusFilterOptions: SelectOption[] = [
     { label: 'Tous', value: '' },
     { label: 'Brouillon', value: 'draft' },
@@ -94,25 +83,8 @@ export class ProjectNotifications {
   });
 
   constructor() {
-    effect(() => {
-      const projectId = this.projectId();
-      if (!projectId) return;
-      this.notificationsStore.loadAll({ projectId, filters: this.queryParams() });
-      this.phasesStore.loadAll(projectId);
-    });
-
-    const phaseControl = this.form.get('phase_id');
-    const notifyMentorsControl = this.form.get('notify_mentors');
-    phaseControl?.valueChanges.pipe(takeUntilDestroyed(this.#destroyRef)).subscribe((phaseId) => {
-      if (phaseId || !notifyMentorsControl?.value) return;
-      notifyMentorsControl.setValue(false, { emitEvent: false });
-    });
-
-    effect(() => {
-      if (this.notificationsStore.isSaving()) return;
-      this.composeActionLoading.set(null);
-      this.listActionLoading.set(null);
-    });
+    this.#setupEffects();
+    this.#setupFormListeners();
   }
 
   #buildForm(): FormGroup {
@@ -122,6 +94,37 @@ export class ProjectNotifications {
       phase_id: [''],
       notify_mentors: [false]
     });
+  }
+
+  #setupEffects(): void {
+    effect(() => {
+      const projectId = this.projectId();
+      if (!projectId) return;
+      this.notificationsStore.loadAll({ projectId, filters: this.queryParams() });
+      this.phasesStore.loadAll(projectId);
+    });
+
+    effect(() => {
+      if (this.notificationsStore.isSaving()) return;
+      this.composeActionLoading.set(null);
+      this.listActionLoading.set(null);
+    });
+  }
+
+  #setupFormListeners(): void {
+    const phaseControl = this.form.get('phase_id');
+    const notifyMentorsControl = this.form.get('notify_mentors');
+    phaseControl?.valueChanges.pipe(takeUntilDestroyed(this.#destroyRef)).subscribe((phaseId) => {
+      if (phaseId || !notifyMentorsControl?.value) return;
+      notifyMentorsControl.setValue(false, { emitEvent: false });
+    });
+  }
+
+  #buildPhaseOptions(defaultLabel: string): SelectOption[] {
+    return [
+      { label: defaultLabel, value: '' },
+      ...this.phasesStore.sortedPhases().map((phase) => ({ label: phase.name, value: phase.id }))
+    ];
   }
 
   onFilterPhaseChange(value: string): void {
@@ -143,9 +146,7 @@ export class ProjectNotifications {
   onComposeNew(): void {
     this.notificationsStore.setActiveNotification(null);
     this.notificationsStore.clearError();
-    this.form.reset({ title: '', body: '', phase_id: '', notify_mentors: false });
-    this.attachments.set([]);
-    this.isComposing.set(true);
+    this.#startCompose();
   }
 
   onEditNotification(): void {
@@ -157,9 +158,8 @@ export class ProjectNotifications {
       phase_id: current.phase_id ?? current.phase?.id ?? '',
       notify_mentors: !!current.notify_mentors
     });
-    this.attachments.set([]);
     this.notificationsStore.clearError();
-    this.isComposing.set(true);
+    this.#startCompose(false);
   }
 
   onCancelCompose(): void {
@@ -176,10 +176,9 @@ export class ProjectNotifications {
     const input = event.target as HTMLInputElement;
     const files = Array.from(input.files ?? []);
     if (!files.length) return;
-    const existing = this.attachments();
-    const merged = [...existing];
+    const merged = [...this.attachments()];
     files.forEach((file) => {
-      const key = `${file.name}-${file.size}-${file.lastModified}`;
+      const key = this.#attachmentKey(file);
       if (!merged.some((item) => item.id === key)) {
         merged.push({ file, id: key });
       }
@@ -200,26 +199,21 @@ export class ProjectNotifications {
     if (this.form.invalid || this.notificationsStore.isSaving()) return;
     this.composeActionLoading.set('save');
     const dto = this.#buildNotifyDto();
-    const files = this.attachments().map((a) => a.file);
+    const files = this.#selectedFiles();
+    const hasAttachments = files.length > 0;
     const current = this.activeNotification();
 
     if (!current) {
       this.notificationsStore.create({
         projectId: this.projectId(),
         dto,
-        attachments: files.length > 0 ? files : undefined,
+        attachments: hasAttachments ? files : undefined,
         onSuccess: (data) => {
-          this.attachments.set([]);
-          this.isComposing.set(false);
-          if (files.length > 0) {
-            this.notificationsStore.loadAllAndSelectNotification({
-              projectId: this.projectId(),
-              filters: this.queryParams(),
-              notificationId: data.id
-            });
-          } else {
-            this.notificationsStore.setActiveNotification(data);
-          }
+          this.#handleComposeSuccess({
+            notificationId: data.id,
+            hasAttachments,
+            activeNotification: hasAttachments ? undefined : data
+          });
         }
       });
       return;
@@ -228,18 +222,8 @@ export class ProjectNotifications {
     this.notificationsStore.updateWithAttachments({
       id: current.id,
       dto,
-      attachments: files.length > 0 ? files : undefined,
-      onSuccess: () => {
-        this.attachments.set([]);
-        this.isComposing.set(false);
-        if (files.length > 0) {
-          this.notificationsStore.loadAllAndSelectNotification({
-            projectId: this.projectId(),
-            filters: this.queryParams(),
-            notificationId: current.id
-          });
-        }
-      }
+      attachments: hasAttachments ? files : undefined,
+      onSuccess: () => this.#handleComposeSuccess({ notificationId: current.id, hasAttachments })
     });
   }
 
@@ -248,26 +232,17 @@ export class ProjectNotifications {
     if (!current || this.form.invalid || this.notificationsStore.isSaving()) return;
     this.composeActionLoading.set('send');
     const dto = this.#buildNotifyDto();
-    const files = this.attachments().map((a) => a.file);
+    const files = this.#selectedFiles();
+    const hasAttachments = files.length > 0;
 
     this.notificationsStore.updateWithAttachments({
       id: current.id,
       dto,
-      attachments: files.length > 0 ? files : undefined,
+      attachments: hasAttachments ? files : undefined,
       onSuccess: () => {
         this.notificationsStore.send({
           notificationId: current.id,
-          onSuccess: () => {
-            this.attachments.set([]);
-            this.isComposing.set(false);
-            if (files.length > 0) {
-              this.notificationsStore.loadAllAndSelectNotification({
-                projectId: this.projectId(),
-                filters: this.queryParams(),
-                notificationId: current.id
-              });
-            }
-          }
+          onSuccess: () => this.#handleComposeSuccess({ notificationId: current.id, hasAttachments })
         });
       }
     });
@@ -293,36 +268,15 @@ export class ProjectNotifications {
     });
   }
 
-  deleteAttachments(notification: INotification): void {
-    if (!notification.attachments || notification.attachments.length === 0) return;
-    this.#confirmationService.confirm({
-      header: 'Supprimer les pièces jointes',
-      message: `Supprimer les pièces jointes de « ${notification.title} » ?`,
-      acceptLabel: 'Supprimer',
-      rejectLabel: 'Annuler',
-      accept: () => {
-        this.notificationsStore.deleteAttachments({ id: notification.id });
-      }
-    });
-  }
-
   isActive(notification: INotification): boolean {
     return this.activeNotification()?.id === notification.id;
   }
 
   phaseLabel(notification: INotification): string {
-    const phaseName = notification.phase?.name;
-    if (!phaseName) return 'Tous les participants';
-    return notification.notify_mentors ? `Phase: ${phaseName} · mentors uniquement` : `Phase: ${phaseName}`;
-  }
-
-  phaseLabelForSummary(): string {
-    const notification = this.activeNotification();
-    if (notification) return this.phaseLabel(notification);
-    const phaseId = this.form.value.phase_id;
-    if (!phaseId) return 'Tous les participants';
-    const phase = this.phasesStore.sortedPhases().find((p) => p.id === phaseId);
-    return phase ? phase.name : 'Tous les participants';
+    if (!notification.phase?.name) return 'Tous les participants';
+    return notification.notify_mentors
+      ? `Phase: ${notification.phase.name} · mentors uniquement`
+      : `Phase: ${notification.phase.name}`;
   }
 
   bodySafe(notification: INotification | null): SafeHtml {
@@ -364,5 +318,41 @@ export class ProjectNotifications {
       body: String(body ?? ''),
       ...(phase_id && { phase_id, notify_mentors: !!notify_mentors })
     };
+  }
+
+  #attachmentKey(file: File): string {
+    return `${file.name}-${file.size}-${file.lastModified}`;
+  }
+
+  #selectedFiles(): File[] {
+    return this.attachments().map((a) => a.file);
+  }
+
+  #startCompose(resetForm = true): void {
+    if (resetForm) this.form.reset(this.#defaultFormValue);
+    this.attachments.set([]);
+    this.isComposing.set(true);
+  }
+
+  #handleComposeSuccess({
+    notificationId,
+    hasAttachments,
+    activeNotification
+  }: {
+    notificationId: string;
+    hasAttachments: boolean;
+    activeNotification?: INotification;
+  }): void {
+    this.attachments.set([]);
+    this.isComposing.set(false);
+    if (!hasAttachments) {
+      if (activeNotification) this.notificationsStore.setActiveNotification(activeNotification);
+      return;
+    }
+    this.notificationsStore.loadAllAndSelectNotification({
+      projectId: this.projectId(),
+      filters: this.queryParams(),
+      notificationId
+    });
   }
 }

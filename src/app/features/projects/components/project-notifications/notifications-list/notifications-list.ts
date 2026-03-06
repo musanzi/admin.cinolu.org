@@ -32,9 +32,7 @@ export class NotificationsHistoryList {
   phaseLabel(notification: INotification): string {
     if (notification.notify_staff) return 'Tous les participants';
     if (!notification.phase?.name) return 'Destinataires: staff';
-    return notification.notify_mentors
-      ? `Phase: ${notification.phase.name} · mentors uniquement`
-      : `Phase: ${notification.phase.name}`;
+    return notification.phase.name;
   }
 
   bodyPreview(notification: INotification): string {

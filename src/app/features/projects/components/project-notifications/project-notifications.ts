@@ -129,7 +129,6 @@ export class ProjectNotifications {
   }
 
   onSaveDraft(payload: SubmitNotification): void {
-    if (this.notificationsStore.isSaving()) return;
     const current = this.activeNotification();
     this.#upsertDraft({
       currentNotificationId: current?.id,
@@ -139,7 +138,6 @@ export class ProjectNotifications {
   }
 
   onSend(payload: SubmitNotification): void {
-    if (this.notificationsStore.isSaving()) return;
     const current = this.activeNotification();
     if (!current) return;
     const hasAttachments = payload.attachments.length > 0;

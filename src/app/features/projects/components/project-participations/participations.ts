@@ -56,8 +56,7 @@ export class Participations {
   selectedIds = signal<Set<string>>(new Set());
   activeParticipationId = signal<string | null>(null);
   operationType = signal('move');
-  moveTargetPhase = signal<string | null>(null);
-  removeTargetPhase = signal<string | null>(null);
+  targetedPhase = signal<string | null>(null);
   selectedCsvFile = signal<File | null>(null);
   csvFileInput = viewChild<ElementRef<HTMLInputElement>>('csvFileInput');
   icons = { Users, Search, CircleArrowRight, X, Check, Upload, Trash2, ChevronDown };
@@ -68,38 +67,12 @@ export class Participations {
   movePhaseOptions = computed(() =>
     this.phasesStore.sortedPhases().map((phase) => ({ label: phase.name, value: phase.id }))
   );
-  selectedCount = computed(() => this.selectedIds().size);
-  allVisibleSelected = computed(() => {
-    const participations = this.rawParticipations();
-    if (participations.length === 0) return false;
-    const selectedIds = this.selectedIds();
-    return participations.every((participation) => selectedIds.has(participation.id));
-  });
-  hasSomeVisibleSelected = computed(() => {
-    const participations = this.participationsByPhase();
-    if (participations.length === 0) return false;
-    const selectedIds = this.selectedIds();
-    const selectedVisibleCount = participations.filter((participation) => selectedIds.has(participation.id)).length;
-    return selectedVisibleCount > 0 && selectedVisibleCount < participations.length;
-  });
   requestDto = computed<FilterParticipationsDto>(() => ({
     page: this.currentPage(),
     q: this.searchQuery(),
     phaseId: this.selectedPhase()
   }));
-  rawParticipations = computed(() => this.projectsStore.participations()[0]);
-  participationsByPhase = computed(() => {
-    const list = this.rawParticipations();
-    const phaseId = this.selectedPhase();
-    if (!phaseId) return list;
-    return list.filter((p) => p.phases?.some((ph) => ph.id === phaseId) ?? false);
-  });
-  currentPhase = computed(() => {
-    const phaseId = this.selectedPhase();
-    if (!phaseId) return null;
-    return this.phasesStore.sortedPhases().find((p) => p.id === phaseId) ?? null;
-  });
-
+  participationsList = computed(() => this.projectsStore.participations()[0]);
   phaseFilterOptions = computed(() => {
     const phases = this.phasesStore.sortedPhases();
     const options = [{ label: `Tous (${this.projectsStore.participations()[1]})`, value: '' }];
@@ -123,37 +96,20 @@ export class Participations {
 
   toggleSelect(id: string): void {
     this.selectedIds.update((current) => {
-      const next = new Set(current);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
+      if (current.has(id)) current.delete(id);
+      else current.add(id);
+      return current;
     });
   }
 
-  toggleSelectAllVisible(checked: boolean): void {
+  onSelectAll(event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
     if (!checked) {
-      this.selectedIds.update((current) => {
-        const next = new Set(current);
-        for (const participation of this.participationsByPhase()) {
-          next.delete(participation.id);
-        }
-        return next;
-      });
+      this.selectedIds().clear();
       return;
     }
-
-    this.selectedIds.update((current) => {
-      const next = new Set(current);
-      for (const participation of this.participationsByPhase()) {
-        next.add(participation.id);
-      }
-      return next;
-    });
-  }
-
-  onSelectAllChange(event: Event): void {
-    const checked = (event.target as HTMLInputElement).checked;
-    this.toggleSelectAllVisible(checked);
+    const ids = new Set<string>(this.participationsList().map((p) => p.id));
+    this.selectedIds.set(ids);
   }
 
   clearSelection(): void {
@@ -165,24 +121,24 @@ export class Participations {
   }
 
   moveToPhase(): void {
-    const phaseId = this.selectedPhase();
+    const phaseId = this.targetedPhase();
     if (!phaseId) return;
     this.projectsStore.moveParticipations({
       dto: { ids: [...this.selectedIds()], phaseId },
       onSuccess: () => {
-        this.refreshProjectData();
+        this.#refreshProjectData();
         this.clearSelection();
       }
     });
   }
 
   removeFromPhase(): void {
-    const phaseId = this.selectedPhase();
+    const phaseId = this.targetedPhase();
     if (!phaseId) return;
     this.projectsStore.removeParticipations({
       dto: { ids: [...this.selectedIds()], phaseId },
       onSuccess: () => {
-        this.refreshProjectData();
+        this.#refreshProjectData();
         this.clearSelection();
       }
     });
@@ -211,7 +167,7 @@ export class Participations {
       projectId,
       file,
       onSuccess: () => {
-        this.refreshProjectData();
+        this.#refreshProjectData();
         this.clearCsvSelection();
       }
     });
@@ -223,18 +179,13 @@ export class Participations {
       if (projectId) this.phasesStore.loadAll(projectId);
     });
     effect(() => {
-      this.searchQuery();
-      this.selectedPhase();
-      this.currentPage.set(1);
-    });
-    effect(() => {
       const projectId = this.project()?.id;
       if (!projectId) return;
       this.projectsStore.loadParticipations({ projectId, dto: this.requestDto() });
     });
   }
 
-  private refreshProjectData(): void {
+  #refreshProjectData(): void {
     const projectSlug = this.project()?.slug;
     const projectId = this.project()?.id;
     if (projectSlug) this.projectsStore.loadOne(projectSlug);

@@ -1,5 +1,6 @@
-@let totalFiltered = participationsByPhase().length;
+<!-- @let totalFiltered = participationsList().length; -->
 @let totalCount = this.projectsStore.participations()[1];
+@let selectedCount = selectedIds().size;
 <div class="relative flex flex-col gap-6 lg:gap-7">
   <div class="rounded-2xl border border-slate-200/70 bg-white/85 p-4 sm:p-5">
     <input
@@ -78,21 +79,17 @@
       class="flex flex-col gap-3 border-b border-slate-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
       <label class="ui-checkbox-wrapper flex items-center gap-2.5 cursor-pointer">
         <div class="ui-checkbox-container relative">
-          <input
-            type="checkbox"
-            class="ui-checkbox-input"
-            [checked]="allVisibleSelected()"
-            (change)="onSelectAllChange($event)" />
+          <input type="checkbox" class="ui-checkbox-input" (change)="onSelectAll($event)" />
           <div class="ui-checkbox-checkmark">
             <i-lucide [name]="icons.Check" class="size-4 shrink-0" />
           </div>
         </div>
         <span class="text-sm text-slate-600">
-          <span class="font-semibold tabular-nums text-slate-900">{{ selectedCount() }}</span>
+          <span class="font-semibold tabular-nums text-slate-900">{{ selectedCount }}</span>
           sélectionné(e)s
         </span>
       </label>
-      <app-ui-badge [label]="currentPhase()?.participationsCount + ' participation(s)'" />
+      <app-ui-badge [label]="totalCount + ' participation(s)'" />
     </div>
     @if (projectsStore.isLoadingParticipations()) {
       <div class="overflow-hidden border border-slate-200/70 bg-white/90">
@@ -107,8 +104,8 @@
           }
         </div>
       </div>
-    } @else if (!projectsStore.isLoadingParticipations() && totalFiltered > 0) {
-      @if (selectedCount() > 0) {
+    } @else if (!projectsStore.isLoadingParticipations() && totalCount > 0) {
+      @if (selectedCount > 0) {
         <div class="participations-bulk-actions border-b border-slate-100 bg-stone-50/90 px-4 py-4 sm:px-6">
           <div class="grid gap-3 lg:grid-cols-[1fr_1fr_auto_auto] lg:items-end">
             <div class="min-w-0">
@@ -130,13 +127,12 @@
                 <label
                   for="move-phase-select"
                   class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  Destination
+                  Destinationn
                 </label>
                 <app-ui-select
                   id="move-phase-select"
                   [options]="movePhaseOptions()"
-                  [ngModel]="moveTargetPhase()"
-                  (ngModelChange)="moveTargetPhase.set($event)"
+                  [(ngModel)]="targetedPhase"
                   placeholder="Choisir une phase" />
               </div>
               <app-ui-button
@@ -144,7 +140,7 @@
                 variant="primary"
                 size="small"
                 [loading]="projectsStore.isManagingParticipations()"
-                [disabled]="!moveTargetPhase() || projectsStore.isManagingParticipations()"
+                [disabled]="!targetedPhase() || projectsStore.isManagingParticipations()"
                 (clicked)="moveToPhase()"
                 class="lg:self-end">
                 <span class="flex items-center justify-center gap-2">
@@ -165,8 +161,7 @@
                 <app-ui-select
                   id="remove-phase-select"
                   [options]="movePhaseOptions()"
-                  [ngModel]="removeTargetPhase()"
-                  (ngModelChange)="removeTargetPhase.set($event)"
+                  [(ngModel)]="targetedPhase"
                   placeholder="Choisir une phase" />
               </div>
               <app-ui-button
@@ -174,7 +169,7 @@
                 variant="outlined"
                 size="small"
                 [loading]="projectsStore.isManagingParticipations()"
-                [disabled]="!removeTargetPhase() || projectsStore.isManagingParticipations()"
+                [disabled]="!targetedPhase() || projectsStore.isManagingParticipations()"
                 (clicked)="removeFromPhase()"
                 class="lg:self-end">
                 <span class="flex items-center justify-center gap-2">
@@ -213,7 +208,7 @@
             </tr>
           </thead>
           <tbody class="align-top">
-            @for (participation of participationsByPhase(); track participation.id) {
+            @for (participation of participationsList(); track participation.id) {
               <tr
                 class="border-b border-slate-100 transition-colors hover:bg-stone-50"
                 [class.bg-teal-50/50]="isSelected(participation)">
@@ -315,7 +310,7 @@
       }
     }
   </div>
-  @if (!projectsStore.isLoadingParticipations() && totalFiltered === 0) {
+  @if (!projectsStore.isLoadingParticipations() && totalCount === 0) {
     <div
       class="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/80 px-4 py-14 text-center">
       <div
@@ -324,11 +319,7 @@
       </div>
       <p class="text-sm font-semibold text-slate-800">Aucune participation</p>
       <p class="mt-2 max-w-md text-xs leading-relaxed text-slate-500">
-        @if (currentPhase()) {
-          Aucune participation dans cette phase ou aucun résultat pour votre recherche.
-        } @else {
-          Ce projet n'a pas encore de participations.
-        }
+        Aucune participation dans ce projet, cette phase ou aucun résultat pour votre recherche.
       </p>
     </div>
   }

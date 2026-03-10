@@ -46,8 +46,7 @@ export class ProjectParticipations {
   phasesStore = inject(PhasesStore);
   projectsStore = inject(ProjectsStore);
   filtersForm = this.#fb.group({
-    q: [''],
-    phaseId: ['']
+    q: ['']
   });
   currentPage = signal(1);
   selectedIds = signal<string[]>([]);
@@ -55,35 +54,32 @@ export class ProjectParticipations {
   searchQuery = signal<string | null>(null);
   phaseFilterId = signal<string | null>(null);
   icons = { Star, Upload, Users, MoveRight, CircleMinus };
-
   phaseOptions = computed<SelectOption[]>(() => [
     { label: 'Toutes les phases', value: '' },
     ...this.phasesStore.sortedPhases().map((phase) => ({ label: phase.name, value: phase.id }))
   ]);
-
   bulkPhaseOptions = computed<SelectOption[]>(() => [
-    { label: 'Choisir une phase', value: '' },
-    ...this.phasesStore.sortedPhases().map((phase) => ({ label: phase.name, value: phase.id }))
+    ...this.phasesStore
+      .sortedPhases()
+      .filter((phase) => phase.id !== this.phaseFilterId())
+      .map((phase) => ({ label: phase.name, value: phase.id }))
   ]);
-
   filters = computed<FilterParticipationsDto>(() => ({
     page: this.currentPage() > 1 ? this.currentPage() : null,
     q: this.searchQuery(),
     phaseId: this.phaseFilterId()
   }));
-
   allVisibleSelected = computed(() => {
     const list = this.participationsStore.list();
     return list.length > 0 && list.every((item) => this.selectedIds().includes(item.id));
   });
-
   hasSelection = computed(() => this.selectedIds().length > 0);
   totalVotes = computed(() =>
     this.participationsStore.list().reduce((sum, participation) => sum + (participation.upvotesCount ?? 0), 0)
   );
-
-  canApplyBulkAction = computed(
-    () => this.hasSelection() && !!this.actionPhaseId() && !this.participationsStore.isSaving()
+  canMoveToPhase = computed(() => this.hasSelection() && this.actionPhaseId() && !this.participationsStore.isSaving());
+  canRemoveFromPhase = computed(
+    () => this.hasSelection() && !!this.phaseFilterId() && !this.participationsStore.isSaving()
   );
 
   constructor() {
@@ -100,18 +96,6 @@ export class ProjectParticipations {
         this.currentPage.set(1);
       });
 
-    this.filtersForm
-      .get('phaseId')
-      ?.valueChanges.pipe(
-        map((value) => (value ? String(value) : null)),
-        distinctUntilChanged(),
-        takeUntilDestroyed(this.#destroyRef)
-      )
-      .subscribe((value) => {
-        this.phaseFilterId.set(value);
-        this.currentPage.set(1);
-      });
-
     effect(() => {
       const projectId = this.projectId();
       this.phasesStore.loadAll(projectId);
@@ -119,13 +103,18 @@ export class ProjectParticipations {
 
     effect(() => {
       const projectId = this.projectId();
+      console.log(this.filters());
       this.participationsStore.loadAll({ projectId, filters: this.filters() });
       this.selectedIds.set([]);
     });
-  }
 
-  ventureName(participation: IProjectParticipation): string {
-    return participation.venture?.name || 'Aucune startup';
+    effect(() => {
+      const actionPhaseId = this.actionPhaseId();
+      const phaseFilterId = this.phaseFilterId();
+      if (actionPhaseId && actionPhaseId === phaseFilterId) {
+        this.actionPhaseId.set('');
+      }
+    });
   }
 
   participantInitials(participation: IProjectParticipation): string {
@@ -154,10 +143,6 @@ export class ProjectParticipations {
     this.actionPhaseId.set(String(value ?? ''));
   }
 
-  onFilterPhaseChange(value: unknown): void {
-    this.filtersForm.patchValue({ phaseId: String(value ?? '') });
-  }
-
   onPageChange(page: number): void {
     this.currentPage.set(page);
   }
@@ -174,7 +159,7 @@ export class ProjectParticipations {
   }
 
   onMoveToPhase(): void {
-    if (!this.canApplyBulkAction()) return;
+    if (!this.canMoveToPhase()) return;
     this.participationsStore.moveToPhase({
       ids: this.selectedIds(),
       phaseId: this.actionPhaseId(),
@@ -183,10 +168,11 @@ export class ProjectParticipations {
   }
 
   onRemoveFromPhase(): void {
-    if (!this.canApplyBulkAction()) return;
+    const phaseId = this.phaseFilterId();
+    if (!this.canRemoveFromPhase() || !phaseId) return;
     this.participationsStore.removeFromPhase({
       ids: this.selectedIds(),
-      phaseId: this.actionPhaseId(),
+      phaseId,
       onSuccess: () => this.onBulkActionSuccess()
     });
   }

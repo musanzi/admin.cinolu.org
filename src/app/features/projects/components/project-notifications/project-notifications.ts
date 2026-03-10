@@ -18,39 +18,31 @@ import { NotificationState, NotificationsState, NotificationStatus, SubmitNotifi
 })
 export class ProjectNotifications {
   project = input.required<IProject>();
-
   #confirmationService = inject(ConfirmationService);
   notificationsStore = inject(NotificationsStore);
   phasesStore = inject(PhasesStore);
-
   filterPhaseId = signal('');
   filterStatus = signal<NotificationStatus | ''>('');
   currentPage = signal(1);
-
   icons = { Plus, BellRing };
-
   phaseOptions = computed<SelectOption[]>(() => [
     { label: 'Tous les participants', value: '' },
     ...this.phasesStore.sortedPhases().map((phase) => ({ label: phase.name, value: phase.id }))
   ]);
-
   phaseFilterOptions = computed<SelectOption[]>(() => [
     { label: 'Toutes les phases', value: '' },
     ...this.phasesStore.sortedPhases().map((phase) => ({ label: phase.name, value: phase.id }))
   ]);
-
   statusFilterOptions: SelectOption[] = [
     { label: 'Tous les statuts', value: '' },
     { label: 'Brouillons', value: NotificationStatus.DRAFT },
     { label: 'Envoyées', value: NotificationStatus.SENT }
   ];
-
   filters = computed<FilterProjectNotificationsDto>(() => ({
     phaseId: this.filterPhaseId() || null,
     status: this.filterStatus() || null,
     page: this.currentPage() === 1 ? null : this.currentPage()
   }));
-
   activeNotification = computed(() => this.notificationsStore.activeNotification());
 
   historyState = computed<NotificationsState>(() => ({

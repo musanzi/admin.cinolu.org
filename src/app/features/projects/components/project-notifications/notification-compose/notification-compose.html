@@ -19,7 +19,6 @@
         }
       </p>
     </div>
-
     @if (notification) {
       <app-ui-button
         variant="danger"
@@ -44,19 +43,17 @@
             formControlName="phase_id"
             [options]="state().phaseOptions"
             placeholder="Tous les participants" />
-          <div class="flex min-h-14 items-center rounded-lg border border-gray-200 bg-white px-4 py-3">
+          <div class="flex items-center gap-5 rounded-lg border border-gray-200 bg-white px-4 py-3">
             <app-ui-checkbox
               [id]="'notify_mentors'"
               formControlName="notify_mentors"
-              label="Mentors"
+              label="Les mentors uniquement"
               [disabled]="!state().isEditable || !form.getRawValue().phase_id" />
-          </div>
-          <div class="flex min-h-14 items-center rounded-lg border border-gray-200 bg-white px-4 py-3">
             <app-ui-checkbox
               [id]="'notify_staff'"
               formControlName="notify_staff"
-              label="Staff"
-              [disabled]="!state().isEditable" />
+              label="Les membres du staff"
+              [disabled]="(form.getRawValue().phase_id ? true : false) || !state().isEditable" />
           </div>
         </div>
       </div>

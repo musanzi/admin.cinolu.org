@@ -127,24 +127,6 @@ export const ResourcesStore = signalStore(
           })
         )
       ),
-      publish: rxMethod<string>(
-        pipe(
-          tap(() => patchState(store, { isSaving: true })),
-          switchMap((id) =>
-            http.patch<{ data: IResource }>(`resources/${id}/publish`, {}).pipe(
-              tap(({ data }) => {
-                upsert(data);
-                patchState(store, { isSaving: false });
-              }),
-              catchError(() => {
-                patchState(store, { isSaving: false });
-                toast.showError("Une erreur s'est produite lors du changement de publication");
-                return of(null);
-              })
-            )
-          )
-        )
-      ),
       delete: rxMethod<string>(
         pipe(
           tap(() => patchState(store, { isSaving: true })),

@@ -17,7 +17,6 @@ export interface IResource extends IBase {
   description: string;
   file: string;
   category: ResourceCategory;
-  is_published: boolean;
   project: IProject | null;
   phase: IPhase | null;
 }

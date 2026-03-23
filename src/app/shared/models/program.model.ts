@@ -2,6 +2,7 @@ import type { IBase } from './base.model';
 import type { ICategory } from './category.model';
 import type { IProject } from './project.model';
 import type { IEvent } from './event.model';
+import type { ISector } from './sector.model';
 
 export interface ISubprogram extends IBase {
   name: string;
@@ -24,4 +25,5 @@ export interface Program extends IBase {
   is_highlighted: boolean;
   subprograms: ISubprogram[];
   category: ICategory;
+  sector: ISector | null;
 }

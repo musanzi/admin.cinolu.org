@@ -1,0 +1,156 @@
+@let isLoading = store.isLoading();
+@let filteredSectorCount = sectorCount();
+@let sectors = paginatedSectors();
+<div class="dashboard-main-content">
+  <div class="flex flex-col md:flex-row gap-4 md:justify-between md:items-center mb-4">
+    <app-ui-badge [label]="filteredSectorCount.toString() + ' Secteurs'" />
+    <button
+      class="ui-button ui-button-small ui-button-primary disabled:opacity-40 disabled:cursor-not-allowed"
+      [disabled]="isCreating()"
+      (click)="onToggleCreation()">
+      Nouveau secteur
+    </button>
+  </div>
+
+  <form
+    class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-6 my-8"
+    [formGroup]="createForm"
+    (ngSubmit)="onCreate()"
+    [class.hidden]="!isCreating()">
+    <div class="flex-1">
+      <app-ui-input
+        [required]="true"
+        [id]="'program-sector-name-create'"
+        formControlName="name"
+        placeholder="Ex: Agriculture, Santé, Éducation..." />
+    </div>
+    <div class="flex items-center gap-3">
+      <app-ui-button type="button" size="small" variant="secondary" [outlined]="true" (clicked)="onCancelCreation()">
+        Annuler
+      </app-ui-button>
+      <app-ui-button
+        type="submit"
+        size="small"
+        variant="primary"
+        [disabled]="createForm.invalid || isLoading"
+        [loading]="isLoading">
+        Ajouter
+      </app-ui-button>
+    </div>
+  </form>
+
+  <form [formGroup]="searchForm" class="search-input-wrapper">
+    <div class="search-input-group">
+      <div class="search-input-icon">
+        <i-lucide [name]="icons.Search" class="search-input-icon-svg" />
+      </div>
+      <label for="sector-search-input" class="sr-only">Rechercher un secteur</label>
+      <input
+        id="sector-search-input"
+        type="text"
+        name="q"
+        formControlName="q"
+        placeholder="Rechercher un secteur..."
+        class="search-input"
+        autocomplete="off" />
+    </div>
+  </form>
+
+  <div class="mt-6">
+    @if (isLoading && filteredSectorCount === 0) {
+      <app-ui-table-skeleton [rows]="10" [columns]="2" />
+    }
+    @if (filteredSectorCount > 0) {
+      <div class="ui-table-wrapper">
+        <table class="ui-table">
+          <thead class="ui-table-head">
+            <tr class="ui-table-head-row">
+              <th class="ui-table-header">Nom</th>
+              <th class="ui-table-header">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="ui-table-body">
+            @for (sector of sectors; track sector.id) {
+              @if (!isEditing(sector.id)) {
+                <tr class="ui-table-row">
+                  <td class="ui-table-cell whitespace-nowrap">
+                    <p class="font-semibold text-gray-900">{{ sector.name | titlecase }}</p>
+                  </td>
+                  <td class="ui-table-cell">
+                    <div class="flex items-center gap-1">
+                      <app-ui-button (clicked)="onEdit(sector)" size="small" variant="primary" [outlined]="true">
+                        <i-lucide [name]="icons.Pencil" class="size-4" />
+                        Modifier
+                      </app-ui-button>
+                      <app-ui-button (clicked)="onDelete(sector.id)" size="small" variant="danger">
+                        <i-lucide [name]="icons.Trash" class="size-4" />
+                        Supprimer
+                      </app-ui-button>
+                    </div>
+                  </td>
+                </tr>
+              }
+              @if (isEditing(sector.id)) {
+                <tr class="ui-table-row">
+                  <td colspan="2" class="ui-table-cell">
+                    <form class="flex items-center gap-6" [formGroup]="updateForm" (ngSubmit)="onUpdate()">
+                      <div class="flex-1">
+                        <app-ui-input
+                          [required]="true"
+                          [id]="'program-sector-name-update-' + sector.id"
+                          formControlName="name"
+                          placeholder="Ex: Agriculture, Santé, Éducation..." />
+                      </div>
+                      <div class="flex items-center gap-3">
+                        <app-ui-button
+                          type="button"
+                          size="small"
+                          variant="secondary"
+                          [outlined]="true"
+                          (clicked)="onCancelUpdate()">
+                          Annuler
+                        </app-ui-button>
+                        <app-ui-button
+                          type="submit"
+                          size="small"
+                          variant="primary"
+                          [disabled]="updateForm.invalid || isLoading"
+                          [loading]="isLoading">
+                          Mettre à jour
+                        </app-ui-button>
+                      </div>
+                    </form>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+    <div class="flex flex-col justify-end items-end">
+      <app-ui-pagination
+        [currentPage]="currentPage()"
+        [totalItems]="filteredSectorCount"
+        [itemsPerPage]="itemsPerPage"
+        (pageChange)="onPageChange($event)" />
+    </div>
+  </div>
+
+  @if (filteredSectorCount === 0 && !isLoading) {
+    <div class="flex flex-col items-start">
+      <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-primary-50 border border-primary-100">
+        <i-lucide [name]="icons.Search" class="w-10 h-10 stroke-[1.5] text-primary-500" />
+      </div>
+      <h3 class="text-2xl font-bold text-gray-900 mb-2">Aucun secteur trouvé</h3>
+      <p class="text-gray-500 max-w-lg mb-8 text-base leading-relaxed">
+        Nous n'avons trouvé aucun secteur correspondant à vos critères.<br />
+      </p>
+      <app-ui-button (clicked)="onResetFilters()" variant="secondary" [outlined]="true">
+        Réinitialiser les filtres
+      </app-ui-button>
+    </div>
+  }
+
+  <app-ui-confirm-dialog />
+</div>

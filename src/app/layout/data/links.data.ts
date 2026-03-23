@@ -36,12 +36,16 @@ export const LINK_GROUPS: ILinkGroup[] = [
         icon: Layers,
         children: [
           {
-            name: 'Tous les programmes',
+            name: 'Les programmes',
             path: '/programs'
           },
           {
             name: 'Les catégories',
             path: '/program-categories'
+          },
+          {
+            name: 'Les secteurs',
+            path: '/program-sectors'
           }
         ]
       },
@@ -50,7 +54,7 @@ export const LINK_GROUPS: ILinkGroup[] = [
         icon: Folders,
         children: [
           {
-            name: 'Tous les projets',
+            name: 'Les projets',
             path: '/projects'
           },
           {
@@ -64,7 +68,7 @@ export const LINK_GROUPS: ILinkGroup[] = [
         icon: Calendar1,
         children: [
           {
-            name: 'Tous les événements',
+            name: 'Les événements',
             path: '/events'
           },
           {
@@ -78,7 +82,7 @@ export const LINK_GROUPS: ILinkGroup[] = [
         icon: User,
         children: [
           {
-            name: 'Tous les mentors',
+            name: 'Les mentors',
             path: '/mentors'
           },
           {
@@ -93,7 +97,7 @@ export const LINK_GROUPS: ILinkGroup[] = [
         icon: BookOpen,
         children: [
           {
-            name: 'Tous les articles',
+            name: 'Les articles',
             path: '/blog/articles'
           },
           {

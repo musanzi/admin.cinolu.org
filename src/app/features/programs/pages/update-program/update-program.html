@@ -53,6 +53,19 @@
             [options]="categoriesStore.allCategories()"
             formControlName="category"
             placeholder="Sélectionner une catégorie" />
+          <app-ui-select
+            [id]="'sector_id'"
+            label="Secteur"
+            [optionLabel]="'name'"
+            [optionValue]="'id'"
+            [options]="sectorsStore.sectors()"
+            [allowCreate]="true"
+            [createDisabled]="sectorsStore.isLoading()"
+            createPlaceholder="Ajouter un secteur"
+            createButtonLabel="Ajouter"
+            formControlName="sector"
+            placeholder="Sélectionner un secteur"
+            (createOption)="onCreateSector($event)" />
           <app-ui-input [id]="'name'" label="Nom du programme" formControlName="name" placeholder="Nom du programme" />
           <app-ui-textarea
             class="md:col-span-2"

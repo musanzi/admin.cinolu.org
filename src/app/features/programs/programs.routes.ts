@@ -26,5 +26,10 @@ export const programsRoutes: Routes = [
     path: 'program-categories',
     title: 'Les categories',
     loadComponent: () => import('./pages/program-categories/program-categories').then((c) => c.ProgramCategories)
+  },
+  {
+    path: 'program-sectors',
+    title: 'Les secteurs',
+    loadComponent: () => import('./pages/program-sectors/program-sectors').then((c) => c.ProgramSectors)
   }
 ];

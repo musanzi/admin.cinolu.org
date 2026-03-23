@@ -2,6 +2,7 @@ export * from './base.model';
 export * from './tag.model';
 export * from './image.model';
 export * from './category.model';
+export * from './sector.model';
 export * from './role.model';
 export * from './user.model';
 export * from './article.model';

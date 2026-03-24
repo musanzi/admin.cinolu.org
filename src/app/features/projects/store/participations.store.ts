@@ -8,15 +8,26 @@ import { IProjectParticipation } from '@shared/models';
 import { ToastrService } from '@shared/services/toast/toastr.service';
 import { FilterParticipationsDto } from '../dto/phases/filter-participations.dto';
 import { MoveParticipationsDto } from '../dto/phases/move-participations.dto';
+import { ReviewParticipationDto } from '../dto/participations/review-participation.dto';
 
 interface ParticipationsStoreState {
   isLoading: boolean;
+  isDetailLoading: boolean;
   isSaving: boolean;
   participations: [IProjectParticipation[], number];
+  participation: IProjectParticipation | null;
+  participationError: string | null;
 }
 
 export const ParticipationsStore = signalStore(
-  withState<ParticipationsStoreState>({ isLoading: false, isSaving: false, participations: [[], 0] }),
+  withState<ParticipationsStoreState>({
+    isLoading: false,
+    isDetailLoading: false,
+    isSaving: false,
+    participations: [[], 0],
+    participation: null,
+    participationError: null
+  }),
   withProps(() => ({
     _http: inject(HttpClient),
     _toast: inject(ToastrService)
@@ -43,6 +54,30 @@ export const ParticipationsStore = signalStore(
               })
             );
         })
+      )
+    ),
+    loadOne: rxMethod<string>(
+      pipe(
+        tap(() => patchState(store, { isDetailLoading: true, participationError: null })),
+        switchMap((participationId) =>
+          _http.get<{ data: IProjectParticipation }>(`projects/participations/${participationId}`).pipe(
+            map(({ data }) => {
+              patchState(store, {
+                isDetailLoading: false,
+                participation: data,
+                participationError: null
+              });
+            }),
+            catchError((error) => {
+              patchState(store, {
+                isDetailLoading: false,
+                participation: null,
+                participationError: extractApiErrorMessage(error, 'Impossible de charger la participation')
+              });
+              return of(null);
+            })
+          )
+        )
       )
     ),
     moveToPhase: rxMethod<MoveParticipationsDto & { onSuccess?: () => void }>(
@@ -76,12 +111,41 @@ export const ParticipationsStore = signalStore(
             }),
             catchError((error) => {
               _toast.showError(extractApiErrorMessage(error, "Une erreur s'est produite lors du retrait des participants"));
-              patchState(store, { isLoading: false });
+              patchState(store, { isSaving: false });
               return of(null);
             })
           )
         )
       )
-    )
+    ),
+    review: rxMethod<{ participationId: string; dto: ReviewParticipationDto; onSuccess?: () => void }>(
+      pipe(
+        tap(() => patchState(store, { isSaving: true })),
+        switchMap(({ participationId, dto, onSuccess }) =>
+          _http.patch<{ data: IProjectParticipation }>(`projects/participations/${participationId}/review`, dto).pipe(
+            tap(({ data }) => {
+              const [list, total] = store.participations();
+              const participations = list.map((participation) => (participation.id === data.id ? data : participation));
+              patchState(store, {
+                isSaving: false,
+                participations: [participations, total],
+                participation: data,
+                participationError: null
+              });
+              _toast.showSuccess('La revue de la participation a été enregistrée');
+              onSuccess?.();
+            }),
+            catchError((error) => {
+              _toast.showError(extractApiErrorMessage(error, "Une erreur s'est produite lors de la revue"));
+              patchState(store, { isSaving: false });
+              return of(null);
+            })
+          )
+        )
+      )
+    ),
+    clearParticipation(): void {
+      patchState(store, { participation: null, participationError: null, isDetailLoading: false });
+    }
   }))
 );

@@ -19,15 +19,13 @@ import { ProjectDetailsSkeleton } from '../../ui/project-details-skeleton/projec
 import { SubprogramsStore } from '@features/programs/store/subprograms.store';
 import { CategoriesStore } from '@features/projects/store/project-categories.store';
 import { UsersStore } from '@features/users/store/users.store';
-import {
-  ProjectSheet,
-  ProjectGallery,
-  ProjectNotifications,
-  ProjectParticipations,
-  ProjectResources,
-  ProjectUpdate,
-  Phases
-} from '@features/projects/components';
+import { ProjectGallery } from '@features/projects/components/project-gallery/project-gallery';
+import { ProjectNotifications } from '@features/projects/components/project-notifications/project-notifications';
+import { ProjectParticipations } from '@features/projects/components/project-participations/project-participations';
+import { Phases } from '@features/projects/components/project-phases/phases';
+import { ProjectResources } from '@features/projects/components/project-resources/project-resources';
+import { ProjectSheet } from '@features/projects/components/project-sheet/project-sheet';
+import { ProjectUpdate } from '@features/projects/components/project-update/project-update';
 
 @Component({
   selector: 'app-project-details',
@@ -37,10 +35,10 @@ import {
   imports: [
     UiTabs,
     ProjectSheet,
+    ProjectParticipations,
     ProjectGallery,
     ProjectUpdate,
     Phases,
-    ProjectParticipations,
     ProjectNotifications,
     ProjectResources,
     ProjectDetailsSkeleton,
@@ -59,8 +57,8 @@ export class ProjectDetails implements OnInit {
   activeTab = signal(this.#route.snapshot.queryParamMap.get('tab') || 'details');
   tabs = [
     { label: "Fiche d'activité", name: 'details', icon: ChartColumn },
-    { label: 'Phases', name: 'phases', icon: Layers },
     { label: 'Participations', name: 'participations', icon: Users },
+    { label: 'Phases', name: 'phases', icon: Layers },
     { label: 'Ressources', name: 'resources', icon: FolderKanban },
     { label: 'Notifications', name: 'notifications', icon: Bell },
     { label: 'Mettre à jour', name: 'edit', icon: SquarePen },

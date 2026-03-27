@@ -33,14 +33,14 @@
           [outlined]="true"
           size="small"
           [disabled]="isLoading()"
-          (clicked)="reload.emit()">
+          (clicked)="reloadCurrentData()">
           <i-lucide [name]="icons.RefreshCcw" class="size-4" />
           Actualiser
         </app-ui-button>
       </div>
     </div>
 
-    <form [formGroup]="filtersForm()" class="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,3fr)_auto] lg:items-end">
+    <form [formGroup]="filtersForm" class="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,3fr)_auto] lg:items-end">
       <app-ui-select
         [id]="'participation-phase-filter'"
         label="Phase"
@@ -49,7 +49,7 @@
         placeholder="Toutes les phases"
         formControlName="phaseId" />
       <div class="flex items-end gap-2">
-        <app-ui-button type="button" variant="secondary" [outlined]="true" size="small" (clicked)="resetFilters.emit()">
+        <app-ui-button type="button" variant="secondary" [outlined]="true" size="small" (clicked)="onResetFilters()">
           Réinitialiser
         </app-ui-button>
       </div>
@@ -58,9 +58,7 @@
 
   <div class="flex flex-col gap-4">
     <div class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
-      <form
-        [formGroup]="batchForm()"
-        class="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_auto_auto] lg:items-end">
+      <form [formGroup]="batchForm" class="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_auto_auto] lg:items-end">
         <app-ui-select
           [id]="'participation-batch-phase'"
           label="Phase cible"
@@ -73,7 +71,7 @@
           size="small"
           [disabled]="selectedCount() === 0 || isSaving()"
           [loading]="isSaving()"
-          (clicked)="batchAction.emit('move')">
+          (clicked)="runBatchAction('move')">
           <i-lucide [name]="icons.ArrowRight" class="size-4" />
           Ajouter à la phase
         </app-ui-button>
@@ -83,7 +81,7 @@
           size="small"
           [disabled]="selectedCount() === 0 || isSaving()"
           [loading]="isSaving()"
-          (clicked)="batchAction.emit('remove')">
+          (clicked)="runBatchAction('remove')">
           <i-lucide [name]="icons.X" class="size-4" />
           Retirer de la phase
         </app-ui-button>
@@ -104,7 +102,7 @@
                   <app-ui-checkbox
                     [id]="'participations-select-all'"
                     [value]="allSelectedOnPage()"
-                    (valueChange)="toggleAll.emit($event)" />
+                    (valueChange)="toggleAll($event)" />
                 </th>
                 <th class="ui-table-header">Participant</th>
                 <th class="ui-table-header">Phases</th>
@@ -119,7 +117,7 @@
                     <app-ui-checkbox
                       [id]="'participation-select-' + item.id"
                       [value]="isSelected(item.id)"
-                      (valueChange)="onToggleSelection(item.id, $event)" />
+                      (valueChange)="toggleSelection(item.id, $event)" />
                   </td>
                   <td class="ui-table-cell">
                     <button
@@ -161,8 +159,8 @@
           <app-ui-pagination
             [currentPage]="currentPage()"
             [totalItems]="totalCount()"
-            [itemsPerPage]="itemsPerPage()"
-            (pageChange)="pageChange.emit($event)" />
+            [itemsPerPage]="itemsPerPage"
+            (pageChange)="onPageChange($event)" />
         </div>
       } @else {
         <div class="flex flex-col items-start gap-3 p-8">

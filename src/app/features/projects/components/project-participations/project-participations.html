@@ -1,32 +1,5 @@
 @if (!selectedParticipationId()) {
-  <app-project-participations-list
-    [participations]="store.list()"
-    [totalCount]="store.total()"
-    [selectedIds]="selectedIds()"
-    [isLoading]="store.isLoading()"
-    [isSaving]="store.isSaving()"
-    [isImportingCsv]="projectStore.isImportingCsv()"
-    [currentPage]="currentPage()"
-    [itemsPerPage]="itemsPerPage"
-    [filtersForm]="filtersForm"
-    [batchForm]="batchForm"
-    [phaseOptions]="phaseOptions()"
-    (pageChange)="onPageChange($event)"
-    (resetFilters)="onResetFilters()"
-    (reload)="reloadCurrentData()"
-    (selectParticipation)="onSelectParticipation($event)"
-    (toggleSelection)="toggleSelection($event.id, $event.checked)"
-    (toggleAll)="toggleAll($event)"
-    (batchAction)="runBatchAction($event)"
-    (importCsv)="onImportCsv($event)" />
+  <app-project-participations-list [project]="project()" (selectParticipation)="onSelectParticipation($event)" />
 } @else {
-  <app-project-participation-details
-    [participation]="store.participation()"
-    [isLoading]="store.isDetailLoading()"
-    [isSaving]="store.isSaving()"
-    [error]="store.participationError()"
-    [reviewForm]="reviewForm"
-    [reviewPhaseOptions]="reviewPhaseOptions()"
-    (back)="closeDetails()"
-    (submitReview)="onSubmitReview()" />
+  <app-project-participation-details [participationId]="selectedParticipationId()!" (back)="closeDetails()" />
 }

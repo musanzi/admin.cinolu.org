@@ -41,29 +41,29 @@ import { bindSearchControlToQuery, toPageQueryValue } from '@shared/helpers';
   ]
 })
 export class ListUsers {
-  #route = inject(ActivatedRoute);
-  #fb = inject(FormBuilder);
-  #confirmationService = inject(ConfirmationService);
-  #destroyRef = inject(DestroyRef);
+  private readonly route = inject(ActivatedRoute);
+  private readonly fb = inject(FormBuilder);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly destroyRef = inject(DestroyRef);
   searchForm: FormGroup;
   store = inject(UsersStore);
   itemsPerPage = 50;
   icons = { Pencil, Trash, Search, Funnel, Download, Upload };
   csvFileInput = viewChild<ElementRef<HTMLInputElement>>('csvFileInput');
   queryParams = signal<FilterUsersDto>({
-    page: this.#route.snapshot.queryParamMap.get('page'),
-    q: this.#route.snapshot.queryParamMap.get('q')
+    page: this.route.snapshot.queryParamMap.get('page'),
+    q: this.route.snapshot.queryParamMap.get('q')
   });
   currentPage = computed(() => Number(this.queryParams().page) || 1);
 
   constructor() {
-    this.searchForm = this.#fb.group({
+    this.searchForm = this.fb.group({
       q: [this.queryParams().q || '']
     });
     effect(() => {
       this.store.loadAll(this.queryParams());
     });
-    bindSearchControlToQuery(this.searchForm.get('q'), this.queryParams, this.#destroyRef, 1000);
+    bindSearchControlToQuery(this.searchForm.get('q'), this.queryParams, this.destroyRef, 1000);
   }
 
   onPageChange(currentPage: number): void {
@@ -83,7 +83,7 @@ export class ListUsers {
   }
 
   onDelete(userId: string): void {
-    this.#confirmationService.confirm({
+    this.confirmationService.confirm({
       header: 'Confirmation',
       message: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?',
       acceptLabel: 'Supprimer',
@@ -95,7 +95,7 @@ export class ListUsers {
   }
 
   clear(): void {
-    this.#confirmationService.confirm({
+    this.confirmationService.confirm({
       header: 'Confirmation',
       message: 'Êtes-vous sûr de vouloir supprimer les utilisateurs invalides ?',
       acceptLabel: 'Supprimer',

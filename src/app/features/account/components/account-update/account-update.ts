@@ -16,13 +16,13 @@ import { UiInput, UiDatepicker, UiTextarea, UiSelect, UiButton, FileUpload } fro
   imports: [ReactiveFormsModule, UiInput, UiDatepicker, UiTextarea, UiSelect, UiButton, FileUpload]
 })
 export class AccountUpdate implements OnInit {
-  #fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
   infoStore = inject(UpdateInfoStore);
   passwordStore = inject(UpdatePasswordStore);
   authStore = inject(AuthStore);
   genderOptions = GENDERS;
-  infoForm: FormGroup = this.#initInfoForm();
-  passwordForm: FormGroup = this.#initPasswordForm();
+  infoForm: FormGroup = this.initInfoForm();
+  passwordForm: FormGroup = this.initPasswordForm();
   user = computed<IUser | null>(() => this.authStore.user());
 
   ngOnInit(): void {
@@ -32,8 +32,8 @@ export class AccountUpdate implements OnInit {
     });
   }
 
-  #initInfoForm(): FormGroup {
-    return this.#fb.group({
+  private initInfoForm(): FormGroup {
+    return this.fb.group({
       email: ['', Validators.email],
       city: ['', Validators.required],
       country: ['', Validators.required],
@@ -45,8 +45,8 @@ export class AccountUpdate implements OnInit {
     });
   }
 
-  #initPasswordForm(): FormGroup {
-    return this.#fb.group({
+  private initPasswordForm(): FormGroup {
+    return this.fb.group({
       password: ['', [Validators.minLength(6), Validators.required]],
       password_confirm: ['', [Validators.minLength(6), Validators.required]]
     });

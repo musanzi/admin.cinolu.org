@@ -8,13 +8,13 @@ import { UiAccordion } from '../accordion';
 })
 export class UiAccordionPanel {
   value = input.required<string>();
-  #accordion = inject(UiAccordion, { optional: true });
+  private readonly accordion = inject(UiAccordion, { optional: true });
 
   isActive = computed(() => {
-    return this.#accordion?.isActive(this.value()) ?? false;
+    return this.accordion?.isActive(this.value()) ?? false;
   });
 
   toggle(): void {
-    this.#accordion?.toggle(this.value());
+    this.accordion?.toggle(this.value());
   }
 }

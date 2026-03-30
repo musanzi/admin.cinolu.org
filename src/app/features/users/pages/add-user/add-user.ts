@@ -13,14 +13,14 @@ import { UiButton, UiDatepicker, UiInput, UiMultiSelect, UiSelect } from '@share
   imports: [UiButton, UiInput, ReactiveFormsModule, UiDatepicker, UiMultiSelect, UiSelect]
 })
 export class AddUserComponent {
-  #fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
   addUserForm: FormGroup;
   store = inject(UsersStore);
   rolesStore = inject(RolesStore);
   genders = GENDERS;
 
   constructor() {
-    this.addUserForm = this.#fb.group({
+    this.addUserForm = this.fb.group({
       email: ['', [Validators.required]],
       name: ['', Validators.required],
       gender: ['', Validators.required],

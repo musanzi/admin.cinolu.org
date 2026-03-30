@@ -24,14 +24,10 @@ export class ParticipationsService {
 
   getAll(projectId: string, filters: FilterParticipationsDto): Observable<ParticipationsResponse> {
     const params = buildQueryParams(filters);
-    
     return this.http
       .get<{ data: [IProjectParticipation[], number] }>(`projects/id/${projectId}/participations`, { params })
       .pipe(
-        map(({ data }) => ({
-          participations: data[0],
-          total: data[1]
-        })),
+        map(({ data }) => ({ participations: data[0], total: data[1] })),
         catchError((error) => {
           const message = extractApiErrorMessage(error, 'Impossible de charger les participations');
           this.toast.showError(message);
@@ -41,16 +37,14 @@ export class ParticipationsService {
   }
 
   getOne(participationId: string): Observable<IProjectParticipation> {
-    return this.http
-      .get<{ data: IProjectParticipation }>(`projects/participations/${participationId}`)
-      .pipe(
-        map(({ data }) => data),
-        catchError((error) => {
-          const message = extractApiErrorMessage(error, 'Impossible de charger la participation');
-          this.toast.showError(message);
-          return throwError(() => message);
-        })
-      );
+    return this.http.get<{ data: IProjectParticipation }>(`projects/participations/${participationId}`).pipe(
+      map(({ data }) => data),
+      catchError((error) => {
+        const message = extractApiErrorMessage(error, 'Impossible de charger la participation');
+        this.toast.showError(message);
+        return throwError(() => message);
+      })
+    );
   }
 
   moveToPhase(dto: MoveParticipationsDto): Observable<void> {
@@ -59,10 +53,7 @@ export class ParticipationsService {
         this.toast.showSuccess('Les participants ont été ajoutés à la phase');
       }),
       catchError((error) => {
-        const message = extractApiErrorMessage(
-          error,
-          "Une erreur s'est produite lors du déplacement des participants"
-        );
+        const message = extractApiErrorMessage(error, "Une erreur s'est produite lors du déplacement des participants");
         this.toast.showError(message);
         return throwError(() => message);
       })
@@ -75,10 +66,7 @@ export class ParticipationsService {
         this.toast.showSuccess('Les participants ont été retirés de la phase');
       }),
       catchError((error) => {
-        const message = extractApiErrorMessage(
-          error,
-          "Une erreur s'est produite lors du retrait des participants"
-        );
+        const message = extractApiErrorMessage(error, "Une erreur s'est produite lors du retrait des participants");
         this.toast.showError(message);
         return throwError(() => message);
       })
@@ -100,9 +88,7 @@ export class ParticipationsService {
       .post<{ data: IProjectParticipationReview }>(`projects/participations/${participationId}/review`, dto)
       .pipe(
         map(({ data }) => {
-          const message = dto.notifyParticipant
-            ? 'La revue a été enregistrée et le participant a été notifié'
-            : 'La revue a été enregistrée';
+          const message = 'La revue a été enregistrée';
           this.toast.showSuccess(message);
           return data;
         }),
@@ -122,25 +108,18 @@ export class ParticipationsService {
     dto: UpdateParticipationReviewDto
   ): Observable<IProjectParticipationReview> {
     const { reviewId, ...payload } = dto;
-    
     return this.http
-      .patch<{ data: IProjectParticipationReview }>(
-        `projects/participations/${participationId}/review/${reviewId}`,
-        payload
-      )
+      .patch<{
+        data: IProjectParticipationReview;
+      }>(`projects/participations/${participationId}/review/${reviewId}`, payload)
       .pipe(
         map(({ data }) => {
-          const message = payload.notifyParticipant
-            ? 'La revue a été mise à jour et le participant a été notifié'
-            : 'La revue a été mise à jour';
+          const message = 'La revue a été mise à jour';
           this.toast.showSuccess(message);
           return data;
         }),
         catchError((error) => {
-          const message = extractApiErrorMessage(
-            error,
-            "Une erreur s'est produite lors de la mise à jour de la revue"
-          );
+          const message = extractApiErrorMessage(error, "Une erreur s'est produite lors de la mise à jour");
           this.toast.showError(message);
           return throwError(() => message);
         })

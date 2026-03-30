@@ -33,21 +33,21 @@ import { DatePipe } from '@angular/common';
   ]
 })
 export class ListEvents {
-  #route = inject(ActivatedRoute);
-  #fb = inject(FormBuilder);
-  #confirmationService = inject(ConfirmationService);
-  #destroyRef = inject(DestroyRef);
+  private readonly route = inject(ActivatedRoute);
+  private readonly fb = inject(FormBuilder);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly destroyRef = inject(DestroyRef);
   store = inject(EventsStore);
   itemsPerPage = 20;
   icons = { Trash, Search, Funnel, Eye };
   queryParams = signal<FilterEventsDto>({
-    page: this.#route.snapshot.queryParamMap.get('page'),
-    q: this.#route.snapshot.queryParamMap.get('q'),
-    filter: this.#route.snapshot.queryParamMap.get('filter')
+    page: this.route.snapshot.queryParamMap.get('page'),
+    q: this.route.snapshot.queryParamMap.get('q'),
+    filter: this.route.snapshot.queryParamMap.get('filter')
   });
   activeTab = computed(() => this.queryParams().filter || 'all');
   currentPage = computed(() => Number(this.queryParams().page) || 1);
-  searchForm: FormGroup = this.#fb.group({
+  searchForm: FormGroup = this.fb.group({
     q: [this.queryParams().q || '']
   });
   tabsConfig = signal([
@@ -63,7 +63,7 @@ export class ListEvents {
     });
     const searchValue = this.searchForm.get('q');
     searchValue?.valueChanges
-      .pipe(debounceTime(1000), distinctUntilChanged(), takeUntilDestroyed(this.#destroyRef))
+      .pipe(debounceTime(1000), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe((searchValue: string) => {
         this.queryParams.update((qp) => ({ ...qp, q: searchValue, page: null }));
       });
@@ -86,7 +86,7 @@ export class ListEvents {
   }
 
   onDelete(eventId: string): void {
-    this.#confirmationService.confirm({
+    this.confirmationService.confirm({
       header: 'Confirmation',
       message: 'Êtes-vous sûr de vouloir supprimer cet événement ?',
       acceptLabel: 'Supprimer',

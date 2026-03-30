@@ -27,37 +27,37 @@ import { RouterLink } from '@angular/router';
   imports: [LucideAngularModule, UiBadge, UiConfirmDialog, DatePipe, ApiImgPipe, UiAvatar, RouterLink]
 })
 export class MentorDetails implements OnInit {
-  #route = inject(ActivatedRoute);
-  #confirmationService = inject(ConfirmationService);
-  #id = this.#route.snapshot.params['id'];
+  private readonly route = inject(ActivatedRoute);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly id = this.route.snapshot.params['id'];
   store = inject(MentorsStore);
   cvUrl = environment.apiUrl + 'uploads/mentors/cvs/';
   icons = { CircleCheckBig, CircleX, Briefcase, Calendar, Award, FileText, ExternalLink };
 
   ngOnInit(): void {
-    this.store.loadOne(this.#id);
+    this.store.loadOne(this.id);
   }
 
   onApprove(): void {
-    this.#confirmationService.confirm({
+    this.confirmationService.confirm({
       header: "Confirmer l'approbation",
       message: 'Êtes-vous sûr de vouloir approuver ce profil mentor ?',
       acceptLabel: 'Approuver',
       rejectLabel: 'Annuler',
       accept: () => {
-        this.store.approve(this.#id);
+        this.store.approve(this.id);
       }
     });
   }
 
   onReject(): void {
-    this.#confirmationService.confirm({
+    this.confirmationService.confirm({
       header: 'Confirmer le rejet',
       message: 'Êtes-vous sûr de vouloir rejeter ce profil mentor ?',
       acceptLabel: 'Rejeter',
       rejectLabel: 'Annuler',
       accept: () => {
-        this.store.reject(this.#id);
+        this.store.reject(this.id);
       }
     });
   }

@@ -16,8 +16,8 @@ import { ArticleGalleryComponent } from '../../components/article-gallery/articl
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ArticleDetails implements OnInit {
-  #route = inject(ActivatedRoute);
-  #slug = this.#route.snapshot.params['slug'];
+  private readonly route = inject(ActivatedRoute);
+  private readonly slug = this.route.snapshot.params['slug'];
   store = inject(ArticlesStore);
   activeTab = signal('edit');
   tabs = [
@@ -26,8 +26,8 @@ export class ArticleDetails implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.store.loadOne(this.#slug);
-    this.store.loadGallery(this.#slug);
+    this.store.loadOne(this.slug);
+    this.store.loadGallery(this.slug);
   }
 
   onTabChange(tab: string): void {
@@ -35,11 +35,11 @@ export class ArticleDetails implements OnInit {
   }
 
   onGalleryUploaded(): void {
-    this.store.loadGallery(this.#slug);
+    this.store.loadGallery(this.slug);
   }
 
   onCoverUploaded(): void {
-    this.store.loadOne(this.#slug);
+    this.store.loadOne(this.slug);
   }
 
   onDeleteImage(imgId: string): void {

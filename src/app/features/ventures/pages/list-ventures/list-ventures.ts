@@ -32,17 +32,17 @@ import { NgOptimizedImage } from '@angular/common';
   ]
 })
 export class ListVentures {
-  #route = inject(ActivatedRoute);
-  #fb = inject(FormBuilder);
-  #destroyRef = inject(DestroyRef);
+  private readonly route = inject(ActivatedRoute);
+  private readonly fb = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
   store = inject(VenturesStore);
   itemsPerPage = 20;
   icons = { Eye, Search, Funnel, ToggleLeft, ToggleRight };
   queryParams = signal<FilterVenturesDto>({
-    page: this.#route.snapshot.queryParamMap.get('page'),
-    q: this.#route.snapshot.queryParamMap.get('q')
+    page: this.route.snapshot.queryParamMap.get('page'),
+    q: this.route.snapshot.queryParamMap.get('q')
   });
-  searchForm: FormGroup = this.#fb.group({
+  searchForm: FormGroup = this.fb.group({
     q: [this.queryParams().q || '']
   });
   currentPage = computed(() => Number(this.queryParams().page) || 1);
@@ -53,7 +53,7 @@ export class ListVentures {
     });
     const searchValue = this.searchForm.get('q');
     searchValue?.valueChanges
-      .pipe(debounceTime(1000), distinctUntilChanged(), takeUntilDestroyed(this.#destroyRef))
+      .pipe(debounceTime(1000), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe((searchValue: string) => {
         this.queryParams.update((qp) => ({ ...qp, q: searchValue, page: null }));
       });

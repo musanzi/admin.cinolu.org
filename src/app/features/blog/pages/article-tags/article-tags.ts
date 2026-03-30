@@ -29,27 +29,27 @@ import { UiTableSkeleton } from '@shared/ui/table-skeleton/table-skeleton';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ArticleTags {
-  #route = inject(ActivatedRoute);
-  #fb = inject(FormBuilder);
-  #confirmationService = inject(ConfirmationService);
-  #destroyRef = inject(DestroyRef);
+  private readonly route = inject(ActivatedRoute);
+  private readonly fb = inject(FormBuilder);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly destroyRef = inject(DestroyRef);
   store = inject(TagsStore);
   itemsPerPage = 10;
   icons = { Pencil, Trash, Plus, Search, Funnel };
   queryParams = signal<FilterArticlesTagsDto>({
-    page: this.#route.snapshot.queryParamMap.get('page'),
-    q: this.#route.snapshot.queryParamMap.get('q')
+    page: this.route.snapshot.queryParamMap.get('page'),
+    q: this.route.snapshot.queryParamMap.get('q')
   });
   currentPage = computed(() => Number(this.queryParams().page) || 1);
   isCreating = signal(false);
   editingTagId = signal<string | null>(null);
-  searchForm: FormGroup = this.#fb.group({
+  searchForm: FormGroup = this.fb.group({
     q: [this.queryParams().q || '']
   });
-  createForm: FormGroup = this.#fb.group({
+  createForm: FormGroup = this.fb.group({
     name: ['', Validators.required]
   });
-  updateForm: FormGroup = this.#fb.group({
+  updateForm: FormGroup = this.fb.group({
     name: ['', Validators.required]
   });
 
@@ -59,7 +59,7 @@ export class ArticleTags {
     });
     const searchValue = this.searchForm.get('q');
     searchValue?.valueChanges
-      .pipe(debounceTime(1000), distinctUntilChanged(), takeUntilDestroyed(this.#destroyRef))
+      .pipe(debounceTime(1000), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe((searchValue: string) => {
         this.queryParams.update((qp) => ({ ...qp, q: searchValue, page: null }));
       });
@@ -82,7 +82,7 @@ export class ArticleTags {
   }
 
   onDelete(id: string): void {
-    this.#confirmationService.confirm({
+    this.confirmationService.confirm({
       header: 'Confirmation',
       message: 'Êtes-vous sûr de vouloir supprimer ce tag ?',
       acceptLabel: 'Supprimer',

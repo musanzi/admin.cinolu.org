@@ -47,14 +47,14 @@ import { ProjectUpdate } from '@features/projects/components/project-update/proj
   ]
 })
 export class ProjectDetails implements OnInit {
-  #route = inject(ActivatedRoute);
-  #slug = this.#route.snapshot.params['slug'];
+  private readonly route = inject(ActivatedRoute);
+  private readonly slug = this.route.snapshot.params['slug'];
   projectStore = inject(ProjectsStore);
   galleryStore = inject(GalleryStore);
   categoriesStore = inject(CategoriesStore);
   programsStore = inject(SubprogramsStore);
   usersStore = inject(UsersStore);
-  activeTab = signal(this.#route.snapshot.queryParamMap.get('tab') || 'details');
+  activeTab = signal(this.route.snapshot.queryParamMap.get('tab') || 'details');
   tabs = [
     { label: "Fiche d'activité", name: 'details', icon: ChartColumn },
     { label: 'Participations', name: 'participations', icon: Users },
@@ -66,19 +66,19 @@ export class ProjectDetails implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.projectStore.loadOne(this.#slug);
-    this.galleryStore.loadAll(this.#slug);
+    this.projectStore.loadOne(this.slug);
+    this.galleryStore.loadAll(this.slug);
     this.categoriesStore.loadUnpaginated();
     this.programsStore.loadUnpaginated();
     this.usersStore.loadStaff();
   }
 
   onCoverUploaded(): void {
-    this.projectStore.loadOne(this.#slug);
+    this.projectStore.loadOne(this.slug);
   }
 
   onGalleryUploaded(): void {
-    this.galleryStore.loadAll(this.#slug);
+    this.galleryStore.loadAll(this.slug);
   }
 
   onDeleteImage(id: string): void {

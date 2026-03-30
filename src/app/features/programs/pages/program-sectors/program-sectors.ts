@@ -28,22 +28,22 @@ import { ProgramSectorsStore } from '../../store/program-sectors.store';
   ]
 })
 export class ProgramSectors {
-  #fb = inject(FormBuilder);
-  #confirmationService = inject(ConfirmationService);
-  #destroyRef = inject(DestroyRef);
+  private readonly fb = inject(FormBuilder);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly destroyRef = inject(DestroyRef);
   store = inject(ProgramSectorsStore);
   icons = { Pencil, Search, Trash };
   itemsPerPage = 10;
   currentPage = signal(1);
   isCreating = signal(false);
   editingSectorId = signal<string | null>(null);
-  searchForm: FormGroup = this.#fb.group({
+  searchForm: FormGroup = this.fb.group({
     q: ['']
   });
-  createForm: FormGroup = this.#fb.group({
+  createForm: FormGroup = this.fb.group({
     name: ['', Validators.required]
   });
-  updateForm: FormGroup = this.#fb.group({
+  updateForm: FormGroup = this.fb.group({
     name: ['', Validators.required]
   });
   searchTerm = signal('');
@@ -71,7 +71,7 @@ export class ProgramSectors {
     });
     this.searchForm
       .get('q')
-      ?.valueChanges.pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.#destroyRef))
+      ?.valueChanges.pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe((value: string) => {
         this.searchTerm.set(value ?? '');
         this.currentPage.set(1);
@@ -136,7 +136,7 @@ export class ProgramSectors {
   }
 
   onDelete(sectorId: string): void {
-    this.#confirmationService.confirm({
+    this.confirmationService.confirm({
       header: 'Confirmation',
       message: 'Êtes-vous sûr de vouloir supprimer ce secteur ?',
       acceptLabel: 'Supprimer',

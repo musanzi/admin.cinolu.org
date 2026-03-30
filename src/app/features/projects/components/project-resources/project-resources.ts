@@ -43,9 +43,9 @@ import { RESOURCE_CATEGORY_LABELS, RESOURCE_CATEGORY_OPTIONS } from '../../types
 export class ProjectResources {
   projectId = input.required<string>();
   phases = input<IPhase[]>([]);
-  #fb = inject(FormBuilder);
-  #destroyRef = inject(DestroyRef);
-  #confirmationService = inject(ConfirmationService);
+  private readonly fb = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly confirmationService = inject(ConfirmationService);
   resourcesStore = inject(ResourcesStore);
   icons = { Plus, FileText, Pencil, Trash2, Eye, Upload, FolderOpen, FilePenLine };
   categoryOptions = RESOURCE_CATEGORY_OPTIONS;
@@ -60,14 +60,14 @@ export class ProjectResources {
   replaceTargetId = signal<string | null>(null);
   editingResourceId = signal<string | null>(null);
   showForm = signal(false);
-  resourceForm = this.#fb.group({
+  resourceForm = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(2)]],
     description: ['', Validators.required],
     category: [ResourceCategory.OTHER, Validators.required],
     scope: ['project', Validators.required],
     phase_id: ['']
   });
-  filtersForm = this.#fb.group({
+  filtersForm = this.fb.group({
     category: ['']
   });
   phaseOptions = computed<SelectOption[]>(() => [
@@ -82,7 +82,7 @@ export class ProjectResources {
   constructor() {
     this.filtersForm
       .get('category')
-      ?.valueChanges.pipe(takeUntilDestroyed(this.#destroyRef))
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((value) => {
         this.selectedCategory.set((value as ResourceCategory) || null);
         this.currentPage.set(1);
@@ -177,7 +177,7 @@ export class ProjectResources {
   }
 
   onDelete(resource: IResource): void {
-    this.#confirmationService.confirm({
+    this.confirmationService.confirm({
       header: 'Supprimer la ressource',
       message: `Êtes-vous sûr de vouloir supprimer « ${resource.title} » ?`,
       acceptLabel: 'Supprimer',

@@ -18,13 +18,13 @@ export class ProjectUpdate implements OnInit {
   programs = input.required<ISubprogram[]>();
   staff = input.required<IUser[]>();
   categories = input.required<ICategory[]>();
-  #fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
   updateProjectStore = inject(ProjectsStore);
   categoriesStore = inject(CategoriesStore);
   form: FormGroup;
 
   constructor() {
-    this.form = this.#fb.group({
+    this.form = this.fb.group({
       id: [''],
       name: ['', Validators.required],
       description: ['', Validators.required],

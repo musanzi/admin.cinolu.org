@@ -55,7 +55,7 @@ export class UiSelect implements ControlValueAccessor {
   createValue = signal('');
   filterTerm = signal('');
   isControlDisabled = signal(false);
-  #elementRef = inject(ElementRef);
+  private readonly elementRef = inject(ElementRef);
   constructor() {
     effect(() => {
       const modelValue = this.modelValue();
@@ -109,7 +109,7 @@ export class UiSelect implements ControlValueAccessor {
   canCreate = computed(() => this.createValue().trim().length > 0 && !this.createDisabled());
   isDisabled = computed(() => this.disabled() || this.isControlDisabled());
 
-  #onChangeCallback: (value: unknown) => void = () => undefined;
+  private onChangeCallback: (value: unknown) => void = () => undefined;
   onTouched: () => void = () => undefined;
 
   onDocumentClick(event: MouseEvent): void {
@@ -117,7 +117,7 @@ export class UiSelect implements ControlValueAccessor {
       return;
     }
     const target = event.target as HTMLElement;
-    const element = this.#elementRef.nativeElement;
+    const element = this.elementRef.nativeElement;
     if (!element.contains(target)) {
       this.isOpen.set(false);
       this.filterTerm.set('');
@@ -130,7 +130,7 @@ export class UiSelect implements ControlValueAccessor {
   }
 
   registerOnChange(fn: (value: unknown) => void): void {
-    this.#onChangeCallback = fn;
+    this.onChangeCallback = fn;
   }
 
   registerOnTouched(fn: () => void): void {
@@ -158,7 +158,7 @@ export class UiSelect implements ControlValueAccessor {
       return;
     }
     this.value.set(option.value);
-    this.#onChangeCallback(this.value());
+    this.onChangeCallback(this.value());
     this.valueChange.emit(this.value());
     this.isOpen.set(false);
     this.filterTerm.set('');

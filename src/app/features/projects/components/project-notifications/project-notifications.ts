@@ -18,7 +18,7 @@ import { NotificationState, NotificationsState, NotificationStatus, SubmitNotifi
 })
 export class ProjectNotifications {
   project = input.required<IProject>();
-  #confirmationService = inject(ConfirmationService);
+  private readonly confirmationService = inject(ConfirmationService);
   notificationsStore = inject(NotificationsStore);
   phasesStore = inject(PhasesStore);
   filterPhaseId = signal('');
@@ -151,7 +151,7 @@ export class ProjectNotifications {
   }
 
   onDelete(notification: INotification): void {
-    this.#confirmationService.confirm({
+    this.confirmationService.confirm({
       header: 'Supprimer la notification',
       message: `Êtes-vous sûr de vouloir supprimer « ${notification.title} » ?`,
       acceptLabel: 'Supprimer',

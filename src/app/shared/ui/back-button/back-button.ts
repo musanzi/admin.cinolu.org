@@ -10,9 +10,9 @@ import { ArrowLeft, LucideAngularModule } from 'lucide-angular';
 })
 export class BackButton {
   icons = { ArrowLeft };
-  #location = inject(Location);
+  private readonly location = inject(Location);
 
   onGoBack(): void {
-    this.#location.back();
+    this.location.back();
   }
 }

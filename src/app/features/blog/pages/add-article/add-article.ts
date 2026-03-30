@@ -12,13 +12,13 @@ import { TagsStore } from '../../store/tags.store';
   imports: [ReactiveFormsModule, UiButton, UiInput, UiTextarea, UiMultiSelect, UiDatepicker, UiTextEditor]
 })
 export class AddArticle {
-  #fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
   store = inject(ArticlesStore);
   tagsStore = inject(TagsStore);
   form: FormGroup;
 
   constructor() {
-    this.form = this.#fb.group({
+    this.form = this.fb.group({
       title: ['', Validators.required],
       published_at: [new Date(), Validators.required],
       content: ['', Validators.required],

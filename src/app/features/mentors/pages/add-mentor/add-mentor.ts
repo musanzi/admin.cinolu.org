@@ -16,7 +16,7 @@ import { CreateExperienceDto, CreateMentorDto } from '../../dto/mentors/create-m
   imports: [UiInput, UiDatepicker, UiSelect, UiMultiSelect, UiCheckbox, UiButton, ReactiveFormsModule]
 })
 export class AddMentor {
-  #fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
   store = inject(MentorsStore);
   expertisesStore = inject(ExpertisesStore);
 
@@ -27,7 +27,7 @@ export class AddMentor {
   isSearchingUsers = this.store.isSearchingUsers;
   currentUserSearchTerm = this.store.userSearchTerm;
   userSearchOptions = computed<SelectOption[]>(() => this.store.userSearchOptions());
-  form = this.#initForm();
+  form = this.initForm();
 
   constructor() {
     this.expertisesStore.loadUnpaginated();
@@ -38,7 +38,7 @@ export class AddMentor {
   }
 
   addExperience(): void {
-    this.experiences.push(this.#buildExperienceForm());
+    this.experiences.push(this.buildExperienceForm());
   }
 
   removeExperience(index: number): void {
@@ -51,7 +51,7 @@ export class AddMentor {
       markAllAsTouched(this.form);
       return;
     }
-    this.store.create(this.#buildPayload());
+    this.store.create(this.buildPayload());
   }
 
   onCreateExpertise(name: string): void {
@@ -78,17 +78,17 @@ export class AddMentor {
     });
   }
 
-  #initForm(): FormGroup {
-    return this.#fb.group({
+  private initForm(): FormGroup {
+    return this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       years_experience: [0, [Validators.required, Validators.min(0)]],
       expertises: [[], Validators.required],
       type: [''],
-      experiences: this.#fb.array([this.#buildExperienceForm()])
+      experiences: this.fb.array([this.buildExperienceForm()])
     });
   }
 
-  #buildExperienceForm(
+  private buildExperienceForm(
     experience?: Partial<{
       id: string;
       company_name: string;
@@ -98,7 +98,7 @@ export class AddMentor {
       end_date?: Date | string;
     }>
   ): FormGroup {
-    return this.#fb.group({
+    return this.fb.group({
       id: [experience?.id ?? ''],
       company_name: [experience?.company_name ?? '', Validators.required],
       job_title: [experience?.job_title ?? '', Validators.required],
@@ -108,7 +108,7 @@ export class AddMentor {
     });
   }
 
-  #buildPayload(): CreateMentorDto {
+  private buildPayload(): CreateMentorDto {
     const value = this.form.value;
     const toApiDate = (val: unknown): string | undefined => {
       if (!val) return undefined;

@@ -17,7 +17,7 @@ import { UiButton, UiDatepicker, UiInput, UiMultiSelect, UiSelect, UiTextarea } 
 })
 export class EventUpdate implements OnInit {
   event = input.required<IEvent>();
-  #fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
   store = inject(EventsStore);
   categoriesStore = inject(CategoriesStore);
   programsStore = inject(SubprogramsStore);
@@ -25,7 +25,7 @@ export class EventUpdate implements OnInit {
   form: FormGroup;
 
   constructor() {
-    this.form = this.#fb.group({
+    this.form = this.fb.group({
       id: ['', Validators.required],
       name: ['', Validators.required],
       place: [''],

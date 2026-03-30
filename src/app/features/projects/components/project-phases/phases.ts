@@ -40,10 +40,10 @@ import { PhaseSkeleton } from '@features/projects/ui/phase-skeleton/phase-skelet
 })
 export class Phases implements OnInit {
   projectId = input.required<string>();
-  #confirmationService = inject(ConfirmationService);
-  #fb = inject(FormBuilder);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly fb = inject(FormBuilder);
   phasesStore = inject(PhasesStore);
-  form = this.#buildForm();
+  form = this.buildForm();
   phaseId = signal<string | null>(null);
   showForm = signal(false);
   icons = { Plus, Pencil, Trash2, Calendar, FileText };
@@ -62,20 +62,20 @@ export class Phases implements OnInit {
     this.phasesStore.loadMentors();
   }
 
-  #buildForm(): FormGroup {
-    return this.#fb.group({
+  private buildForm(): FormGroup {
+    return this.fb.group({
       id: [null as string | null],
       name: ['', [Validators.required, Validators.minLength(2)]],
       description: ['', Validators.required],
       started_at: [null, Validators.required],
       ended_at: [null, Validators.required],
       mentors: [[]],
-      deliverables: this.#fb.array([])
+      deliverables: this.fb.array([])
     });
   }
 
-  #buildDeliverableForm(deliverable?: DeliverableDto): FormGroup {
-    return this.#fb.group({
+  private buildDeliverableForm(deliverable?: DeliverableDto): FormGroup {
+    return this.fb.group({
       title: [deliverable?.title ?? '', [Validators.required, Validators.minLength(2)]],
       description: [deliverable?.description ?? undefined]
     });
@@ -86,19 +86,19 @@ export class Phases implements OnInit {
   }
 
   addDeliverable(deliverable?: DeliverableDto): void {
-    this.deliverables.push(this.#buildDeliverableForm(deliverable));
+    this.deliverables.push(this.buildDeliverableForm(deliverable));
   }
 
   removeDeliverable(index: number): void {
     this.deliverables.removeAt(index);
   }
 
-  #setDeliverables(deliverables: DeliverableDto[]): void {
+  private setDeliverables(deliverables: DeliverableDto[]): void {
     this.deliverables.clear();
-    deliverables.forEach((deliverable) => this.deliverables.push(this.#buildDeliverableForm(deliverable)));
+    deliverables.forEach((deliverable) => this.deliverables.push(this.buildDeliverableForm(deliverable)));
   }
 
-  #buildPayload(): PhaseDto {
+  private buildPayload(): PhaseDto {
     const formValue = this.form.getRawValue();
     const deliverables = (formValue.deliverables as DeliverableDto[])
       .filter((d) => d.title?.length)
@@ -107,14 +107,14 @@ export class Phases implements OnInit {
     return { ...formValue, mentors, deliverables };
   }
 
-  #resetForm(): void {
+  private resetForm(): void {
     this.phaseId.set(null);
     this.form.reset({ mentors: [] });
     this.deliverables.clear();
   }
 
   onCreateClick(): void {
-    this.#resetForm();
+    this.resetForm();
     this.showForm.set(true);
   }
 
@@ -128,17 +128,17 @@ export class Phases implements OnInit {
       started_at: parseDate(phase.started_at),
       ended_at: parseDate(phase.ended_at)
     });
-    this.#setDeliverables((phase.deliverables ?? []).map((d) => ({ title: d.title, description: d.description })));
+    this.setDeliverables((phase.deliverables ?? []).map((d) => ({ title: d.title, description: d.description })));
   }
 
   onCancelForm(): void {
     this.showForm.set(false);
-    this.#resetForm();
+    this.resetForm();
   }
 
   onSubmit(): void {
     if (this.form.invalid) return;
-    const payload = this.#buildPayload();
+    const payload = this.buildPayload();
     if (this.phaseId()) {
       this.phasesStore.update({
         dto: { ...payload, id: this.phaseId()! },
@@ -154,7 +154,7 @@ export class Phases implements OnInit {
   }
 
   onDelete(phase: IPhase): void {
-    this.#confirmationService.confirm({
+    this.confirmationService.confirm({
       header: 'Confirmer la suppression',
       message: `Êtes-vous sûr de vouloir supprimer la phase « ${phase.name} » ?`,
       acceptLabel: 'Supprimer',

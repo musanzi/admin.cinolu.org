@@ -29,27 +29,27 @@ import { UiInput } from '@shared/ui/form/input/input';
   ]
 })
 export class EventCategories {
-  #route = inject(ActivatedRoute);
-  #fb = inject(FormBuilder);
-  #confirmationService = inject(ConfirmationService);
-  #destroyRef = inject(DestroyRef);
+  private readonly route = inject(ActivatedRoute);
+  private readonly fb = inject(FormBuilder);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly destroyRef = inject(DestroyRef);
   store = inject(CategoriesStore);
   queryParams = signal<FilterEventCategoriesDto>({
-    page: this.#route.snapshot.queryParamMap.get('page'),
-    q: this.#route.snapshot.queryParamMap.get('q')
+    page: this.route.snapshot.queryParamMap.get('page'),
+    q: this.route.snapshot.queryParamMap.get('q')
   });
   icons = { Pencil, Trash, Search, Funnel };
   itemsPerPage = 20;
   isCreating = signal(false);
   editingCategoryId = signal<string | null>(null);
   currentPage = computed(() => Number(this.queryParams().page) || 1);
-  searchForm: FormGroup = this.#fb.group({
+  searchForm: FormGroup = this.fb.group({
     q: [this.queryParams().q || '']
   });
-  createForm: FormGroup = this.#fb.group({
+  createForm: FormGroup = this.fb.group({
     name: ['', Validators.required]
   });
-  updateForm: FormGroup = this.#fb.group({
+  updateForm: FormGroup = this.fb.group({
     name: ['', Validators.required]
   });
 
@@ -59,7 +59,7 @@ export class EventCategories {
     });
     const searchValue = this.searchForm.get('q');
     searchValue?.valueChanges
-      .pipe(debounceTime(1000), distinctUntilChanged(), takeUntilDestroyed(this.#destroyRef))
+      .pipe(debounceTime(1000), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe((searchValue: string) => {
         this.queryParams.update((qp) => ({ ...qp, q: searchValue, page: null }));
       });
@@ -123,7 +123,7 @@ export class EventCategories {
   }
 
   onDelete(categoryId: string): void {
-    this.#confirmationService.confirm({
+    this.confirmationService.confirm({
       header: 'Confirmer la suppression',
       message: 'Êtes-vous sûr de vouloir supprimer cette catégorie ?',
       acceptLabel: 'Supprimer',

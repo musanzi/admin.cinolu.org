@@ -43,12 +43,12 @@ import { DatePipe } from '@angular/common';
   ]
 })
 export class ListSubprograms implements OnInit {
-  #fb = inject(FormBuilder);
-  #confirmationService = inject(ConfirmationService);
+  private readonly fb = inject(FormBuilder);
+  private readonly confirmationService = inject(ConfirmationService);
   readonly store = inject(SubprogramsStore);
   programs = input<Program[]>([]);
   programId = input.required<string>();
-  form = this.#fb.nonNullable.group({
+  form = this.fb.nonNullable.group({
     programId: ['', Validators.required],
     name: ['', Validators.required],
     description: ['', Validators.required]
@@ -151,7 +151,7 @@ export class ListSubprograms implements OnInit {
   }
 
   onDelete(subprogramId: string): void {
-    this.#confirmationService.confirm({
+    this.confirmationService.confirm({
       header: 'Confirmation',
       message: 'Êtes-vous sûr de vouloir supprimer ce sous-programme ?',
       acceptLabel: 'Supprimer',

@@ -39,12 +39,12 @@ import { UiTableSkeleton } from '@shared/ui/table-skeleton/table-skeleton';
 })
 export class ProjectParticipationDetails implements OnDestroy {
   participationId = input.required<string>();
-  #fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
   store = inject(ParticipationsStore);
   back = output<void>();
   selectedReviewId = signal<string | null>(null);
   icons = { ArrowLeft, CheckCheck, PencilLine, X };
-  reviewForm = this.#fb.group({
+  reviewForm = this.fb.group({
     phaseId: ['', Validators.required],
     score: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
     message: [''],

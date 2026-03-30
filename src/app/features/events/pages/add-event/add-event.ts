@@ -14,7 +14,7 @@ import { UiButton, UiDatepicker, UiInput, UiMultiSelect, UiSelect, UiTextarea } 
   imports: [UiSelect, UiMultiSelect, UiButton, UiTextarea, UiInput, UiDatepicker, ReactiveFormsModule]
 })
 export class AddEventComponent {
-  #fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
   store = inject(EventsStore);
   categoriesStore = inject(CategoriesStore);
   programsStore = inject(SubprogramsStore);
@@ -22,7 +22,7 @@ export class AddEventComponent {
   form: FormGroup;
 
   constructor() {
-    this.form = this.#fb.group({
+    this.form = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
       place: [''],

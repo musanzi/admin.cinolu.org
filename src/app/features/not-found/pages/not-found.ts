@@ -12,10 +12,10 @@ import { UiButton } from '@ui';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotFoundPage {
-  #location = inject(Location);
+  private readonly location = inject(Location);
   icons = { SearchX, House, ArrowLeft };
 
   goBack(): void {
-    this.#location.back();
+    this.location.back();
   }
 }

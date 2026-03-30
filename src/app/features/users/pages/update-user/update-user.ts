@@ -28,18 +28,18 @@ import { UserNotFoundPlaceholder } from '../../ui/user-not-found-placeholder/use
   ]
 })
 export class UpdateUser implements OnInit {
-  #route = inject(ActivatedRoute);
-  #email = this.#route.snapshot.params['email'];
+  private readonly route = inject(ActivatedRoute);
+  private readonly email = this.route.snapshot.params['email'];
   usersStore = inject(UsersStore);
-  #fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
   store = inject(UsersStore);
   rolesStore = inject(RolesStore);
   genders = GENDERS;
-  form = this.#initForm();
+  form = this.initForm();
   user = computed(() => this.usersStore.user());
 
   ngOnInit(): void {
-    this.usersStore.loadOne(this.#email);
+    this.usersStore.loadOne(this.email);
     this.rolesStore.loadUnpaginated();
   }
 
@@ -47,12 +47,12 @@ export class UpdateUser implements OnInit {
     effect(() => {
       const user = this.user();
       if (!user) return;
-      this.#patchForm(user);
+      this.patchForm(user);
     });
   }
 
-  #initForm(): FormGroup {
-    return this.#fb.group({
+  private initForm(): FormGroup {
+    return this.fb.group({
       email: ['', [Validators.required]],
       name: ['', Validators.required],
       phone_number: [''],
@@ -65,7 +65,7 @@ export class UpdateUser implements OnInit {
     });
   }
 
-  #patchForm(user: IUser): void {
+  private patchForm(user: IUser): void {
     this.form.reset({
       ...user,
       birth_date: parseDate(user.birth_date),

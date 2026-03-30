@@ -26,20 +26,20 @@ import { bindSearchControlToQuery, toPageQueryValue } from '@shared/helpers';
   ]
 })
 export class ListMentors {
-  #route = inject(ActivatedRoute);
-  #fb = inject(FormBuilder);
-  #destroyRef = inject(DestroyRef);
+  private readonly route = inject(ActivatedRoute);
+  private readonly fb = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
   store = inject(MentorsStore);
   itemsPerPage = 20;
   icons = { Eye, Search, Funnel, CircleCheckBig, CircleX, Pencil };
   queryParams = signal<FilterMentorsProfileDto>({
-    page: this.#route.snapshot.queryParamMap.get('page'),
-    q: this.#route.snapshot.queryParamMap.get('q'),
-    status: (this.#route.snapshot.queryParamMap.get('status') as MentorStatus) || null
+    page: this.route.snapshot.queryParamMap.get('page'),
+    q: this.route.snapshot.queryParamMap.get('q'),
+    status: (this.route.snapshot.queryParamMap.get('status') as MentorStatus) || null
   });
   activeTab = computed(() => this.queryParams().status || 'all');
   currentPage = computed(() => Number(this.queryParams().page) || 1);
-  searchForm: FormGroup = this.#fb.group({
+  searchForm: FormGroup = this.fb.group({
     q: [this.queryParams().q || '']
   });
   tabsConfig = signal([
@@ -53,7 +53,7 @@ export class ListMentors {
     effect(() => {
       this.store.loadAll(this.queryParams());
     });
-    bindSearchControlToQuery(this.searchForm.get('q'), this.queryParams, this.#destroyRef, 1000);
+    bindSearchControlToQuery(this.searchForm.get('q'), this.queryParams, this.destroyRef, 1000);
   }
 
   onTabChange(tabName: string): void {

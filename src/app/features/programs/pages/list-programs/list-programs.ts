@@ -33,17 +33,17 @@ import { DatePipe } from '@angular/common';
   ]
 })
 export class ListPrograms {
-  #route = inject(ActivatedRoute);
-  #confirmationService = inject(ConfirmationService);
-  #destroyRef = inject(DestroyRef);
-  #fb = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly fb = inject(FormBuilder);
   store = inject(ProgramsStore);
   queryParams = signal<FilterProgramsDto>({
-    page: this.#route.snapshot.queryParamMap.get('page'),
-    q: this.#route.snapshot.queryParamMap.get('q'),
-    filter: this.#route.snapshot.queryParamMap.get('filter')
+    page: this.route.snapshot.queryParamMap.get('page'),
+    q: this.route.snapshot.queryParamMap.get('q'),
+    filter: this.route.snapshot.queryParamMap.get('filter')
   });
-  searchForm: FormGroup = this.#fb.group({
+  searchForm: FormGroup = this.fb.group({
     q: [this.queryParams().q || '']
   });
   icons = { Trash, Search, Funnel, Eye };
@@ -67,7 +67,7 @@ export class ListPrograms {
     });
     const searchValue = this.searchForm.get('q');
     searchValue?.valueChanges
-      .pipe(debounceTime(1000), distinctUntilChanged(), takeUntilDestroyed(this.#destroyRef))
+      .pipe(debounceTime(1000), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe((searchValue: string) => {
         this.queryParams.update((qp) => ({ ...qp, q: searchValue, page: null }));
       });
@@ -101,7 +101,7 @@ export class ListPrograms {
   }
 
   onDelete(roleId: string): void {
-    this.#confirmationService.confirm({
+    this.confirmationService.confirm({
       header: 'Confirmer la suppression',
       message: 'Etes-vous sûr de vouloir supprimer ce programme ?',
       acceptLabel: 'Supprimer',

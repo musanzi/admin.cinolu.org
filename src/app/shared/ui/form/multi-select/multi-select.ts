@@ -48,7 +48,7 @@ export class UiMultiSelect implements ControlValueAccessor {
   isOpen = signal(false);
   createValue = signal('');
   checkboxValues: Record<string, boolean> = {};
-  #elementRef = inject(ElementRef);
+  private readonly elementRef = inject(ElementRef);
 
   constructor() {
     effect(() => {
@@ -62,7 +62,7 @@ export class UiMultiSelect implements ControlValueAccessor {
       return;
     }
     const target = event.target as HTMLElement;
-    const element = this.#elementRef.nativeElement;
+    const element = this.elementRef.nativeElement;
     if (!element.contains(target)) {
       this.isOpen.set(false);
     }

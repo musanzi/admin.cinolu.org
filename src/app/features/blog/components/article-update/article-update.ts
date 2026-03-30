@@ -14,13 +14,13 @@ import { TagsStore } from '../../store/tags.store';
 })
 export class ArticleUpdate implements OnInit {
   article = input.required<IArticle>();
-  #fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
   updateStore = inject(ArticlesStore);
   tagsStore = inject(TagsStore);
   form: FormGroup;
 
   constructor() {
-    this.form = this.#fb.group({
+    this.form = this.fb.group({
       id: ['', Validators.required],
       title: ['', Validators.required],
       published_at: [null as Date | null, Validators.required],

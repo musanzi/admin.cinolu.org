@@ -15,15 +15,15 @@ import { environment } from '@env/environment';
   imports: [ReactiveFormsModule, NgOptimizedImage, UiInput, UiPassword, UiButton]
 })
 export class SignIn {
-  #formBuilder: FormBuilder = inject(FormBuilder);
-  #route = inject(ActivatedRoute);
+  private readonly formBuilder: FormBuilder = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
   form: FormGroup;
   store = inject(SignInStore);
   authStore = inject(AuthStore);
   isCheckingAuth = signal(true);
 
   constructor() {
-    this.form = this.#formBuilder.group({
+    this.form = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
@@ -35,7 +35,7 @@ export class SignIn {
 
   onSignIn(): void {
     if (this.form.invalid) return;
-    const redirectPath = this.#route.snapshot.queryParamMap.get('redirect');
+    const redirectPath = this.route.snapshot.queryParamMap.get('redirect');
     this.store.signIn({
       payload: this.form.value,
       redirectPath: redirectPath || '/dashboard',

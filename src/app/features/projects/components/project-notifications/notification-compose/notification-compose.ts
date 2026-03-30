@@ -19,11 +19,11 @@ export class NotificationCompose {
   saveDraft = output<SubmitNotification>();
   sendNotification = output<SubmitNotification>();
   deleteNotification = output<INotification>();
-  #fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
   attachments = signal<AttachmentPreview[]>([]);
   icons = { CircleAlert, Paperclip, Send, Trash2, X, RotateCcw };
   actionLoading = signal<'save' | 'send' | null>(null);
-  form = this.#fb.nonNullable.group({
+  form = this.fb.nonNullable.group({
     title: ['', [Validators.required, Validators.minLength(3)]],
     body: ['', [Validators.required, Validators.minLength(10)]],
     phase_id: [''],
@@ -83,14 +83,14 @@ export class NotificationCompose {
   onSaveDraft(): void {
     if (this.form.invalid || !this.state().isEditable) return;
     this.actionLoading.set('save');
-    this.saveDraft.emit(this.#buildPayload());
+    this.saveDraft.emit(this.buildPayload());
   }
 
   onSend(): void {
     const active = this.state().activeNotification;
     if (active?.status !== 'sent' && (this.form.invalid || !this.state().isEditable)) return;
     this.actionLoading.set('send');
-    this.sendNotification.emit(this.#buildPayload());
+    this.sendNotification.emit(this.buildPayload());
   }
 
   onDelete(): void {
@@ -104,7 +104,7 @@ export class NotificationCompose {
     return `${environment.apiUrl}uploads/notifications/${filename}`;
   }
 
-  #buildPayload(): SubmitNotification {
+  private buildPayload(): SubmitNotification {
     const { title, body, phase_id, notify_mentors, notify_staff } = this.form.getRawValue();
     return {
       dto: {

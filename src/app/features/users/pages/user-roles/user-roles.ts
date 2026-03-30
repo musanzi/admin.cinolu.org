@@ -30,26 +30,26 @@ import { ConfirmationService } from '@shared/services/confirmation';
   ]
 })
 export class UserRoles {
-  #route = inject(ActivatedRoute);
-  #fb = inject(FormBuilder);
-  #confirmationService = inject(ConfirmationService);
-  #destroyRef = inject(DestroyRef);
+  private readonly route = inject(ActivatedRoute);
+  private readonly fb = inject(FormBuilder);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly destroyRef = inject(DestroyRef);
   store = inject(RolesStore);
   queryParams = signal<FilterRolesDto>({
-    page: this.#route.snapshot.queryParamMap.get('page'),
-    q: this.#route.snapshot.queryParamMap.get('q')
+    page: this.route.snapshot.queryParamMap.get('page'),
+    q: this.route.snapshot.queryParamMap.get('q')
   });
   icons = { Pencil, Trash, Search, Funnel };
   itemsPerPage = 10;
   isCreating = signal(false);
   editingRoleId = signal<string | null>(null);
-  searchForm: FormGroup = this.#fb.group({
+  searchForm: FormGroup = this.fb.group({
     q: [this.queryParams().q || '']
   });
-  createForm: FormGroup = this.#fb.group({
+  createForm: FormGroup = this.fb.group({
     name: ['', Validators.required]
   });
-  updateForm: FormGroup = this.#fb.group({
+  updateForm: FormGroup = this.fb.group({
     name: ['', Validators.required]
   });
   currentPage = computed(() => Number(this.queryParams().page) || 1);
@@ -60,7 +60,7 @@ export class UserRoles {
     });
     const searchValue = this.searchForm.get('q');
     searchValue?.valueChanges
-      .pipe(debounceTime(1000), distinctUntilChanged(), takeUntilDestroyed(this.#destroyRef))
+      .pipe(debounceTime(1000), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe((searchValue: string) => {
         this.queryParams.update((qp) => ({ ...qp, q: searchValue, page: null }));
       });
@@ -124,7 +124,7 @@ export class UserRoles {
   }
 
   onDelete(roleId: string): void {
-    this.#confirmationService.confirm({
+    this.confirmationService.confirm({
       header: 'Confirmation',
       message: 'Êtes-vous sûr de vouloir supprimer ce rôle ?',
       acceptLabel: 'Supprimer',

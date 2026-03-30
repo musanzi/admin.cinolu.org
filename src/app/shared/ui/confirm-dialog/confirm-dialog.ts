@@ -11,16 +11,16 @@ import { ConfirmationService } from '@shared/services/confirmation';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UiConfirmDialog {
-  #confirmationService = inject(ConfirmationService);
+  private readonly confirmationService = inject(ConfirmationService);
   icons = { X, CircleAlert };
-  confirmation = this.#confirmationService.getConfirmation;
+  confirmation = this.confirmationService.getConfirmation;
 
   onAccept(): void {
     const config = this.confirmation();
     if (config?.accept) {
       config.accept();
     }
-    this.#confirmationService.close();
+    this.confirmationService.close();
   }
 
   onReject(): void {
@@ -28,6 +28,6 @@ export class UiConfirmDialog {
     if (config?.reject) {
       config.reject();
     }
-    this.#confirmationService.close();
+    this.confirmationService.close();
   }
 }

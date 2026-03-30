@@ -32,17 +32,17 @@ import { bindSearchControlToQuery, toPageQueryValue } from '@shared/helpers';
   ]
 })
 export class ListProjects {
-  #route = inject(ActivatedRoute);
-  #confirmationService = inject(ConfirmationService);
-  #destroyRef = inject(DestroyRef);
-  #fb = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly fb = inject(FormBuilder);
   store = inject(ProjectsStore);
   queryParams = signal<FilterProjectsDto>({
-    page: this.#route.snapshot.queryParamMap.get('page'),
-    q: this.#route.snapshot.queryParamMap.get('q'),
-    filter: this.#route.snapshot.queryParamMap.get('filter')
+    page: this.route.snapshot.queryParamMap.get('page'),
+    q: this.route.snapshot.queryParamMap.get('q'),
+    filter: this.route.snapshot.queryParamMap.get('filter')
   });
-  searchForm: FormGroup = this.#fb.group({
+  searchForm: FormGroup = this.fb.group({
     q: [this.queryParams().q || '']
   });
   icons = { Trash, Search, Funnel, Eye };
@@ -64,7 +64,7 @@ export class ListProjects {
     effect(() => {
       this.updateRouteAndProjects();
     });
-    bindSearchControlToQuery(this.searchForm.get('q'), this.queryParams, this.#destroyRef, 1000);
+    bindSearchControlToQuery(this.searchForm.get('q'), this.queryParams, this.destroyRef, 1000);
   }
 
   onTabChange(tabName: string): void {
@@ -90,7 +90,7 @@ export class ListProjects {
   }
 
   onDelete(projectId: string): void {
-    this.#confirmationService.confirm({
+    this.confirmationService.confirm({
       header: 'Confirmer la suppression',
       message: 'Etes-vous sûr de vouloir supprimer ce projet ?',
       acceptLabel: 'Supprimer',

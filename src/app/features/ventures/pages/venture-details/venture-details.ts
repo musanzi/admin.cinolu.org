@@ -44,9 +44,9 @@ import { VentureSkeleton } from '@features/ventures/ui/venture-skeleton/venture-
   ]
 })
 export class VentureDetails implements OnInit {
-  #route = inject(ActivatedRoute);
-  #confirmationService = inject(ConfirmationService);
-  #slug = this.#route.snapshot.params['slug'];
+  private readonly route = inject(ActivatedRoute);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly slug = this.route.snapshot.params['slug'];
   store = inject(VenturesStore);
 
   selectedProductGallery = signal<{ product: IProduct; index: number } | null>(null);
@@ -69,14 +69,14 @@ export class VentureDetails implements OnInit {
   };
 
   ngOnInit(): void {
-    this.store.loadOne(this.#slug);
+    this.store.loadOne(this.slug);
   }
 
   onTogglePublish(): void {
     const venture = this.store.venture();
     if (!venture) return;
     const action = venture.is_published ? 'dépublier' : 'publier';
-    this.#confirmationService.confirm({
+    this.confirmationService.confirm({
       header: `Confirmer la ${action}`,
       message: `Êtes-vous sûr de vouloir ${action} "${venture.name}" ?`,
       acceptLabel: action === 'publier' ? 'Publier' : 'Dépublier',

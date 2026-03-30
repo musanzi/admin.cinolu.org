@@ -34,8 +34,8 @@ export class UiDatepicker implements ControlValueAccessor {
   currentViewDate = signal<Date>(new Date());
   icons = { Calendar, ChevronLeft, ChevronRight };
 
-  #onChangeCallback: (value: Date | null) => void = () => undefined;
-  #onTouchedCallback: () => void = () => undefined;
+  private onChangeCallback: (value: Date | null) => void = () => undefined;
+  private onTouchedCallback: () => void = () => undefined;
 
   writeValue(value: Date | string | null): void {
     if (value) {
@@ -48,11 +48,11 @@ export class UiDatepicker implements ControlValueAccessor {
   }
 
   registerOnChange(fn: (value: Date | null) => void): void {
-    this.#onChangeCallback = fn;
+    this.onChangeCallback = fn;
   }
 
   registerOnTouched(fn: () => void): void {
-    this.#onTouchedCallback = fn;
+    this.onTouchedCallback = fn;
   }
 
   setDisabledState(isDisabled: boolean): void {
@@ -164,14 +164,14 @@ export class UiDatepicker implements ControlValueAccessor {
 
   closeCalendar(): void {
     this.isOpen.set(false);
-    this.#onTouchedCallback();
+    this.onTouchedCallback();
   }
 
   selectYear(year: number): void {
     const newDate = this.withUpdatedYearMonth(year, this.currentViewDate().getMonth());
     this.currentViewDate.set(newDate);
     this.selectedDate.set(newDate);
-    this.#onChangeCallback(newDate);
+    this.onChangeCallback(newDate);
     this.closeCalendar();
   }
 
@@ -181,7 +181,7 @@ export class UiDatepicker implements ControlValueAccessor {
 
     if (this.view() === 'month') {
       this.selectedDate.set(newDate);
-      this.#onChangeCallback(newDate);
+      this.onChangeCallback(newDate);
       this.closeCalendar();
     }
   }
@@ -190,7 +190,7 @@ export class UiDatepicker implements ControlValueAccessor {
     const newDate = new Date(this.currentViewDate());
     newDate.setDate(day);
     this.selectedDate.set(newDate);
-    this.#onChangeCallback(newDate);
+    this.onChangeCallback(newDate);
     this.closeCalendar();
   }
 

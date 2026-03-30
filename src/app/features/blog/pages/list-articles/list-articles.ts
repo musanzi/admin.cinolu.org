@@ -34,21 +34,21 @@ import { bindSearchControlToQuery, toPageQueryValue } from '@shared/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListArticles {
-  #route = inject(ActivatedRoute);
-  #fb = inject(FormBuilder);
-  #confirmationService = inject(ConfirmationService);
-  #destroyRef = inject(DestroyRef);
+  private readonly route = inject(ActivatedRoute);
+  private readonly fb = inject(FormBuilder);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly destroyRef = inject(DestroyRef);
   store = inject(ArticlesStore);
   itemsPerPage = 20;
   icons = { Pencil, Trash, Search, Plus, Eye, Funnel };
   queryParams = signal<FilterArticleDto>({
-    page: this.#route.snapshot.queryParamMap.get('page'),
-    q: this.#route.snapshot.queryParamMap.get('q'),
-    filter: (this.#route.snapshot.queryParamMap.get('filter') as FilterArticleDto['filter']) || 'all'
+    page: this.route.snapshot.queryParamMap.get('page'),
+    q: this.route.snapshot.queryParamMap.get('q'),
+    filter: (this.route.snapshot.queryParamMap.get('filter') as FilterArticleDto['filter']) || 'all'
   });
   activeTab = computed(() => this.queryParams().filter || 'all');
   currentPage = computed(() => Number(this.queryParams().page) || 1);
-  searchForm: FormGroup = this.#fb.group({
+  searchForm: FormGroup = this.fb.group({
     q: [this.queryParams().q || '']
   });
   tabsConfig = signal([
@@ -62,7 +62,7 @@ export class ListArticles {
     effect(() => {
       this.store.loadAll(this.queryParams());
     });
-    bindSearchControlToQuery(this.searchForm.get('q'), this.queryParams, this.#destroyRef, 1000);
+    bindSearchControlToQuery(this.searchForm.get('q'), this.queryParams, this.destroyRef, 1000);
   }
 
   onTabChange(tabName: string): void {
@@ -88,7 +88,7 @@ export class ListArticles {
   }
 
   onDelete(articleId: string): void {
-    this.#confirmationService.confirm({
+    this.confirmationService.confirm({
       header: 'Confirmation',
       message: 'Êtes-vous sûr de vouloir supprimer cet article ?',
       acceptLabel: 'Supprimer',

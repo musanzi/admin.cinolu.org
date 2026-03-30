@@ -18,8 +18,8 @@ import { LucideAngularModule } from 'lucide-angular';
   imports: [UiTabs, EventSheet, EventGalleryComponent, EventUpdate, EventDetailsSkeleton, LucideAngularModule, UiButton]
 })
 export class EventDetails implements OnInit {
-  #route = inject(ActivatedRoute);
-  #slug = this.#route.snapshot.params['slug'];
+  private readonly route = inject(ActivatedRoute);
+  private readonly slug = this.route.snapshot.params['slug'];
   eventsStore = inject(EventsStore);
   galleryStore = inject(GalleryStore);
   activeTab = signal('details');
@@ -30,8 +30,8 @@ export class EventDetails implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.eventsStore.loadOne(this.#slug);
-    this.galleryStore.loadAll(this.#slug);
+    this.eventsStore.loadOne(this.slug);
+    this.galleryStore.loadAll(this.slug);
   }
 
   onTabChange(tab: string): void {
@@ -43,11 +43,11 @@ export class EventDetails implements OnInit {
   }
 
   onCoverUploaded(): void {
-    this.eventsStore.loadOne(this.#slug);
+    this.eventsStore.loadOne(this.slug);
   }
 
   onGalleryUploaded(): void {
-    this.galleryStore.loadAll(this.#slug);
+    this.galleryStore.loadAll(this.slug);
   }
 
   onShowcase(): void {

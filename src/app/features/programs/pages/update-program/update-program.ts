@@ -30,8 +30,8 @@ import { UiButton, UiSelect, UiTextarea } from '@shared/ui';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UpdateProgram implements OnInit {
-  #route = inject(ActivatedRoute);
-  #fb = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
+  private readonly fb = inject(FormBuilder);
   store = inject(ProgramsStore);
   categoriesStore = inject(ProgramCategoriesStore);
   sectorsStore = inject(ProgramSectorsStore);
@@ -41,19 +41,19 @@ export class UpdateProgram implements OnInit {
     { label: 'Modifier le programme', name: 'edit', icon: SquarePen },
     { label: 'Sous programmes', name: 'subprograms', icon: Tag }
   ];
-  updateForm: FormGroup = this.#fb.group({
+  updateForm: FormGroup = this.fb.group({
     id: ['', Validators.required],
     name: ['', Validators.required],
     description: ['', Validators.required],
     category: ['', Validators.required],
     sector: ['', Validators.required]
   });
-  slug = this.#route.snapshot.params['slug'];
+  slug = this.route.snapshot.params['slug'];
 
   constructor() {
     effect(() => {
       const program = this.store.program();
-      if (program) this.#patchForm(program);
+      if (program) this.patchForm(program);
     });
   }
 
@@ -64,7 +64,7 @@ export class UpdateProgram implements OnInit {
     this.sectorsStore.loadAll();
   }
 
-  #patchForm(program: Program | null): void {
+  private patchForm(program: Program | null): void {
     if (!program) return;
     this.updateForm.patchValue({
       ...program,

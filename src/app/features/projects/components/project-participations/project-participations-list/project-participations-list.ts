@@ -53,18 +53,18 @@ function toPhaseOptions(phases: IPhase[]): SelectOption[] {
 })
 export class ProjectParticipationsList {
   project = input.required<IProject>();
-  #fb = inject(FormBuilder);
-  #toast = inject(ToastrService);
+  private readonly fb = inject(FormBuilder);
+  private readonly toast = inject(ToastrService);
   store = inject(ParticipationsStore);
   projectStore = inject(ProjectsStore);
   selectParticipation = output<string>();
   csvFileInput = viewChild<ElementRef<HTMLInputElement>>('csvFileInput');
   queryParams = signal<FilterParticipationsDto>({ page: null, phaseId: null });
   selectedIds = signal<string[]>([]);
-  filtersForm = this.#fb.group({
+  filtersForm = this.fb.group({
     phaseId: ['']
   });
-  batchForm = this.#fb.group({
+  batchForm = this.fb.group({
     phaseId: ['', Validators.required]
   });
   icons = { Upload, RefreshCcw, ArrowRight, X, Search, Download };
@@ -126,7 +126,7 @@ export class ProjectParticipationsList {
     }
 
     if (!file.name.toLowerCase().endsWith('.csv')) {
-      this.#toast.showError('Le fichier doit être au format CSV');
+      this.toast.showError('Le fichier doit être au format CSV');
       return;
     }
 
@@ -176,7 +176,7 @@ export class ProjectParticipationsList {
 
   runBatchAction(mode: 'move' | 'remove'): void {
     if (!this.selectedIds().length) {
-      this.#toast.showError('Sélectionnez au moins une participation');
+      this.toast.showError('Sélectionnez au moins une participation');
       return;
     }
 

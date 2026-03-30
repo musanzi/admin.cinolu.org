@@ -16,12 +16,12 @@ import { UiButton, UiInput, UiSelect, UiTextarea } from '@shared/ui';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddProgramPage {
-  #fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
   store = inject(ProgramsStore);
   categoriesStore = inject(CategoriesStore);
   sectorsStore = inject(ProgramSectorsStore);
   icons = { alert: CircleAlert };
-  form = this.#fb.group({
+  form = this.fb.group({
     name: ['', Validators.required],
     description: ['', Validators.required],
     category: ['', Validators.required],

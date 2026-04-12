@@ -1,4 +1,4 @@
-import { LucideIconData } from 'lucide-angular';
+import type { LucideIconData } from '@shared/data';
 
 export interface ILink {
   name: string;

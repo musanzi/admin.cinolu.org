@@ -4,7 +4,8 @@ import { Sidebar } from '../../components/sidebar/sidebar';
 import { BackButton } from '@shared/ui/back-button/back-button';
 import { UiAvatar } from '@ui';
 import { AuthStore } from '@core/auth';
-import { ChevronDown, LogOut, User, LucideAngularModule } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { ADMIN_LAYOUT_ICONS } from '@shared/data';
 import { ApiImgPipe } from '../../../shared/pipes/api-img.pipe';
 import { MobileMenu } from '../../components/mobile-menu/mobile-menu';
 
@@ -14,20 +15,12 @@ import { MobileMenu } from '../../components/mobile-menu/mobile-menu';
   host: {
     '(document:click)': 'onDocumentClick($event)'
   },
-  imports: [
-    RouterModule,
-    LucideAngularModule,
-    Sidebar,
-    BackButton,
-    UiAvatar,
-    ApiImgPipe,
-    MobileMenu
-  ],
+  imports: [RouterModule, LucideAngularModule, Sidebar, BackButton, UiAvatar, ApiImgPipe, MobileMenu],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminLayout {
+  icons = ADMIN_LAYOUT_ICONS;
   authStore = inject(AuthStore);
-  icons = { ChevronDown, LogOut, User };
   isUserMenuOpen = signal(false);
 
   toggleUserMenu(): void {

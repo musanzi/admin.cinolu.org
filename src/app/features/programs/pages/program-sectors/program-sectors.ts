@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { LucideAngularModule, Pencil, Search, Trash } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { PROGRAM_SECTORS_ICONS } from '@shared/data';
 import { ISector } from '@shared/models';
 import { ConfirmationService } from '@shared/services/confirmation';
 import { UiBadge, UiButton, UiConfirmDialog, UiInput, UiPagination } from '@shared/ui';
@@ -28,11 +29,11 @@ import { ProgramSectorsStore } from '../../store/program-sectors.store';
   ]
 })
 export class ProgramSectors {
+  icons = PROGRAM_SECTORS_ICONS;
   private readonly fb = inject(FormBuilder);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly destroyRef = inject(DestroyRef);
   store = inject(ProgramSectorsStore);
-  icons = { Pencil, Search, Trash };
   itemsPerPage = 10;
   currentPage = signal(1);
   isCreating = signal(false);

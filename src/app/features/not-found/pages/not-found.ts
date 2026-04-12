@@ -1,6 +1,7 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { LucideAngularModule, SearchX, House, ArrowLeft } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { NOT_FOUND_PAGE_ICONS } from '@shared/data';
 import { Location } from '@angular/common';
 import { UiButton } from '@ui';
 
@@ -12,8 +13,8 @@ import { UiButton } from '@ui';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotFoundPage {
+  icons = NOT_FOUND_PAGE_ICONS;
   private readonly location = inject(Location);
-  icons = { SearchX, House, ArrowLeft };
 
   goBack(): void {
     this.location.back();

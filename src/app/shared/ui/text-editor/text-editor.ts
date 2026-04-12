@@ -11,16 +11,8 @@ import {
   computed
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import {
-  LucideAngularModule,
-  Bold,
-  Italic,
-  Underline,
-  List,
-  TextAlignStart,
-  TextAlignCenter,
-  TextAlignEnd
-} from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { UI_TEXT_EDITOR_ICONS } from '@shared/data';
 
 @Component({
   selector: 'app-ui-text-editor',
@@ -30,6 +22,7 @@ import {
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => UiTextEditor), multi: true }]
 })
 export class UiTextEditor implements ControlValueAccessor, AfterViewInit {
+  icons = UI_TEXT_EDITOR_ICONS;
   @ViewChild('editor', { static: false }) editorElement!: ElementRef<HTMLDivElement>;
 
   placeholder = input<string>('Start typing...');
@@ -41,7 +34,6 @@ export class UiTextEditor implements ControlValueAccessor, AfterViewInit {
   isFocused = signal(false);
   isControlDisabled = signal(false);
   isDisabled = computed(() => this.disabled() || this.isControlDisabled());
-  icons = { Bold, Italic, Underline, List, TextAlignCenter, TextAlignStart, TextAlignEnd };
 
   onChange!: (value: string) => void;
   onTouched!: () => void;

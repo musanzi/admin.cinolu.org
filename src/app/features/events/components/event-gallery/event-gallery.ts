@@ -1,7 +1,8 @@
 import { NgOptimizedImage } from '@angular/common';
 import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { IEvent, IImage } from '@shared/models';
-import { Image, LucideAngularModule, Trash } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { EVENT_GALLERY_COMPONENT_ICONS } from '@shared/data';
 import { FileUpload } from '@shared/ui';
 import { ApiImgPipe } from '@shared/pipes';
 
@@ -12,13 +13,13 @@ import { ApiImgPipe } from '@shared/pipes';
   imports: [NgOptimizedImage, LucideAngularModule, FileUpload, ApiImgPipe]
 })
 export class EventGalleryComponent {
+  icons = EVENT_GALLERY_COMPONENT_ICONS;
   event = input.required<IEvent>();
   gallery = input.required<IImage[]>();
   isLoading = input<boolean>(false);
   coverUploaded = output<void>();
   galleryUploaded = output<void>();
   deleteImage = output<string>();
-  icons = { Image: Image, Trash };
 
   onCoverUploaded(): void {
     this.coverUploaded.emit();

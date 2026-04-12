@@ -1,16 +1,8 @@
 import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MentorsStore } from '../../store/mentors.store';
-import {
-  LucideAngularModule,
-  CircleCheckBig,
-  CircleX,
-  Briefcase,
-  Calendar,
-  Award,
-  FileText,
-  ExternalLink
-} from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { MENTOR_DETAILS_ICONS } from '@shared/data';
 import { UiBadge, UiConfirmDialog } from '@shared/ui';
 import { ConfirmationService } from '@shared/services/confirmation';
 import { DatePipe } from '@angular/common';
@@ -27,12 +19,12 @@ import { RouterLink } from '@angular/router';
   imports: [LucideAngularModule, UiBadge, UiConfirmDialog, DatePipe, ApiImgPipe, UiAvatar, RouterLink]
 })
 export class MentorDetails implements OnInit {
+  icons = MENTOR_DETAILS_ICONS;
   private readonly route = inject(ActivatedRoute);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly id = this.route.snapshot.params['id'];
   store = inject(MentorsStore);
   cvUrl = environment.apiUrl + 'uploads/mentors/cvs/';
-  icons = { CircleCheckBig, CircleX, Briefcase, Calendar, Award, FileText, ExternalLink };
 
   ngOnInit(): void {
     this.store.loadOne(this.id);

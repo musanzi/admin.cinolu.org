@@ -11,7 +11,8 @@ import {
   effect
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { ChevronDown, LucideAngularModule, Plus } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { UI_SELECT_ICONS } from '@shared/data';
 
 export interface SelectOption {
   label: string;
@@ -30,6 +31,7 @@ export interface SelectOption {
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => UiSelect), multi: true }]
 })
 export class UiSelect implements ControlValueAccessor {
+  icons = UI_SELECT_ICONS;
   label = input<string>('');
   options = input<SelectOption[] | unknown[]>([]);
   placeholder = input<string>('');
@@ -49,7 +51,6 @@ export class UiSelect implements ControlValueAccessor {
   createOption = output<string>();
   valueChange = output<unknown>();
   searchTermChange = output<string>();
-  icons = { ChevronDown, Plus };
   value = signal<unknown>('');
   isOpen = signal(false);
   createValue = signal('');

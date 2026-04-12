@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Images, SquarePen, Star, LucideAngularModule } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { ARTICLE_DETAILS_ICONS } from '@shared/data';
 import { UiTabs, UiButton } from '@shared/ui';
 import { ArticlesStore } from '../../store/articles.store';
 import { ArticleUpdate } from '../../components/article-update/article-update';
@@ -16,13 +17,14 @@ import { ArticleGalleryComponent } from '../../components/article-gallery/articl
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ArticleDetails implements OnInit {
+  icons = ARTICLE_DETAILS_ICONS;
   private readonly route = inject(ActivatedRoute);
   private readonly slug = this.route.snapshot.params['slug'];
   store = inject(ArticlesStore);
   activeTab = signal('edit');
   tabs = [
-    { label: "Mettre à jour l'article", name: 'edit', icon: SquarePen },
-    { label: 'Gérer la galerie', name: 'gallery', icon: Images }
+    { label: "Mettre à jour l'article", name: 'edit', icon: this.icons.SquarePen },
+    { label: 'Gérer la galerie', name: 'gallery', icon: this.icons.Images }
   ];
 
   ngOnInit(): void {
@@ -51,6 +53,4 @@ export class ArticleDetails implements OnInit {
     if (!article) return;
     this.store.showcase(article.id);
   }
-
-  icons = { Star };
 }

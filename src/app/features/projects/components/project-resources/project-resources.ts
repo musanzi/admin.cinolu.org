@@ -16,7 +16,7 @@ import {
   UiTextarea
 } from '@shared/ui';
 import { LucideAngularModule } from 'lucide-angular';
-import { Eye, FilePenLine, FileText, FolderOpen, Pencil, Plus, Trash2, Upload } from 'lucide-angular';
+import { PROJECT_RESOURCES_ICONS } from '@shared/data';
 import { CreateResourceDto, UpdateResourceDto } from '../../dto/resources/create-resource.dto';
 import { FilterResourcesDto } from '../../dto/resources/filter-resources.dto';
 import { ResourcesStore } from '../../store/resources.store';
@@ -41,13 +41,13 @@ import { RESOURCE_CATEGORY_LABELS, RESOURCE_CATEGORY_OPTIONS } from '../../types
   ]
 })
 export class ProjectResources {
+  icons = PROJECT_RESOURCES_ICONS;
   projectId = input.required<string>();
   phases = input<IPhase[]>([]);
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
   private readonly confirmationService = inject(ConfirmationService);
   resourcesStore = inject(ResourcesStore);
-  icons = { Plus, FileText, Pencil, Trash2, Eye, Upload, FolderOpen, FilePenLine };
   categoryOptions = RESOURCE_CATEGORY_OPTIONS;
   filterCategoryOptions: SelectOption[] = [{ label: 'Toutes les catégories', value: '' }, ...RESOURCE_CATEGORY_OPTIONS];
   scopeOptions: SelectOption[] = [

@@ -1,17 +1,7 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { IProject } from '@shared/models';
-import {
-  BookOpen,
-  Calendar,
-  SquareCheckBig,
-  Clock,
-  FileText,
-  Flag,
-  FolderOpen,
-  LucideAngularModule,
-  Target,
-  User
-} from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { PROJECT_SHEET_ICONS } from '@shared/data';
 import { UiAccordion, UiAccordionPanel, UiAccordionHeader, UiAccordionContent } from '@shared/ui';
 import { DatePipe } from '@angular/common';
 
@@ -22,6 +12,6 @@ import { DatePipe } from '@angular/common';
   imports: [UiAccordion, DatePipe, UiAccordionPanel, UiAccordionHeader, UiAccordionContent, LucideAngularModule]
 })
 export class ProjectSheet {
+  icons = PROJECT_SHEET_ICONS;
   project = input.required<IProject>();
-  icons = { FolderOpen, User, Clock, Calendar, Flag, FileText, BookOpen, Target, SquareCheckBig };
 }

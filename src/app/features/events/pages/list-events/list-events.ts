@@ -1,5 +1,6 @@
 import { Component, computed, DestroyRef, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { LucideAngularModule, Trash, Search, Funnel, Eye } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { LIST_EVENTS_ICONS } from '@shared/data';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { EventsStore } from '../../store/events.store';
@@ -33,13 +34,13 @@ import { DatePipe } from '@angular/common';
   ]
 })
 export class ListEvents {
+  icons = LIST_EVENTS_ICONS;
   private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly destroyRef = inject(DestroyRef);
   store = inject(EventsStore);
   itemsPerPage = 20;
-  icons = { Trash, Search, Funnel, Eye };
   queryParams = signal<FilterEventsDto>({
     page: this.route.snapshot.queryParamMap.get('page'),
     q: this.route.snapshot.queryParamMap.get('q'),

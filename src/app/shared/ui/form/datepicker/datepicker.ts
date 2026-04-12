@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, forwardRef, input, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Calendar, ChevronLeft, ChevronRight, LucideAngularModule } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { UI_DATEPICKER_ICONS } from '@shared/data';
 import { SelectOption, UiSelect } from '../select/select';
 
 export type DatePickerView = 'date' | 'month' | 'year';
@@ -16,6 +17,7 @@ export type DatePickerView = 'date' | 'month' | 'year';
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => UiDatepicker), multi: true }]
 })
 export class UiDatepicker implements ControlValueAccessor {
+  icons = UI_DATEPICKER_ICONS;
   view = input<DatePickerView>('date');
   label = input<string>('');
   placeholder = input<string>('');
@@ -32,7 +34,6 @@ export class UiDatepicker implements ControlValueAccessor {
   isOpen = signal<boolean>(false);
   selectedDate = signal<Date | null>(null);
   currentViewDate = signal<Date>(new Date());
-  icons = { Calendar, ChevronLeft, ChevronRight };
 
   private onChangeCallback: (value: Date | null) => void = () => undefined;
   private onTouchedCallback: () => void = () => undefined;
@@ -88,7 +89,11 @@ export class UiDatepicker implements ControlValueAccessor {
   });
 
   monthSelectOptions = computed<SelectOption[]>(() =>
-    this.months().map((month) => ({ label: month.name, value: month.value, disabled: this.isDisabledMonth(month.value) }))
+    this.months().map((month) => ({
+      label: month.name,
+      value: month.value,
+      disabled: this.isDisabledMonth(month.value)
+    }))
   );
 
   yearSelectOptions = computed(() => {
@@ -107,7 +112,11 @@ export class UiDatepicker implements ControlValueAccessor {
   });
 
   yearSelectOptionsForDropdown = computed<SelectOption[]>(() =>
-    this.yearSelectOptions().map((year) => ({ label: year.toString(), value: year, disabled: this.isDisabledYear(year) }))
+    this.yearSelectOptions().map((year) => ({
+      label: year.toString(),
+      value: year,
+      disabled: this.isDisabledYear(year)
+    }))
   );
 
   calendarDays = computed(() => {

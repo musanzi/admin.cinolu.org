@@ -1,5 +1,6 @@
 import { Component, computed, DestroyRef, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { LucideAngularModule, Trash, Search, Funnel, Pencil } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { MENTOR_EXPERTISES_ICONS } from '@shared/data';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IExpertise } from '@shared/models';
@@ -29,6 +30,7 @@ import { UiInput } from '@shared/ui/form/input/input';
   ]
 })
 export class MentorExpertises {
+  icons = MENTOR_EXPERTISES_ICONS;
   private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   private readonly confirmationService = inject(ConfirmationService);
@@ -38,7 +40,6 @@ export class MentorExpertises {
     page: this.route.snapshot.queryParamMap.get('page'),
     q: this.route.snapshot.queryParamMap.get('q')
   });
-  icons = { Pencil, Trash, Search, Funnel };
   itemsPerPage = 10;
   isCreating = signal(false);
   editingExpertiseId = signal<string | null>(null);

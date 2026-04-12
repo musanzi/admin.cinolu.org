@@ -1,6 +1,7 @@
 import { Component, input, forwardRef, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { LucideAngularModule, Eye, EyeOff } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { UI_PASSWORD_ICONS } from '@shared/data';
 
 @Component({
   selector: 'app-ui-password',
@@ -10,6 +11,7 @@ import { LucideAngularModule, Eye, EyeOff } from 'lucide-angular';
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => UiPassword), multi: true }]
 })
 export class UiPassword implements ControlValueAccessor {
+  icons = UI_PASSWORD_ICONS;
   placeholder = input<string>('');
   disabled = input<boolean>(false);
   id = input<string>('');
@@ -19,7 +21,6 @@ export class UiPassword implements ControlValueAccessor {
   value = '';
   label = input<string>('');
   isMasked = signal<boolean>(true);
-  icons = { Eye, EyeOff };
 
   onChange!: (value: string) => void;
   onTouched!: () => void;

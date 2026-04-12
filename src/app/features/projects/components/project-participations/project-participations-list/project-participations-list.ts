@@ -13,7 +13,8 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ArrowRight, Download, RefreshCcw, Search, Upload, X, LucideAngularModule } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { PROJECT_PARTICIPATIONS_LIST_ICONS } from '@shared/data';
 import { distinctUntilChanged } from 'rxjs';
 import { ApiImgPipe } from '@shared/pipes';
 import { FilterParticipationsDto } from '@features/projects/dto/phases/filter-participations.dto';
@@ -44,6 +45,7 @@ import { UiTableSkeleton } from '@shared/ui/table-skeleton/table-skeleton';
   ]
 })
 export class ProjectParticipationsList {
+  icons = PROJECT_PARTICIPATIONS_LIST_ICONS;
   project = input.required<IProject>();
   private readonly fb = inject(FormBuilder);
   private readonly toast = inject(ToastrService);
@@ -59,7 +61,6 @@ export class ProjectParticipationsList {
   batchForm = this.fb.group({
     phaseId: ['', Validators.required]
   });
-  icons = { Upload, RefreshCcw, ArrowRight, X, Search, Download };
   itemsPerPage = 20;
   currentPage = computed(() => this.queryParams().page || 1);
   participations = computed(() => this.store.participations());

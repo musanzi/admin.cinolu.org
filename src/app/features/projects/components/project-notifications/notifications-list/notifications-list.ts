@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { Inbox, LoaderCircle, LucideAngularModule } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { NOTIFICATIONS_HISTORY_LIST_ICONS } from '@shared/data';
 import { NotificationsState } from '@features/projects/types';
 import { INotification } from '@shared/models';
 import { UiPagination } from '@shared/ui';
@@ -12,11 +13,11 @@ import { UiPagination } from '@shared/ui';
   imports: [DatePipe, UiPagination, LucideAngularModule]
 })
 export class NotificationsHistoryList {
+  icons = NOTIFICATIONS_HISTORY_LIST_ICONS;
   state = input.required<NotificationsState>();
   isLoading = input<boolean>(false);
   selectNotification = output<INotification>();
   pageChange = output<number>();
-  icons = { Inbox, LoaderCircle };
 
   onSelectNotification(notification: INotification): void {
     this.selectNotification.emit(notification);

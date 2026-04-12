@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, input } from '@angular/core';
-import { LucideAngularModule, Users, FolderKanban, CalendarDays, Rocket } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { STATS_OVERVIEW_ICONS } from '@shared/data';
 import type { IGeneralStats } from '../../types';
 
 @Component({
@@ -10,13 +11,7 @@ import type { IGeneralStats } from '../../types';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StatsOverview {
+  icons = STATS_OVERVIEW_ICONS;
   data = input<IGeneralStats | null>(null);
   isLoading = input<boolean>(false);
-
-  icons = {
-    Users,
-    FolderKanban,
-    CalendarDays,
-    Rocket
-  };
 }

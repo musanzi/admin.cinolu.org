@@ -1,17 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-  SquarePen,
-  Images,
-  ChartColumn,
-  Star,
-  Eye,
-  Layers,
-  Users,
-  Bell,
-  FolderKanban,
-  LucideAngularModule
-} from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { PROJECT_DETAILS_ICONS } from '@shared/data';
 import { UiTabs, UiButton } from '@shared/ui';
 import { GalleryStore } from '../../store/project-gallery.store';
 import { ProjectsStore } from '../../store/projects.store';
@@ -47,6 +37,7 @@ import { ProjectUpdate } from '@features/projects/components/project-update/proj
   ]
 })
 export class ProjectDetails implements OnInit {
+  icons = PROJECT_DETAILS_ICONS;
   private readonly route = inject(ActivatedRoute);
   private readonly slug = this.route.snapshot.params['slug'];
   projectStore = inject(ProjectsStore);
@@ -56,13 +47,13 @@ export class ProjectDetails implements OnInit {
   usersStore = inject(UsersStore);
   activeTab = signal(this.route.snapshot.queryParamMap.get('tab') || 'details');
   tabs = [
-    { label: "Fiche d'activité", name: 'details', icon: ChartColumn },
-    { label: 'Participations', name: 'participations', icon: Users },
-    { label: 'Phases', name: 'phases', icon: Layers },
-    { label: 'Ressources', name: 'resources', icon: FolderKanban },
-    { label: 'Notifications', name: 'notifications', icon: Bell },
-    { label: 'Mettre à jour', name: 'edit', icon: SquarePen },
-    { label: 'Galerie', name: 'gallery', icon: Images }
+    { label: "Fiche d'activité", name: 'details', icon: this.icons.ChartColumn },
+    { label: 'Participations', name: 'participations', icon: this.icons.Users },
+    { label: 'Phases', name: 'phases', icon: this.icons.Layers },
+    { label: 'Ressources', name: 'resources', icon: this.icons.FolderKanban },
+    { label: 'Notifications', name: 'notifications', icon: this.icons.Bell },
+    { label: 'Mettre à jour', name: 'edit', icon: this.icons.SquarePen },
+    { label: 'Galerie', name: 'gallery', icon: this.icons.Images }
   ];
 
   ngOnInit(): void {
@@ -100,6 +91,4 @@ export class ProjectDetails implements OnInit {
     if (!project) return;
     this.projectStore.publish(project.id);
   }
-
-  icons = { Star, Eye, Users };
 }

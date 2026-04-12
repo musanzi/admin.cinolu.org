@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { LucideAngularModule, ChevronLeft, ChevronRight } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { UI_PAGINATION_ICONS } from '@shared/data';
 
 export type PaginationItem = number | 'ellipsis';
 
@@ -10,12 +11,12 @@ export type PaginationItem = number | 'ellipsis';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UiPagination {
+  icons = UI_PAGINATION_ICONS;
   currentPage = input<number>(1);
   totalItems = input<number>(0);
   itemsPerPage = input<number>(40);
   maxVisiblePages = input<number>(5);
   pageChange = output<number>();
-  icons = { ChevronLeft, ChevronRight };
 
   protected totalPages = computed(() => Math.max(1, Math.ceil(this.totalItems() / this.itemsPerPage())));
 

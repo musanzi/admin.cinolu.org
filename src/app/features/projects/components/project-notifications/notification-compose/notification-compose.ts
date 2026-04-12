@@ -5,7 +5,8 @@ import { environment } from '@env/environment';
 import { AttachmentPreview } from '@features/projects/types/attachments.type';
 import { INotification } from '@shared/models';
 import { UiButton, UiCheckbox, UiInput, UiSelect, UiTextEditor } from '@shared/ui';
-import { CircleAlert, Paperclip, Send, Trash2, X, RotateCcw, LucideAngularModule } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { NOTIFICATION_COMPOSE_ICONS } from '@shared/data';
 import { NotificationState, SubmitNotification } from '@features/projects/types';
 
 @Component({
@@ -15,13 +16,13 @@ import { NotificationState, SubmitNotification } from '@features/projects/types'
   imports: [ReactiveFormsModule, UiButton, UiCheckbox, UiInput, UiSelect, UiTextEditor, LucideAngularModule]
 })
 export class NotificationCompose {
+  icons = NOTIFICATION_COMPOSE_ICONS;
   state = input.required<NotificationState>();
   saveDraft = output<SubmitNotification>();
   sendNotification = output<SubmitNotification>();
   deleteNotification = output<INotification>();
   private readonly fb = inject(FormBuilder);
   attachments = signal<AttachmentPreview[]>([]);
-  icons = { CircleAlert, Paperclip, Send, Trash2, X, RotateCcw };
   actionLoading = signal<'save' | 'send' | null>(null);
   form = this.fb.nonNullable.group({
     title: ['', [Validators.required, Validators.minLength(3)]],

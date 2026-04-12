@@ -1,5 +1,6 @@
 import { Component, computed, DestroyRef, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { LucideAngularModule, Trash, Search, Funnel, Eye } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { LIST_PROGRAMS_ICONS } from '@shared/data';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ProgramsStore } from '../../store/programs.store';
@@ -33,6 +34,7 @@ import { DatePipe } from '@angular/common';
   ]
 })
 export class ListPrograms {
+  icons = LIST_PROGRAMS_ICONS;
   private readonly route = inject(ActivatedRoute);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly destroyRef = inject(DestroyRef);
@@ -46,7 +48,6 @@ export class ListPrograms {
   searchForm: FormGroup = this.fb.group({
     q: [this.queryParams().q || '']
   });
-  icons = { Trash, Search, Funnel, Eye };
   itemsPerPage = 10;
   activeTab = computed(() => this.queryParams().filter || 'all');
   tabsConfig = signal([

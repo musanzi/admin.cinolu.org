@@ -1,19 +1,9 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { IEvent } from '@shared/models';
-import {
-  BookOpen,
-  Calendar,
-  Clock,
-  FileText,
-  Flag,
-  FolderOpen,
-  LucideAngularModule,
-  MapPin,
-  SquareCheckBig,
-  Target,
-  User,
-  CircleCheckBig
-} from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { EVENT_SHEET_ICONS } from '@shared/data';
+const { BookOpen, Calendar, Clock, FileText, Flag, FolderOpen, MapPin, SquareCheckBig, Target, User, CircleCheckBig } =
+  EVENT_SHEET_ICONS;
 import { UiAccordion, UiAccordionPanel, UiAccordionHeader, UiAccordionContent } from '@shared/ui';
 import { DatePipe } from '@angular/common';
 

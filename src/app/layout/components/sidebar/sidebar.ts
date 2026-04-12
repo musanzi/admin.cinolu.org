@@ -1,6 +1,7 @@
 import { Component, computed, inject, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
-import { LucideAngularModule, ChevronDown, House, ExternalLink } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { SIDEBAR_ICONS } from '@shared/data';
 import { filter } from 'rxjs';
 import { AuthStore } from '@core/auth/auth.store';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -17,9 +18,9 @@ import { NgOptimizedImage } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Sidebar {
+  icons = SIDEBAR_ICONS;
   #router = inject(Router);
   style = input<string>();
-  icons = { ChevronDown, House, ExternalLink };
   appUrl = environment.appUrl;
   currentUrl = signal(this.#router.url);
   toggleTab = signal<string | null>(null);
@@ -32,10 +33,7 @@ export class Sidebar {
     const url = this.currentUrl();
     return (
       this.allLinks().find((link) => {
-        return (
-          link.path === url ||
-          link.children?.some((child) => child.path && url.startsWith(child.path))
-        );
+        return link.path === url || link.children?.some((child) => child.path && url.startsWith(child.path));
       })?.name ?? null
     );
   });

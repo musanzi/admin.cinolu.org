@@ -1,5 +1,6 @@
 import { Component, computed, DestroyRef, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { LucideAngularModule, Trash, Search, Funnel, Pencil } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { PROJECT_CATEGORIES_ICONS } from '@shared/data';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CategoriesStore } from '../../store/project-categories.store';
@@ -31,6 +32,7 @@ import { CommonModule } from '@angular/common';
   ]
 })
 export class ProjectCategories {
+  icons = PROJECT_CATEGORIES_ICONS;
   private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   private readonly confirmationService = inject(ConfirmationService);
@@ -40,7 +42,6 @@ export class ProjectCategories {
     page: this.route.snapshot.queryParamMap.get('page'),
     q: this.route.snapshot.queryParamMap.get('q')
   });
-  icons = { Pencil, Trash, Search, Funnel };
   itemsPerPage = 10;
   isCreating = signal(false);
   editingCategoryId = signal<string | null>(null);

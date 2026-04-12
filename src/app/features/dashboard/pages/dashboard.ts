@@ -1,7 +1,8 @@
 import { Component, ChangeDetectionStrategy, inject, signal, computed, effect, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, LayoutList } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { DASHBOARD_ICONS } from '@shared/data';
 import { UiSelect } from '@ui';
 import type { SelectOption } from '@shared/ui';
 import { StatsStore } from '../store/stats.store';
@@ -25,13 +26,11 @@ import { StatsOverview, YearSummary, ProgramTabs, ProgramDetails } from '../comp
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Dashboard implements OnInit {
+  icons = DASHBOARD_ICONS;
   store = inject(StatsStore);
   currentYear = new Date().getFullYear();
   selectedYear = signal(this.currentYear);
   selectedProgram = signal<string | null>(null);
-  icons = {
-    LayoutList
-  };
 
   constructor() {
     effect(() => {

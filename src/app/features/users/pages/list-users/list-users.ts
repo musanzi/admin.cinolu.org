@@ -9,7 +9,8 @@ import {
   viewChild,
   ElementRef
 } from '@angular/core';
-import { LucideAngularModule, Trash, Download, Search, Funnel, Pencil, Upload } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { LIST_USERS_ICONS } from '@shared/data';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UsersStore } from '../../store/users.store';
@@ -41,6 +42,7 @@ import { bindSearchControlToQuery, toPageQueryValue } from '@shared/helpers';
   ]
 })
 export class ListUsers {
+  icons = LIST_USERS_ICONS;
   private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   private readonly confirmationService = inject(ConfirmationService);
@@ -48,7 +50,6 @@ export class ListUsers {
   searchForm: FormGroup;
   store = inject(UsersStore);
   itemsPerPage = 50;
-  icons = { Pencil, Trash, Search, Funnel, Download, Upload };
   csvFileInput = viewChild<ElementRef<HTMLInputElement>>('csvFileInput');
   queryParams = signal<FilterUsersDto>({
     page: this.route.snapshot.queryParamMap.get('page'),

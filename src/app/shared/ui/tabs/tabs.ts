@@ -1,5 +1,6 @@
 import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
-import { LucideAngularModule, LucideIconData } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import type { LucideIconData } from '@shared/data';
 
 @Component({
   selector: 'app-ui-tabs',

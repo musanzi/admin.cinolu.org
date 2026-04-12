@@ -4,8 +4,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ProgramsStore } from '../../store/programs.store';
 import { ProgramCategoriesStore } from '../../store/program-categories.store';
 import { ProgramSectorsStore } from '../../store/program-sectors.store';
-import { SquarePen, Trash2, Funnel, Tag, Star, Eye } from 'lucide-angular';
 import { LucideAngularModule } from 'lucide-angular';
+import { UPDATE_PROGRAM_ICONS } from '@shared/data';
 import { UiTabs, FileUpload, UiInput } from '@shared/ui';
 import { Program } from '@shared/models';
 import { ListSubprograms } from '../../components/subprograms/subprograms';
@@ -30,16 +30,16 @@ import { UiButton, UiSelect, UiTextarea } from '@shared/ui';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UpdateProgram implements OnInit {
+  icons = UPDATE_PROGRAM_ICONS;
   private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   store = inject(ProgramsStore);
   categoriesStore = inject(ProgramCategoriesStore);
   sectorsStore = inject(ProgramSectorsStore);
   activeTab = signal('edit');
-  icons = { Trash2, Funnel, Tag, Star, Eye };
   tabs = [
-    { label: 'Modifier le programme', name: 'edit', icon: SquarePen },
-    { label: 'Sous programmes', name: 'subprograms', icon: Tag }
+    { label: 'Modifier le programme', name: 'edit', icon: this.icons.SquarePen },
+    { label: 'Sous programmes', name: 'subprograms', icon: this.icons.Tag }
   ];
   updateForm: FormGroup = this.fb.group({
     id: ['', Validators.required],

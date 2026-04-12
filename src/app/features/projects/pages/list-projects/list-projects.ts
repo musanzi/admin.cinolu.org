@@ -1,5 +1,6 @@
 import { Component, computed, DestroyRef, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { LucideAngularModule, Trash, Search, Funnel, Eye } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { LIST_PROJECTS_ICONS } from '@shared/data';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ProjectsStore } from '../../store/projects.store';
@@ -32,6 +33,7 @@ import { bindSearchControlToQuery, toPageQueryValue } from '@shared/helpers';
   ]
 })
 export class ListProjects {
+  icons = LIST_PROJECTS_ICONS;
   private readonly route = inject(ActivatedRoute);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly destroyRef = inject(DestroyRef);
@@ -45,7 +47,6 @@ export class ListProjects {
   searchForm: FormGroup = this.fb.group({
     q: [this.queryParams().q || '']
   });
-  icons = { Trash, Search, Funnel, Eye };
   itemsPerPage = 20;
   activeTab = computed(() => this.queryParams().filter || 'all');
   tabsConfig = signal([

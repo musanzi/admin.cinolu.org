@@ -1,5 +1,6 @@
 import { Component, computed, DestroyRef, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { LucideAngularModule, Plus, Search, Trash, Funnel, Pencil } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { ARTICLE_TAGS_ICONS } from '@shared/data';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TagsStore } from '../../store/tags.store';
 import { ActivatedRoute } from '@angular/router';
@@ -29,13 +30,13 @@ import { UiTableSkeleton } from '@shared/ui/table-skeleton/table-skeleton';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ArticleTags {
+  icons = ARTICLE_TAGS_ICONS;
   private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly destroyRef = inject(DestroyRef);
   store = inject(TagsStore);
   itemsPerPage = 10;
-  icons = { Pencil, Trash, Plus, Search, Funnel };
   queryParams = signal<FilterArticlesTagsDto>({
     page: this.route.snapshot.queryParamMap.get('page'),
     q: this.route.snapshot.queryParamMap.get('q')

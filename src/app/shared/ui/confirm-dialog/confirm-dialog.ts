@@ -1,5 +1,6 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
-import { X, CircleAlert, LucideAngularModule } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { UI_CONFIRM_DIALOG_ICONS } from '@shared/data';
 import { UiButton } from '../form/button/button';
 import { ConfirmationService } from '@shared/services/confirmation';
 
@@ -11,8 +12,8 @@ import { ConfirmationService } from '@shared/services/confirmation';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UiConfirmDialog {
+  icons = UI_CONFIRM_DIALOG_ICONS;
   private readonly confirmationService = inject(ConfirmationService);
-  icons = { X, CircleAlert };
   confirmation = this.confirmationService.getConfirmation;
 
   onAccept(): void {

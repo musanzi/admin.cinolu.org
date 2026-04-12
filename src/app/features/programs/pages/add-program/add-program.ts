@@ -1,6 +1,7 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LucideAngularModule, CircleAlert } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { ADD_PROGRAM_PAGE_ICONS } from '@shared/data';
 import { ProgramsStore } from '../../store/programs.store';
 import { ProgramDto } from '../../dto/programs/program.dto';
 import { CategoriesStore } from '@features/projects/store/project-categories.store';
@@ -16,11 +17,11 @@ import { UiButton, UiInput, UiSelect, UiTextarea } from '@shared/ui';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddProgramPage {
+  icons = ADD_PROGRAM_PAGE_ICONS;
   private readonly fb = inject(FormBuilder);
   store = inject(ProgramsStore);
   categoriesStore = inject(CategoriesStore);
   sectorsStore = inject(ProgramSectorsStore);
-  icons = { alert: CircleAlert };
   form = this.fb.group({
     name: ['', Validators.required],
     description: ['', Validators.required],

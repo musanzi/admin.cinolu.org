@@ -1,7 +1,8 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { IArticle, IImage } from '@shared/models';
-import { LucideAngularModule, Trash2, Image } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { ARTICLE_GALLERY_COMPONENT_ICONS } from '@shared/data';
 import { FileUpload } from '@shared/ui';
 import { ApiImgPipe } from '@shared/pipes';
 
@@ -12,13 +13,13 @@ import { ApiImgPipe } from '@shared/pipes';
   imports: [CommonModule, NgOptimizedImage, LucideAngularModule, FileUpload, ApiImgPipe]
 })
 export class ArticleGalleryComponent {
+  icons = ARTICLE_GALLERY_COMPONENT_ICONS;
   article = input.required<IArticle>();
   gallery = input.required<IImage[]>();
   isLoading = input<boolean>(false);
   coverUploaded = output<void>();
   galleryUploaded = output<void>();
   deleteImage = output<string>();
-  icons = { Trash2, Image: Image };
 
   onCoverUploaded(): void {
     this.coverUploaded.emit();

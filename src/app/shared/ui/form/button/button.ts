@@ -1,5 +1,6 @@
 import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
-import { LucideAngularModule, Loader2 } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { UI_BUTTON_ICONS } from '@shared/data';
 
 type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'info' | 'contrast' | 'success' | 'outlined';
 type ButtonSize = 'small' | 'medium' | 'large';
@@ -12,7 +13,7 @@ type ButtonSize = 'small' | 'medium' | 'large';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UiButton {
-  icons = { Loader2 };
+  icons = UI_BUTTON_ICONS;
   type = input<'button' | 'submit' | 'reset'>('button');
   variant = input<ButtonVariant>('primary');
   size = input<ButtonSize>('medium');

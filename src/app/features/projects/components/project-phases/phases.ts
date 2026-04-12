@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LucideAngularModule, Plus, Pencil, Trash2, Calendar, FileText } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { PHASES_ICONS } from '@shared/data';
 import {
   SelectOption,
   UiButton,
@@ -39,6 +40,7 @@ import { PhaseSkeleton } from '@features/projects/ui/phase-skeleton/phase-skelet
   ]
 })
 export class Phases implements OnInit {
+  icons = PHASES_ICONS;
   projectId = input.required<string>();
   private readonly confirmationService = inject(ConfirmationService);
   private readonly fb = inject(FormBuilder);
@@ -46,7 +48,6 @@ export class Phases implements OnInit {
   form = this.buildForm();
   phaseId = signal<string | null>(null);
   showForm = signal(false);
-  icons = { Plus, Pencil, Trash2, Calendar, FileText };
   mentorOptions = computed<SelectOption[]>(() =>
     this.phasesStore.mentors().map((mentor) => ({
       label: mentor.owner.name.toUpperCase(),

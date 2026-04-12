@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
-import { BellRing, LucideAngularModule, Plus } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { PROJECT_NOTIFICATIONS_ICONS } from '@shared/data';
 import { ConfirmationService } from '@shared/services/confirmation';
 import { INotification, IProject } from '@shared/models';
 import { UiButton, UiConfirmDialog, UiSelect, SelectOption } from '@shared/ui';
@@ -17,6 +18,7 @@ import { NotificationState, NotificationsState, NotificationStatus, SubmitNotifi
   imports: [UiButton, UiConfirmDialog, UiSelect, LucideAngularModule, NotificationsHistoryList, NotificationCompose]
 })
 export class ProjectNotifications {
+  icons = PROJECT_NOTIFICATIONS_ICONS;
   project = input.required<IProject>();
   private readonly confirmationService = inject(ConfirmationService);
   notificationsStore = inject(NotificationsStore);
@@ -24,7 +26,6 @@ export class ProjectNotifications {
   filterPhaseId = signal('');
   filterStatus = signal<NotificationStatus | ''>('');
   currentPage = signal(1);
-  icons = { Plus, BellRing };
   phaseOptions = computed<SelectOption[]>(() => [
     { label: 'Tous les participants', value: '' },
     ...this.phasesStore.sortedPhases().map((phase) => ({ label: phase.name, value: phase.id }))

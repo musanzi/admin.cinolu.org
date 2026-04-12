@@ -1,5 +1,6 @@
 import { Component, inject, signal, ChangeDetectionStrategy, computed, input, OnInit } from '@angular/core';
-import { LucideAngularModule, Pencil, Trash, Eye, Star, Plus } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { LIST_SUBPROGRAMS_ICONS } from '@shared/data';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SubprogramsStore } from '../../store/subprograms.store';
 import { ISubprogram } from '@shared/models';
@@ -43,6 +44,7 @@ import { DatePipe } from '@angular/common';
   ]
 })
 export class ListSubprograms implements OnInit {
+  icons = LIST_SUBPROGRAMS_ICONS;
   private readonly fb = inject(FormBuilder);
   private readonly confirmationService = inject(ConfirmationService);
   readonly store = inject(SubprogramsStore);
@@ -53,7 +55,6 @@ export class ListSubprograms implements OnInit {
     name: ['', Validators.required],
     description: ['', Validators.required]
   });
-  icons = { Pencil, Plus, Trash, Eye, Star };
   isCreating = signal(false);
   editingSubprogram = signal<ISubprogram | null>(null);
   isFormVisible = computed(() => this.isCreating() || !!this.editingSubprogram());

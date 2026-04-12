@@ -1,14 +1,6 @@
-import {
-  UserCheck,
-  Calendar1,
-  BookOpen,
-  Layers,
-  Folders,
-  LayoutDashboard,
-  UserCog,
-  User,
-  UserRoundCog
-} from 'lucide-angular';
+import { LINK_GROUPS_ICONS } from '@shared/data';
+const { UserCheck, Calendar1, BookOpen, Layers, Folders, LayoutDashboard, UserCog, User, UserRoundCog } =
+  LINK_GROUPS_ICONS;
 import { ILinkGroup } from '../types/link.type';
 
 export const LINK_GROUPS: ILinkGroup[] = [

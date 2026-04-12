@@ -1,6 +1,7 @@
 import { Component, computed, ElementRef, inject, input, output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
-import { LucideAngularModule, Menu, ChevronDown, LogOut, House, ExternalLink, Calendar } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { MOBILE_MENU_ICONS } from '@shared/data';
 import { LINK_GROUPS } from '../../data/links.data';
 import { IUser } from '@shared/models';
 import { filter, fromEvent } from 'rxjs';
@@ -17,10 +18,10 @@ import { ILinkGroup } from '../../types/link.type';
   imports: [LucideAngularModule, RouterModule, NgOptimizedImage]
 })
 export class MobileMenu {
+  icons = MOBILE_MENU_ICONS;
   user = input.required<IUser | null>();
   signOut = output<void>();
   isOpen = signal<boolean>(false);
-  icons = { Menu, Calendar, House, ChevronDown, LogOut, ExternalLink };
   #elementRef = inject(ElementRef);
   #router = inject(Router);
   style = input<string>();

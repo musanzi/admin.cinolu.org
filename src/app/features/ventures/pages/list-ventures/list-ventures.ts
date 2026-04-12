@@ -1,5 +1,6 @@
 import { Component, computed, DestroyRef, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { LucideAngularModule, Search, Funnel, Eye, ToggleLeft, ToggleRight } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { LIST_VENTURES_ICONS } from '@shared/data';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { VenturesStore } from '../../store/ventures.store';
@@ -32,12 +33,12 @@ import { NgOptimizedImage } from '@angular/common';
   ]
 })
 export class ListVentures {
+  icons = LIST_VENTURES_ICONS;
   private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
   store = inject(VenturesStore);
   itemsPerPage = 20;
-  icons = { Eye, Search, Funnel, ToggleLeft, ToggleRight };
   queryParams = signal<FilterVenturesDto>({
     page: this.route.snapshot.queryParamMap.get('page'),
     q: this.route.snapshot.queryParamMap.get('q')

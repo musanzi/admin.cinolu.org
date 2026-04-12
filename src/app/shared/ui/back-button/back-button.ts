@@ -1,6 +1,7 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Location } from '@angular/common';
-import { ArrowLeft, LucideAngularModule } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { BACK_BUTTON_ICONS } from '@shared/data';
 
 @Component({
   selector: 'app-ui-back-button',
@@ -9,7 +10,7 @@ import { ArrowLeft, LucideAngularModule } from 'lucide-angular';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BackButton {
-  icons = { ArrowLeft };
+  icons = BACK_BUTTON_ICONS;
   private readonly location = inject(Location);
 
   onGoBack(): void {

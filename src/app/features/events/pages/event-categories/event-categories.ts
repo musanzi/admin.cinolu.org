@@ -1,5 +1,6 @@
 import { Component, computed, DestroyRef, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { LucideAngularModule, Trash, Search, Funnel, Pencil } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { EVENT_CATEGORIES_ICONS } from '@shared/data';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ICategory } from '@shared/models';
@@ -29,6 +30,7 @@ import { UiInput } from '@shared/ui/form/input/input';
   ]
 })
 export class EventCategories {
+  icons = EVENT_CATEGORIES_ICONS;
   private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   private readonly confirmationService = inject(ConfirmationService);
@@ -38,7 +40,6 @@ export class EventCategories {
     page: this.route.snapshot.queryParamMap.get('page'),
     q: this.route.snapshot.queryParamMap.get('q')
   });
-  icons = { Pencil, Trash, Search, Funnel };
   itemsPerPage = 20;
   isCreating = signal(false);
   editingCategoryId = signal<string | null>(null);

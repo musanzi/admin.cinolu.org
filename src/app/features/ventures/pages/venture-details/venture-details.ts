@@ -1,23 +1,8 @@
 import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { VenturesStore } from '../../store/ventures.store';
-import {
-  LucideAngularModule,
-  ToggleLeft,
-  ToggleRight,
-  Building2,
-  Globe,
-  Mail,
-  Phone,
-  MapPin,
-  Calendar,
-  ExternalLink,
-  Images as ImageIcon,
-  Package,
-  ChevronLeft,
-  ChevronRight,
-  X
-} from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { VENTURE_DETAILS_ICONS } from '@shared/data';
 import { UiBadge, UiConfirmDialog } from '@shared/ui';
 import { ConfirmationService } from '@shared/services/confirmation';
 import { CurrencyPipe, DatePipe, NgOptimizedImage } from '@angular/common';
@@ -44,29 +29,13 @@ import { VentureSkeleton } from '@features/ventures/ui/venture-skeleton/venture-
   ]
 })
 export class VentureDetails implements OnInit {
+  icons = VENTURE_DETAILS_ICONS;
   private readonly route = inject(ActivatedRoute);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly slug = this.route.snapshot.params['slug'];
   store = inject(VenturesStore);
 
   selectedProductGallery = signal<{ product: IProduct; index: number } | null>(null);
-
-  icons = {
-    ToggleLeft,
-    ToggleRight,
-    Building2,
-    Globe,
-    Mail,
-    Phone,
-    MapPin,
-    Calendar,
-    ExternalLink,
-    ImageIcon,
-    Package,
-    ChevronLeft,
-    ChevronRight,
-    X
-  };
 
   ngOnInit(): void {
     this.store.loadOne(this.slug);

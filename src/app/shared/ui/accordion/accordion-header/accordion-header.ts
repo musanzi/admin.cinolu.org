@@ -1,5 +1,6 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
-import { LucideAngularModule, ChevronDown } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { UI_ACCORDION_HEADER_ICONS } from '@shared/data';
 import { UiAccordionPanel } from '../accordion-panel/accordion-panel';
 
 @Component({
@@ -9,6 +10,6 @@ import { UiAccordionPanel } from '../accordion-panel/accordion-panel';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UiAccordionHeader {
+  icons = UI_ACCORDION_HEADER_ICONS;
   panel = inject(UiAccordionPanel, { optional: true });
-  icons = { ChevronDown };
 }

@@ -1,5 +1,6 @@
 import { Component, computed, DestroyRef, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { LucideAngularModule, Trash, Search, Funnel, Pencil } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { PROGRAM_CATEGORIES_ICONS } from '@shared/data';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProgramCategoriesStore } from '../../store/program-categories.store';
@@ -31,6 +32,7 @@ import { CommonModule } from '@angular/common';
   ]
 })
 export class ProgramCategories {
+  icons = PROGRAM_CATEGORIES_ICONS;
   private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   private readonly confirmationService = inject(ConfirmationService);
@@ -49,7 +51,6 @@ export class ProgramCategories {
   updateForm: FormGroup = this.fb.group({
     name: ['', Validators.required]
   });
-  icons = { Pencil, Trash, Search, Funnel };
   itemsPerPage = 10;
   isCreating = signal(false);
   editingCategoryId = signal<string | null>(null);

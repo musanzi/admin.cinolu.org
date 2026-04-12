@@ -11,7 +11,8 @@ import {
   signal
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ArrowLeft, CheckCheck, PencilLine, X, LucideAngularModule } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { PROJECT_PARTICIPATION_DETAILS_ICONS } from '@shared/data';
 import { ParticipationsStore } from '@features/projects/store/participations.store';
 import { ApiImgPipe } from '@shared/pipes';
 import { IPhase, IProjectParticipation, IProjectParticipationReview } from '@shared/models';
@@ -38,12 +39,12 @@ import { UiTableSkeleton } from '@shared/ui/table-skeleton/table-skeleton';
   ]
 })
 export class ProjectParticipationDetails implements OnDestroy {
+  icons = PROJECT_PARTICIPATION_DETAILS_ICONS;
   participationId = input.required<string>();
   private readonly fb = inject(FormBuilder);
   store = inject(ParticipationsStore);
   back = output<void>();
   selectedReviewId = signal<string | null>(null);
-  icons = { ArrowLeft, CheckCheck, PencilLine, X };
   reviewForm = this.fb.group({
     phaseId: ['', Validators.required],
     score: ['', [Validators.required, Validators.min(0), Validators.max(100)]],

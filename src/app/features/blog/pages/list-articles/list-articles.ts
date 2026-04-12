@@ -3,7 +3,8 @@ import { Component, computed, DestroyRef, effect, inject, signal, ChangeDetectio
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FilterArticleDto } from '../../dto/filter-article.dto';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Eye, Funnel, LucideAngularModule, Pencil, Plus, Search, Trash } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { LIST_ARTICLES_ICONS } from '@shared/data';
 import { ApiImgPipe } from '@shared/pipes/api-img.pipe';
 import { ArticlesStore } from '../../store/articles.store';
 import { UiAvatar, UiButton, UiConfirmDialog, UiPagination, UiTabs, UiBadge } from '@shared/ui';
@@ -34,13 +35,13 @@ import { bindSearchControlToQuery, toPageQueryValue } from '@shared/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListArticles {
+  icons = LIST_ARTICLES_ICONS;
   private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly destroyRef = inject(DestroyRef);
   store = inject(ArticlesStore);
   itemsPerPage = 20;
-  icons = { Pencil, Trash, Search, Plus, Eye, Funnel };
   queryParams = signal<FilterArticleDto>({
     page: this.route.snapshot.queryParamMap.get('page'),
     q: this.route.snapshot.queryParamMap.get('q'),

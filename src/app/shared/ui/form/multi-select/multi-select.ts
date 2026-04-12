@@ -12,7 +12,8 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { ChevronDown, LucideAngularModule, Plus } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { UI_MULTI_SELECT_ICONS } from '@shared/data';
 import { SelectOption } from '../select/select';
 import { UiCheckbox } from '../checkbox/checkbox';
 
@@ -27,6 +28,7 @@ import { UiCheckbox } from '../checkbox/checkbox';
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => UiMultiSelect), multi: true }]
 })
 export class UiMultiSelect implements ControlValueAccessor {
+  icons = UI_MULTI_SELECT_ICONS;
   label = input<string>('');
   options = input<SelectOption[] | unknown[]>([]);
   placeholder = input<string>('Select items');
@@ -42,7 +44,6 @@ export class UiMultiSelect implements ControlValueAccessor {
   createButtonLabel = input<string>('Ajouter');
   createDisabled = input<boolean>(false);
   createOption = output<string>();
-  icons = { ChevronDown, Plus };
 
   value = signal<unknown[]>([]);
   isOpen = signal(false);

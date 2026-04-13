@@ -9,7 +9,6 @@ type ButtonSize = 'small' | 'medium' | 'large';
   selector: 'app-ui-button',
   imports: [LucideAngularModule],
   templateUrl: './button.html',
-
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UiButton {

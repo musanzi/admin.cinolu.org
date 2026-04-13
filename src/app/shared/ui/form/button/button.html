@@ -8,7 +8,7 @@
   [style.lineHeight]="sizeLineHeight()"
   (click)="handleClick($event)">
   @if (loading()) {
-    <i-lucide [name]="icons.Loader2" [size]="spinnerSize()" class="animate-spin" />
+    <i-lucide [name]="icons.LoaderCircle" [size]="spinnerSize()" class="animate-spin" />
   }
   <ng-content />
 </button>

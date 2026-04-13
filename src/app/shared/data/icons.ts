@@ -44,7 +44,6 @@ import {
   LayoutDashboard,
   LayoutList,
   List,
-  Loader2,
   LoaderCircle,
   LogOut,
   Mail,
@@ -84,407 +83,210 @@ import {
   X
 } from 'lucide-angular';
 
-export const ADD_PROGRAM_PAGE_ICONS = {
-  CircleAlert: CircleAlert,
-  alert: CircleAlert
-} as const;
+export const ADD_PROGRAM_PAGE_ICONS = { CircleAlert };
 
-export const ADMIN_LAYOUT_ICONS = {
-  ChevronDown: ChevronDown,
-  LogOut: LogOut,
-  User: User
-} as const;
+export const ADMIN_LAYOUT_ICONS = { ChevronDown, LogOut, User };
 
-export const ARTICLE_DETAILS_ICONS = {
-  Images: Images,
-  SquarePen: SquarePen,
-  Star: Star
-} as const;
+export const ARTICLE_DETAILS_ICONS = { Images, SquarePen, Star };
 
-export const ARTICLE_GALLERY_COMPONENT_ICONS = {
-  Trash2: Trash2,
-  Image: Image
-} as const;
+export const ARTICLE_GALLERY_COMPONENT_ICONS = { Trash2, Image };
 
-export const ARTICLE_TAGS_ICONS = {
-  Plus: Plus,
-  Search: Search,
-  Trash: Trash,
-  Funnel: Funnel,
-  Pencil: Pencil
-} as const;
+export const ARTICLE_TAGS_ICONS = { Plus, Search, Trash, Funnel, Pencil };
 
-export const BACK_BUTTON_ICONS = {
-  ArrowLeft: ArrowLeft
-} as const;
+export const BACK_BUTTON_ICONS = { ArrowLeft };
 
-export const DASHBOARD_ICONS = {
-  LayoutList: LayoutList
-} as const;
+export const DASHBOARD_ICONS = { LayoutList };
 
-export const EVENT_CATEGORIES_ICONS = {
-  Trash: Trash,
-  Search: Search,
-  Funnel: Funnel,
-  Pencil: Pencil
-} as const;
+export const EVENT_CATEGORIES_ICONS = { Trash, Search, Funnel, Pencil };
 
-export const EVENT_DETAILS_ICONS = {
-  ChartColumn: ChartColumn,
-  SquarePen: SquarePen,
-  Images: Images,
-  Star: Star,
-  Eye: Eye
-} as const;
+export const EVENT_DETAILS_ICONS = { ChartColumn, SquarePen, Images, Star, Eye };
 
-export const EVENT_GALLERY_COMPONENT_ICONS = {
-  Image: Image,
-  Trash: Trash
-} as const;
+export const EVENT_GALLERY_COMPONENT_ICONS = { Image, Trash };
 
 export const EVENT_SHEET_ICONS = {
-  BookOpen: BookOpen,
-  Calendar: Calendar,
-  Clock: Clock,
-  FileText: FileText,
-  Flag: Flag,
-  FolderOpen: FolderOpen,
-  MapPin: MapPin,
-  SquareCheckBig: SquareCheckBig,
-  Target: Target,
-  User: User,
-  CircleCheckBig: CircleCheckBig
-} as const;
+  BookOpen,
+  Calendar,
+  Clock,
+  FileText,
+  Flag,
+  FolderOpen,
+  MapPin,
+  SquareCheckBig,
+  Target,
+  User,
+  CircleCheckBig
+};
 
 export const LINK_GROUPS_ICONS = {
-  UserCheck: UserCheck,
-  Calendar1: Calendar1,
-  BookOpen: BookOpen,
-  Layers: Layers,
-  Folders: Folders,
-  LayoutDashboard: LayoutDashboard,
-  UserCog: UserCog,
-  User: User,
-  UserRoundCog: UserRoundCog
-} as const;
-
-export const LINK_TYPE_ICONS = {
-
-} as const;
+  UserCheck,
+  Calendar1,
+  BookOpen,
+  Layers,
+  Folders,
+  LayoutDashboard,
+  UserCog,
+  User,
+  UserRoundCog
+};
 
 export const LIST_ARTICLES_ICONS = {
-  Eye: Eye,
-  Funnel: Funnel,
-  Pencil: Pencil,
-  Plus: Plus,
-  Search: Search,
-  Trash: Trash
-} as const;
+  Eye,
+  Funnel,
+  Pencil,
+  Plus,
+  Search,
+  Trash
+};
 
-export const LIST_EVENTS_ICONS = {
-  Trash: Trash,
-  Search: Search,
-  Funnel: Funnel,
-  Eye: Eye
-} as const;
+export const LIST_EVENTS_ICONS = { Trash, Search, Funnel, Eye };
 
 export const LIST_MENTORS_ICONS = {
-  Search: Search,
-  Funnel: Funnel,
-  Eye: Eye,
-  CircleCheckBig: CircleCheckBig,
-  CircleX: CircleX,
-  Pencil: Pencil
-} as const;
+  Search,
+  Funnel,
+  Eye,
+  CircleCheckBig,
+  CircleX,
+  Pencil
+};
 
-export const LIST_PROGRAMS_ICONS = {
-  Trash: Trash,
-  Search: Search,
-  Funnel: Funnel,
-  Eye: Eye
-} as const;
+export const LIST_PROGRAMS_ICONS = { Trash, Search, Funnel, Eye };
 
-export const LIST_PROJECTS_ICONS = {
-  Trash: Trash,
-  Search: Search,
-  Funnel: Funnel,
-  Eye: Eye
-} as const;
+export const LIST_PROJECTS_ICONS = { Trash, Search, Funnel, Eye };
 
-export const LIST_SUBPROGRAMS_ICONS = {
-  Pencil: Pencil,
-  Trash: Trash,
-  Eye: Eye,
-  Star: Star,
-  Plus: Plus
-} as const;
+export const LIST_SUBPROGRAMS_ICONS = { Pencil, Trash, Eye, Star, Plus };
 
-export const LIST_USERS_ICONS = {
-  Trash: Trash,
-  Download: Download,
-  Search: Search,
-  Funnel: Funnel,
-  Pencil: Pencil,
-  Upload: Upload
-} as const;
+export const LIST_USERS_ICONS = { Trash, Download, Search, Funnel, Pencil, Upload };
 
 export const LIST_VENTURES_ICONS = {
-  Search: Search,
-  Funnel: Funnel,
-  Eye: Eye,
-  ToggleLeft: ToggleLeft,
-  ToggleRight: ToggleRight
-} as const;
+  Search,
+  Funnel,
+  Eye,
+  ToggleLeft,
+  ToggleRight
+};
 
 export const MENTOR_DETAILS_ICONS = {
-  CircleCheckBig: CircleCheckBig,
-  CircleX: CircleX,
-  Briefcase: Briefcase,
-  Calendar: Calendar,
-  Award: Award,
-  FileText: FileText,
-  ExternalLink: ExternalLink
-} as const;
+  CircleCheckBig,
+  CircleX,
+  Briefcase,
+  Calendar,
+  Award,
+  FileText,
+  ExternalLink
+};
 
 export const MENTOR_EXPERTISES_ICONS = {
-  Trash: Trash,
-  Search: Search,
-  Funnel: Funnel,
-  Pencil: Pencil
-} as const;
+  Trash,
+  Search,
+  Funnel,
+  Pencil
+};
 
 export const MOBILE_MENU_ICONS = {
-  Menu: Menu,
-  ChevronDown: ChevronDown,
-  LogOut: LogOut,
-  House: House,
-  ExternalLink: ExternalLink,
-  Calendar: Calendar
-} as const;
+  Menu,
+  ChevronDown,
+  LogOut,
+  House,
+  ExternalLink,
+  Calendar
+};
 
 export const NOT_FOUND_PAGE_ICONS = {
-  SearchX: SearchX,
-  House: House,
-  ArrowLeft: ArrowLeft
-} as const;
+  SearchX,
+  House,
+  ArrowLeft
+};
 
 export const NOTIFICATION_COMPOSE_ICONS = {
-  CircleAlert: CircleAlert,
-  Paperclip: Paperclip,
-  Send: Send,
-  Trash2: Trash2,
-  X: X,
-  RotateCcw: RotateCcw
-} as const;
+  CircleAlert,
+  Paperclip,
+  Send,
+  Trash2,
+  X,
+  RotateCcw
+};
 
-export const NOTIFICATIONS_HISTORY_LIST_ICONS = {
-  Inbox: Inbox,
-  LoaderCircle: LoaderCircle
-} as const;
+export const NOTIFICATIONS_HISTORY_LIST_ICONS = { Inbox, LoaderCircle };
 
-export const PHASES_ICONS = {
-  Plus: Plus,
-  Pencil: Pencil,
-  Trash2: Trash2,
-  Calendar: Calendar,
-  FileText: FileText
-} as const;
+export const PHASES_ICONS = { Plus, Pencil, Trash2, Calendar, FileText };
 
-export const PROGRAM_CATEGORIES_ICONS = {
-  Trash: Trash,
-  Search: Search,
-  Funnel: Funnel,
-  Pencil: Pencil
-} as const;
+export const PROGRAM_CATEGORIES_ICONS = { Trash, Search, Funnel, Pencil };
 
-export const PROGRAM_DETAILS_ICONS = {
-  FolderKanban: FolderKanban,
-  LayoutList: LayoutList,
-  FileCode: FileCode,
-  Calendar: Calendar
-} as const;
+export const PROGRAM_DETAILS_ICONS = { FolderKanban, LayoutList, FileCode, Calendar };
 
-export const PROGRAM_SECTORS_ICONS = {
-  Pencil: Pencil,
-  Search: Search,
-  Trash: Trash
-} as const;
+export const PROGRAM_SECTORS_ICONS = { Pencil, Search, Trash };
 
-export const PROGRAM_TABS_ICONS = {
-  Folder: Folder
-} as const;
+export const PROGRAM_TABS_ICONS = { Folder };
 
-export const PROJECT_CATEGORIES_ICONS = {
-  Trash: Trash,
-  Search: Search,
-  Funnel: Funnel,
-  Pencil: Pencil
-} as const;
+export const PROJECT_CATEGORIES_ICONS = { Trash, Search, Funnel, Pencil };
 
-export const PROJECT_DETAILS_ICONS = {
-  SquarePen: SquarePen,
-  Images: Images,
-  ChartColumn: ChartColumn,
-  Star: Star,
-  Eye: Eye,
-  Layers: Layers,
-  Users: Users,
-  Bell: Bell,
-  FolderKanban: FolderKanban
-} as const;
+export const PROJECT_DETAILS_ICONS = { SquarePen, Images, ChartColumn, Star, Eye, Layers, Users, Bell, FolderKanban };
 
-export const PROJECT_GALLERY_ICONS = {
-  Trash2: Trash2,
-  Image: Image
-} as const;
+export const PROJECT_GALLERY_ICONS = { Trash2, Image };
 
-export const PROJECT_NOTIFICATIONS_ICONS = {
-  BellRing: BellRing,
-  Plus: Plus
-} as const;
+export const PROJECT_NOTIFICATIONS_ICONS = { BellRing, Plus };
 
-export const PROJECT_PARTICIPATION_DETAILS_ICONS = {
-  ArrowLeft: ArrowLeft,
-  CheckCheck: CheckCheck,
-  PencilLine: PencilLine,
-  X: X
-} as const;
+export const PROJECT_PARTICIPATION_DETAILS_ICONS = { ArrowLeft, CheckCheck, PencilLine, X };
 
-export const PROJECT_PARTICIPATIONS_LIST_ICONS = {
-  ArrowRight: ArrowRight,
-  Download: Download,
-  RefreshCcw: RefreshCcw,
-  Search: Search,
-  Upload: Upload,
-  X: X
-} as const;
+export const PROJECT_PARTICIPATIONS_LIST_ICONS = { ArrowRight, Download, RefreshCcw, Search, Upload, X };
 
-export const PROJECT_RESOURCES_ICONS = {
-  Eye: Eye,
-  FilePenLine: FilePenLine,
-  FileText: FileText,
-  FolderOpen: FolderOpen,
-  Pencil: Pencil,
-  Plus: Plus,
-  Trash2: Trash2,
-  Upload: Upload
-} as const;
+export const PROJECT_RESOURCES_ICONS = { Eye, FilePenLine, FileText, FolderOpen, Pencil, Plus, Trash2, Upload };
 
 export const PROJECT_SHEET_ICONS = {
-  BookOpen: BookOpen,
-  Calendar: Calendar,
-  SquareCheckBig: SquareCheckBig,
-  Clock: Clock,
-  FileText: FileText,
-  Flag: Flag,
-  FolderOpen: FolderOpen,
-  Target: Target,
-  User: User
-} as const;
+  BookOpen,
+  Calendar,
+  SquareCheckBig,
+  Clock,
+  FileText,
+  Flag,
+  FolderOpen,
+  Target,
+  User
+};
 
-export const SIDEBAR_ICONS = {
-  ChevronDown: ChevronDown,
-  House: House,
-  ExternalLink: ExternalLink
-} as const;
+export const SIDEBAR_ICONS = { ChevronDown, House, ExternalLink };
 
-export const STATS_OVERVIEW_ICONS = {
-  Users: Users,
-  FolderKanban: FolderKanban,
-  CalendarDays: CalendarDays,
-  Rocket: Rocket
-} as const;
+export const STATS_OVERVIEW_ICONS = { Users, FolderKanban, CalendarDays, Rocket };
 
-export const UI_ACCORDION_HEADER_ICONS = {
-  ChevronDown: ChevronDown
-} as const;
+export const UI_ACCORDION_HEADER_ICONS = { ChevronDown };
 
-export const UI_BUTTON_ICONS = {
-  Loader2: Loader2
-} as const;
+export const UI_BUTTON_ICONS = { LoaderCircle };
 
-export const UI_CONFIRM_DIALOG_ICONS = {
-  X: X,
-  CircleAlert: CircleAlert
-} as const;
+export const UI_CONFIRM_DIALOG_ICONS = { X, CircleAlert };
 
-export const UI_DATEPICKER_ICONS = {
-  Calendar: Calendar,
-  ChevronLeft: ChevronLeft,
-  ChevronRight: ChevronRight
-} as const;
+export const UI_DATEPICKER_ICONS = { Calendar, ChevronLeft, ChevronRight };
 
-export const UI_MULTI_SELECT_ICONS = {
-  ChevronDown: ChevronDown,
-  Plus: Plus
-} as const;
+export const UI_MULTI_SELECT_ICONS = { ChevronDown, Plus };
 
-export const UI_PAGINATION_ICONS = {
-  ChevronLeft: ChevronLeft,
-  ChevronRight: ChevronRight
-} as const;
+export const UI_PAGINATION_ICONS = { ChevronLeft, ChevronRight };
 
-export const UI_PASSWORD_ICONS = {
-  Eye: Eye,
-  EyeOff: EyeOff
-} as const;
+export const UI_PASSWORD_ICONS = { Eye, EyeOff };
 
-export const UI_SELECT_ICONS = {
-  ChevronDown: ChevronDown,
-  Plus: Plus
-} as const;
+export const UI_SELECT_ICONS = { ChevronDown, Plus };
 
-export const UI_TABS_ICONS = {
+export const UI_TEXT_EDITOR_ICONS = { Bold, Italic, Underline, List, TextAlignStart, TextAlignCenter, TextAlignEnd };
 
-} as const;
+export const UPDATE_PROGRAM_ICONS = { SquarePen, Trash2, Funnel, Tag, Star, Eye };
 
-export const UI_TEXT_EDITOR_ICONS = {
-  Bold: Bold,
-  Italic: Italic,
-  Underline: Underline,
-  List: List,
-  TextAlignStart: TextAlignStart,
-  TextAlignCenter: TextAlignCenter,
-  TextAlignEnd: TextAlignEnd
-} as const;
-
-export const UPDATE_PROGRAM_ICONS = {
-  SquarePen: SquarePen,
-  Trash2: Trash2,
-  Funnel: Funnel,
-  Tag: Tag,
-  Star: Star,
-  Eye: Eye
-} as const;
-
-export const USER_ROLES_ICONS = {
-  Trash: Trash,
-  Search: Search,
-  Funnel: Funnel,
-  Pencil: Pencil
-} as const;
+export const USER_ROLES_ICONS = { Trash, Search, Funnel, Pencil };
 
 export const VENTURE_DETAILS_ICONS = {
-  ToggleLeft: ToggleLeft,
-  ToggleRight: ToggleRight,
-  Building2: Building2,
-  Globe: Globe,
-  Mail: Mail,
-  Phone: Phone,
-  MapPin: MapPin,
-  Calendar: Calendar,
-  ExternalLink: ExternalLink,
+  ToggleLeft,
+  ToggleRight,
+  Building2,
+  Globe,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  ExternalLink,
   ImageIcon: Images,
-  Package: Package,
-  ChevronLeft: ChevronLeft,
-  ChevronRight: ChevronRight,
-  X: X
-} as const;
+  Package,
+  ChevronLeft,
+  ChevronRight,
+  X
+};
 
-export const YEAR_SUMMARY_ICONS = {
-  ChartBar: ChartBar,
-  FolderKanban: FolderKanban,
-  CalendarDays: CalendarDays
-} as const;
+export const YEAR_SUMMARY_ICONS = { ChartBar, FolderKanban, CalendarDays };
 
 export type { LucideIconData } from 'lucide-angular';

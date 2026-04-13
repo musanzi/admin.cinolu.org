@@ -1,0 +1,54 @@
+<section class="pt-32 dashboard-main-content flex flex-col gap-6">
+  <form
+    [formGroup]="form"
+    autocomplete="off"
+    class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm md:p-7"
+    (ngSubmit)="onSubmit()">
+    <div class="mb-6 flex flex-col gap-2 border-b border-gray-100 pb-5">
+      <h2 class="text-lg font-semibold text-gray-900">Créer une opportunité</h2>
+    </div>
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <app-ui-input [id]="'title'" label="Titre" [required]="true" formControlName="title" placeholder="Titre" />
+      <app-ui-input
+        [id]="'link'"
+        label="Lien"
+        [required]="true"
+        formControlName="link"
+        placeholder="https://example.org/apply" />
+      <app-ui-datepicker
+        [id]="'due_date'"
+        [yearSelect]="true"
+        [monthSelect]="true"
+        label="Date limite"
+        [required]="true"
+        formControlName="due_date" />
+      <app-ui-select
+        [id]="'language'"
+        label="Langue"
+        [required]="true"
+        [options]="languageOptions"
+        formControlName="language"
+        placeholder="Choisir une langue" />
+      <div class="lg:col-span-2">
+        <app-ui-textarea
+          [id]="'description'"
+          label="Description"
+          [required]="true"
+          [rows]="8"
+          formControlName="description"
+          placeholder="Décrivez l'opportunité" />
+      </div>
+    </div>
+
+    <div class="mt-8 flex justify-end border-t border-gray-200 pt-6">
+      <app-ui-button
+        [size]="'small'"
+        [loading]="store.isLoading()"
+        [disabled]="store.isLoading()"
+        type="submit"
+        variant="primary">
+        Créer l'opportunité
+      </app-ui-button>
+    </div>
+  </form>
+</section>

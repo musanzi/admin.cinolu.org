@@ -49,6 +49,10 @@ export class ApiImgPipe implements PipeTransform {
 
       case 'event':
         return typeof value['cover'] === 'string' && value['cover'] ? `${apiUrl}uploads/events/${value['cover']}` : '';
+      case 'opportunity':
+        return typeof value['cover'] === 'string' && value['cover']
+          ? `${apiUrl}uploads/opportunities/${value['cover']}`
+          : '';
 
       default:
         return '';

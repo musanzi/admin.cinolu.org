@@ -1,5 +1,5 @@
 import { LINK_GROUPS_ICONS } from '@shared/data';
-const { UserCheck, Calendar1, BookOpen, Layers, Folders, LayoutDashboard, UserCog, User, UserRoundCog } =
+const { UserCheck, Calendar1, BookOpen, Briefcase, Layers, Folders, LayoutDashboard, UserCog, User, UserRoundCog } =
   LINK_GROUPS_ICONS;
 import { ILinkGroup } from '../types/link.type';
 
@@ -68,6 +68,11 @@ export const LINK_GROUPS: ILinkGroup[] = [
             path: '/event-categories'
           }
         ]
+      },
+      {
+        name: 'Les opportunités',
+        path: '/opportunities',
+        icon: Briefcase
       },
       {
         name: 'Les mentors',

@@ -1,0 +1,54 @@
+<section class="pt-32 dashboard-main-content flex flex-col gap-6">
+  @let opportunity = store.opportunity();
+  @if (opportunity) {
+    <div
+      class="flex flex-col gap-4 rounded-2xl border border-gray-200 bg-gray-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h2 class="text-xl font-bold text-gray-900">{{ opportunity.title }}</h2>
+      </div>
+      <div class="flex items-center gap-2">
+        <a
+          [href]="opportunity.link"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="ui-button ui-button-small ui-button-primary ui-button-outlined">
+          <i-lucide [name]="icons.ExternalLink" class="size-4" />
+          Ouvrir le liens
+        </a>
+        <app-ui-button size="small" variant="danger" (clicked)="onDelete()">
+          <i-lucide [name]="icons.Trash" class="size-4" />
+          Supprimer
+        </app-ui-button>
+      </div>
+    </div>
+
+    <app-ui-tabs [tabs]="tabs" [activeTab]="activeTab()" (tabChange)="onTabChange($event)" />
+
+    @if (activeTab() === 'details') {
+      <app-opportunity-sheet [opportunity]="opportunity" />
+    }
+
+    @if (activeTab() === 'edit') {
+      <app-opportunity-update [opportunity]="opportunity" />
+    }
+
+    @if (activeTab() === 'cover') {
+      <app-opportunity-cover
+        [opportunity]="opportunity"
+        [isLoading]="store.isLoading()"
+        (coverUploaded)="onCoverUploaded()" />
+    }
+  } @else if (store.isLoading()) {
+    <div class="grid grid-cols-1 gap-4">
+      <div class="h-24 animate-pulse rounded-2xl bg-gray-200"></div>
+      <div class="h-96 animate-pulse rounded-2xl bg-gray-200"></div>
+    </div>
+  } @else {
+    <div class="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-14 text-center">
+      <h3 class="text-xl font-semibold text-gray-900">Opportunité introuvable</h3>
+      <p class="mt-2 text-sm text-gray-500">Cette ressource est indisponible ou a déjà été supprimée.</p>
+    </div>
+  }
+
+  <app-ui-confirm-dialog />
+</section>

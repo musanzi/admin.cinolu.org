@@ -121,6 +121,7 @@ export const LINK_GROUPS_ICONS = {
   UserCheck,
   Calendar1,
   BookOpen,
+  Briefcase,
   Layers,
   Folders,
   LayoutDashboard,
@@ -148,6 +149,8 @@ export const LIST_MENTORS_ICONS = {
   CircleX,
   Pencil
 };
+
+export const LIST_OPPORTUNITIES_ICONS = { Calendar, Eye, Funnel, Plus, Search, Trash };
 
 export const LIST_PROGRAMS_ICONS = { Trash, Search, Funnel, Eye };
 
@@ -207,6 +210,8 @@ export const NOTIFICATION_COMPOSE_ICONS = {
 };
 
 export const NOTIFICATIONS_HISTORY_LIST_ICONS = { Inbox, LoaderCircle };
+
+export const OPPORTUNITY_DETAILS_ICONS = { Calendar, ExternalLink, FileText, Image, SquarePen, Trash };
 
 export const PHASES_ICONS = { Plus, Pencil, Trash2, Calendar, FileText };
 

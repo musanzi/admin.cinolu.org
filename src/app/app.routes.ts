@@ -53,6 +53,14 @@ export const routes: Routes = [
     data: { layout: 'admin-layout' },
     canActivate: [authGuard],
     path: '',
+    title: 'Opportunités',
+    loadChildren: () => import('@features/opportunities/opportunities.routes').then((m) => m.opportunitiesRoutes)
+  },
+  {
+    component: Layout,
+    data: { layout: 'admin-layout' },
+    canActivate: [authGuard],
+    path: '',
     title: 'Utilisateurs',
     loadChildren: () => import('@features/users/users.routes').then((m) => m.usersRoutes)
   },

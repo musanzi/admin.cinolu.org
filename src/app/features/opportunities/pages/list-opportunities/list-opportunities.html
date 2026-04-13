@@ -1,0 +1,108 @@
+@let opportunities = store.opportunities();
+@let isLoading = store.isLoading();
+<section class="dashboard-main-content">
+  <div class="mb-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <app-ui-badge [label]="opportunities.length + ' opportunités'" />
+    <a [routerLink]="'/opportunities/add'" class="ui-button ui-button-small ui-button-primary">Nouvelle opportunité</a>
+  </div>
+
+  <form [formGroup]="filterForm" class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <app-ui-datepicker
+        [id]="'from'"
+        [yearSelect]="true"
+        [monthSelect]="true"
+        label="À partir du"
+        formControlName="from" />
+      <app-ui-datepicker [id]="'to'" [yearSelect]="true" [monthSelect]="true" label="Jusqu'au" formControlName="to" />
+      <app-ui-select
+        [id]="'language'"
+        label="Langue"
+        [options]="languageOptions"
+        formControlName="language"
+        placeholder="Toutes les langues" />
+    </div>
+    <div class="mt-4 flex justify-end">
+      <app-ui-button type="button" variant="secondary" [outlined]="true" (clicked)="onResetFilters()">
+        <i-lucide [name]="icons.Funnel" class="size-4" />
+        Réinitialiser les filtres
+      </app-ui-button>
+    </div>
+  </form>
+
+  <div class="mt-6">
+    @if (isLoading && opportunities.length === 0) {
+      <app-ui-table-skeleton [rows]="8" [columns]="5" />
+    } @else if (opportunities.length > 0) {
+      <div class="ui-table-wrapper">
+        <table class="ui-table">
+          <thead class="ui-table-head">
+            <tr class="ui-table-head-row">
+              <th class="ui-table-header">Opportunité</th>
+              <th class="ui-table-header">Langue</th>
+              <th class="ui-table-header">Date limite</th>
+              <th class="ui-table-header">Lien</th>
+              <th class="ui-table-header">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="ui-table-body">
+            @for (opportunity of opportunities; track opportunity.id) {
+              <tr class="ui-table-row">
+                <td class="ui-table-cell">
+                  <div class="flex items-center gap-3">
+                    <app-ui-avatar
+                      [shape]="'square'"
+                      [image]="opportunity | apiIMG: 'opportunity'"
+                      [label]="opportunity.title" />
+                    <div class="min-w-36">
+                      <p class="line-clamp-1 font-semibold text-gray-900">{{ opportunity.title }}</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="ui-table-cell">
+                  <app-ui-badge
+                    [label]="opportunity.language === 'fr' ? 'Français' : 'English'"
+                    [variant]="'info'"
+                    [size]="'small'" />
+                </td>
+                <td class="ui-table-cell whitespace-nowrap text-sm text-gray-600">
+                  {{ opportunity.due_date | date: 'longDate' }}
+                </td>
+                <td class="ui-table-cell max-w-xs truncate text-sm text-gray-600">
+                  <a [href]="opportunity.link" target="_blank" rel="noopener noreferrer" class="underline">
+                    {{ opportunity.link }}
+                  </a>
+                </td>
+                <td class="ui-table-cell">
+                  <div class="flex items-center gap-1.5">
+                    <a
+                      [routerLink]="['/opportunities', opportunity.slug]"
+                      class="ui-button ui-button-small ui-button-primary ui-button-outlined ui-button-text">
+                      <i-lucide [name]="icons.Eye" class="size-4" />
+                      Détails
+                    </a>
+                    <app-ui-button size="small" variant="danger" (clicked)="onDelete(opportunity)">
+                      <i-lucide [name]="icons.Trash" class="size-4" />
+                      Supprimer
+                    </app-ui-button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <div class="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-14 text-center">
+        <div
+          class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-primary-100 bg-primary-50">
+          <i-lucide [name]="icons.Search" class="size-8 text-primary-500" />
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900">Aucune opportunité trouvée</h3>
+        <p class="mt-2 text-sm text-gray-500">Essayez d'ajuster les dates ou la langue sélectionnée.</p>
+      </div>
+    }
+  </div>
+
+  <app-ui-confirm-dialog />
+</section>

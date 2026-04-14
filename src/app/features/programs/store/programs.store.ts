@@ -20,128 +20,128 @@ export const ProgramsStore = signalStore(
     const service = inject(ProgramsService);
 
     return {
-    loadAll: rxMethod<FilterProgramsDto>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((filters) =>
-          service.getAll(filters).pipe(
-            tap({
-              next: (programs) => patchState(store, { isLoading: false, programs }),
-              error: () => patchState(store, { isLoading: false, programs: [[], 0] })
-            })
+      loadAll: rxMethod<FilterProgramsDto>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((filters) =>
+            service.getAll(filters).pipe(
+              tap({
+                next: (programs) => patchState(store, { isLoading: false, programs }),
+                error: () => patchState(store, { isLoading: false, programs: [[], 0] })
+              })
+            )
           )
         )
-      )
-    ),
-    loadUnpaginated: rxMethod<void>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        exhaustMap(() =>
-          service.getAllUnpaginated().pipe(
-            tap({
-              next: (allPrograms) => patchState(store, { isLoading: false, allPrograms }),
-              error: () => patchState(store, { isLoading: false, allPrograms: [] })
-            })
+      ),
+      loadUnpaginated: rxMethod<void>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          exhaustMap(() =>
+            service.getAllUnpaginated().pipe(
+              tap({
+                next: (allPrograms) => patchState(store, { isLoading: false, allPrograms }),
+                error: () => patchState(store, { isLoading: false, allPrograms: [] })
+              })
+            )
           )
         )
-      )
-    ),
-    loadOne: rxMethod<string>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((slug) =>
-          service.getOne(slug).pipe(
-            tap({
-              next: (program) => patchState(store, { isLoading: false, program }),
-              error: () => patchState(store, { isLoading: false, program: null })
-            })
+      ),
+      loadOne: rxMethod<string>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((slug) =>
+            service.getOne(slug).pipe(
+              tap({
+                next: (program) => patchState(store, { isLoading: false, program }),
+                error: () => patchState(store, { isLoading: false, program: null })
+              })
+            )
           )
         )
-      )
-    ),
-    create: rxMethod<ProgramDto>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((payload) =>
-          service.create(payload).pipe(
-            tap({
-              next: () => patchState(store, { isLoading: false }),
-              error: () => patchState(store, { isLoading: false })
-            })
+      ),
+      create: rxMethod<ProgramDto>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((payload) =>
+            service.create(payload).pipe(
+              tap({
+                next: () => patchState(store, { isLoading: false }),
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
           )
         )
-      )
-    ),
-    update: rxMethod<{ programId: string; payload: ProgramDto }>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap(({ programId, payload }) =>
-          service.update(programId, payload).pipe(
-            tap({
-              next: (data) => {
-              const [list, count] = store.programs();
-              const updated = list.map((p) => (p.id === data.id ? data : p));
-              patchState(store, { isLoading: false, program: data, programs: [updated, count] });
-              },
-              error: () => patchState(store, { isLoading: false })
-            })
+      ),
+      update: rxMethod<{ programId: string; payload: ProgramDto }>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap(({ programId, payload }) =>
+            service.update(programId, payload).pipe(
+              tap({
+                next: (data) => {
+                  const [list, count] = store.programs();
+                  const updated = list.map((p) => (p.id === data.id ? data : p));
+                  patchState(store, { isLoading: false, program: data, programs: [updated, count] });
+                },
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
           )
         )
-      )
-    ),
-    delete: rxMethod<string>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((id) =>
-          service.delete(id).pipe(
-            tap({
-              next: () => {
-              const [programs, count] = store.programs();
-              const filtered = programs.filter((program) => program.id !== id);
-              patchState(store, { isLoading: false, programs: [filtered, Math.max(0, count - 1)] });
-              },
-              error: () => patchState(store, { isLoading: false })
-            })
+      ),
+      delete: rxMethod<string>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((id) =>
+            service.delete(id).pipe(
+              tap({
+                next: () => {
+                  const [programs, count] = store.programs();
+                  const filtered = programs.filter((program) => program.id !== id);
+                  patchState(store, { isLoading: false, programs: [filtered, Math.max(0, count - 1)] });
+                },
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
           )
         )
-      )
-    ),
+      ),
 
-    // Publish / Highlight
-    publishProgram: rxMethod<string>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((id) =>
-          service.publish(id).pipe(
-            tap({
-              next: (data) => {
-              const [list, count] = store.programs();
-              const updated = list.map((p) => (p.id === data.id ? data : p));
-              patchState(store, { isLoading: false, program: data, programs: [updated, count] });
-              },
-              error: () => patchState(store, { isLoading: false })
-            })
+      // Publish / Highlight
+      publishProgram: rxMethod<string>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((id) =>
+            service.publish(id).pipe(
+              tap({
+                next: (data) => {
+                  const [list, count] = store.programs();
+                  const updated = list.map((p) => (p.id === data.id ? data : p));
+                  patchState(store, { isLoading: false, program: data, programs: [updated, count] });
+                },
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
+          )
+        )
+      ),
+      highlight: rxMethod<string>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((id) =>
+            service.highlight(id).pipe(
+              tap({
+                next: (data) => {
+                  const [list, count] = store.programs();
+                  const updated = list.map((p) => (p.id === data.id ? data : p));
+                  patchState(store, { isLoading: false, program: data, programs: [updated, count] });
+                },
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
           )
         )
       )
-    ),
-    highlight: rxMethod<string>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((id) =>
-          service.highlight(id).pipe(
-            tap({
-              next: (data) => {
-              const [list, count] = store.programs();
-              const updated = list.map((p) => (p.id === data.id ? data : p));
-              patchState(store, { isLoading: false, program: data, programs: [updated, count] });
-              },
-              error: () => patchState(store, { isLoading: false })
-            })
-          )
-        )
-      )
-    )
-  };
+    };
   })
 );

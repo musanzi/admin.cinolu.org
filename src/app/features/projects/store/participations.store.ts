@@ -44,19 +44,19 @@ export const ParticipationsStore = signalStore(
             service.getAll(projectId, filters).pipe(
               tap({
                 next: ({ participations, total }) => {
-                  patchState(store, { 
-                    isLoading: false, 
-                    participations, 
+                  patchState(store, {
+                    isLoading: false,
+                    participations,
                     total,
-                    error: null 
+                    error: null
                   });
                 },
                 error: (error) => {
-                  patchState(store, { 
-                    isLoading: false, 
-                    participations: [], 
+                  patchState(store, {
+                    isLoading: false,
+                    participations: [],
                     total: 0,
-                    error 
+                    error
                   });
                 }
               })
@@ -146,10 +146,10 @@ export const ParticipationsStore = signalStore(
       ),
 
       clearParticipation(): void {
-        patchState(store, { 
-          participation: null, 
-          error: null, 
-          isDetailLoading: false 
+        patchState(store, {
+          participation: null,
+          error: null,
+          isDetailLoading: false
         });
       },
 

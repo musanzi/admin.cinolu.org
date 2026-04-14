@@ -37,118 +37,118 @@ export const MentorsStore = signalStore(
 
     return {
       loadAll: rxMethod<FilterMentorsProfileDto>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((filters) =>
-          service.getAll(filters).pipe(
-            tap({
-              next: (mentors) => patchState(store, { isLoading: false, mentors }),
-              error: () => patchState(store, { isLoading: false, mentors: [[], 0] })
-            })
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((filters) =>
+            service.getAll(filters).pipe(
+              tap({
+                next: (mentors) => patchState(store, { isLoading: false, mentors }),
+                error: () => patchState(store, { isLoading: false, mentors: [[], 0] })
+              })
+            )
           )
         )
-      )
-    ),
+      ),
       loadOne: rxMethod<string>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((id) =>
-          service.getOne(id).pipe(
-            tap({
-              next: (mentor) => patchState(store, { isLoading: false, mentor }),
-              error: () => patchState(store, { isLoading: false })
-            })
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((id) =>
+            service.getOne(id).pipe(
+              tap({
+                next: (mentor) => patchState(store, { isLoading: false, mentor }),
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
           )
         )
-      )
-    ),
+      ),
       searchUsers: rxMethod<string>(
-      pipe(
-        map((term) => term.trim()),
-        debounceTime(500),
-        distinctUntilChanged(),
-        switchMap((term) => {
-          patchState(store, { userSearchTerm: term });
-          if (term.length < 2) {
-            patchState(store, { isSearchingUsers: false });
-            return of(null);
-          }
+        pipe(
+          map((term) => term.trim()),
+          debounceTime(500),
+          distinctUntilChanged(),
+          switchMap((term) => {
+            patchState(store, { userSearchTerm: term });
+            if (term.length < 2) {
+              patchState(store, { isSearchingUsers: false });
+              return of(null);
+            }
 
-          patchState(store, { isSearchingUsers: true });
-          return service.searchUsers(term).pipe(
-            tap({
-              next: (searchedUsers) => patchState(store, { isSearchingUsers: false, searchedUsers }),
-              error: () => patchState(store, { isSearchingUsers: false, searchedUsers: [] })
-            })
-          );
-        })
-      )
-    ),
+            patchState(store, { isSearchingUsers: true });
+            return service.searchUsers(term).pipe(
+              tap({
+                next: (searchedUsers) => patchState(store, { isSearchingUsers: false, searchedUsers }),
+                error: () => patchState(store, { isSearchingUsers: false, searchedUsers: [] })
+              })
+            );
+          })
+        )
+      ),
       approve: rxMethod<string>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((id) =>
-          service.approve(id).pipe(
-            tap({
-              next: (data) => {
-                const [list, count] = store.mentors();
-                const updated = list.map((m) => (m.id === data.id ? data : m));
-                patchState(store, { isLoading: false, mentors: [updated, count], mentor: data });
-              },
-              error: () => patchState(store, { isLoading: false })
-            })
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((id) =>
+            service.approve(id).pipe(
+              tap({
+                next: (data) => {
+                  const [list, count] = store.mentors();
+                  const updated = list.map((m) => (m.id === data.id ? data : m));
+                  patchState(store, { isLoading: false, mentors: [updated, count], mentor: data });
+                },
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
           )
         )
-      )
-    ),
+      ),
       reject: rxMethod<string>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((id) =>
-          service.reject(id).pipe(
-            tap({
-              next: (data) => {
-                const [list, count] = store.mentors();
-                const updated = list.map((m) => (m.id === data.id ? data : m));
-                patchState(store, { isLoading: false, mentors: [updated, count], mentor: data });
-              },
-              error: () => patchState(store, { isLoading: false })
-            })
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((id) =>
+            service.reject(id).pipe(
+              tap({
+                next: (data) => {
+                  const [list, count] = store.mentors();
+                  const updated = list.map((m) => (m.id === data.id ? data : m));
+                  patchState(store, { isLoading: false, mentors: [updated, count], mentor: data });
+                },
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
           )
         )
-      )
-    ),
+      ),
       create: rxMethod<CreateMentorDto>(
-      pipe(
-        tap(() => patchState(store, { isSaving: true })),
-        switchMap((dto) =>
-          service.create(dto).pipe(
-            tap({
-              next: (data) => {
-                patchState(store, { isSaving: false, mentor: data });
-              },
-              error: () => patchState(store, { isSaving: false })
-            })
+        pipe(
+          tap(() => patchState(store, { isSaving: true })),
+          switchMap((dto) =>
+            service.create(dto).pipe(
+              tap({
+                next: (data) => {
+                  patchState(store, { isSaving: false, mentor: data });
+                },
+                error: () => patchState(store, { isSaving: false })
+              })
+            )
           )
         )
-      )
-    ),
+      ),
       update: rxMethod<{ id: string; dto: CreateMentorDto }>(
-      pipe(
-        tap(() => patchState(store, { isSaving: true })),
-        switchMap(({ id, dto }) =>
-          service.update(id, dto).pipe(
-            tap({
-              next: (data) => {
-                const [list, count] = store.mentors();
-                const updated = list.map((mentor) => (mentor.id === data.id ? data : mentor));
-                patchState(store, { isSaving: false, mentors: [updated, count], mentor: data });
-              },
-              error: () => patchState(store, { isSaving: false })
-            })
+        pipe(
+          tap(() => patchState(store, { isSaving: true })),
+          switchMap(({ id, dto }) =>
+            service.update(id, dto).pipe(
+              tap({
+                next: (data) => {
+                  const [list, count] = store.mentors();
+                  const updated = list.map((mentor) => (mentor.id === data.id ? data : mentor));
+                  patchState(store, { isSaving: false, mentors: [updated, count], mentor: data });
+                },
+                error: () => patchState(store, { isSaving: false })
+              })
+            )
           )
         )
-      )
       )
     };
   })

@@ -22,49 +22,49 @@ export const VenturesStore = signalStore(
     const service = inject(VenturesService);
 
     return {
-    loadAll: rxMethod<FilterVenturesDto>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((filters) =>
-          service.getAll(filters).pipe(
-            tap({
-              next: (ventures) => patchState(store, { isLoading: false, ventures }),
-              error: () => patchState(store, { isLoading: false, ventures: [[], 0] })
-            })
+      loadAll: rxMethod<FilterVenturesDto>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((filters) =>
+            service.getAll(filters).pipe(
+              tap({
+                next: (ventures) => patchState(store, { isLoading: false, ventures }),
+                error: () => patchState(store, { isLoading: false, ventures: [[], 0] })
+              })
+            )
+          )
+        )
+      ),
+      loadOne: rxMethod<string>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((slug) =>
+            service.getOne(slug).pipe(
+              tap({
+                next: (venture) => patchState(store, { isLoading: false, venture }),
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
+          )
+        )
+      ),
+      togglePublish: rxMethod<string>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((slug) =>
+            service.togglePublish(slug).pipe(
+              tap({
+                next: (data) => {
+                  const [list, count] = store.ventures();
+                  const updated = list.map((v) => (v.slug === data.slug ? data : v));
+                  patchState(store, { isLoading: false, ventures: [updated, count], venture: data });
+                },
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
           )
         )
       )
-    ),
-    loadOne: rxMethod<string>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((slug) =>
-          service.getOne(slug).pipe(
-            tap({
-              next: (venture) => patchState(store, { isLoading: false, venture }),
-              error: () => patchState(store, { isLoading: false })
-            })
-          )
-        )
-      )
-    ),
-    togglePublish: rxMethod<string>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((slug) =>
-          service.togglePublish(slug).pipe(
-            tap({
-              next: (data) => {
-              const [list, count] = store.ventures();
-              const updated = list.map((v) => (v.slug === data.slug ? data : v));
-              patchState(store, { isLoading: false, ventures: [updated, count], venture: data });
-              },
-              error: () => patchState(store, { isLoading: false })
-            })
-          )
-        )
-      )
-    )
-  };
+    };
   })
 );

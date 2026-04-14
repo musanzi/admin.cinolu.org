@@ -58,9 +58,9 @@ export const ResourcesStore = signalStore(
             service.create(dto, file).pipe(
               tap({
                 next: (data) => {
-                upsert(data);
-                patchState(store, { isSaving: false });
-                onSuccess?.();
+                  upsert(data);
+                  patchState(store, { isSaving: false });
+                  onSuccess?.();
                 },
                 error: () => patchState(store, { isSaving: false })
               })
@@ -75,9 +75,9 @@ export const ResourcesStore = signalStore(
             service.update(id, dto).pipe(
               tap({
                 next: (data) => {
-                upsert(data);
-                patchState(store, { isSaving: false });
-                onSuccess?.();
+                  upsert(data);
+                  patchState(store, { isSaving: false });
+                  onSuccess?.();
                 },
                 error: () => patchState(store, { isSaving: false })
               })
@@ -86,14 +86,14 @@ export const ResourcesStore = signalStore(
         )
       ),
       replaceFile: rxMethod<{ id: string; file: File }>(
-      pipe(
+        pipe(
           tap(() => patchState(store, { isSaving: true })),
           switchMap(({ id, file }) => {
             return service.replaceFile(id, file).pipe(
               tap({
                 next: (data) => {
-                upsert(data);
-                patchState(store, { isSaving: false });
+                  upsert(data);
+                  patchState(store, { isSaving: false });
                 },
                 error: () => patchState(store, { isSaving: false })
               })
@@ -102,17 +102,17 @@ export const ResourcesStore = signalStore(
         )
       ),
       delete: rxMethod<string>(
-      pipe(
+        pipe(
           tap(() => patchState(store, { isSaving: true })),
           switchMap((id) =>
             service.delete(id).pipe(
               tap({
                 next: () => {
-                const [list, total] = store.resources();
-                patchState(store, {
-                  isSaving: false,
-                  resources: [list.filter((item) => item.id !== id), Math.max(0, total - 1)]
-                });
+                  const [list, total] = store.resources();
+                  patchState(store, {
+                    isSaving: false,
+                    resources: [list.filter((item) => item.id !== id), Math.max(0, total - 1)]
+                  });
                 },
                 error: () => patchState(store, { isSaving: false })
               })

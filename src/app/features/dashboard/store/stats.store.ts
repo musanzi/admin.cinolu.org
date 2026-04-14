@@ -27,32 +27,32 @@ export const StatsStore = signalStore(
     const service = inject(StatsService);
 
     return {
-    loadGeneral: rxMethod<void>(
-      pipe(
-        tap(() => patchState(store, { isLoadingGeneral: true })),
-        switchMap(() =>
-          service.getGeneral().pipe(
-            tap({
-              next: (general) => patchState(store, { isLoadingGeneral: false, general }),
-              error: () => patchState(store, { isLoadingGeneral: false, general: null })
-            })
+      loadGeneral: rxMethod<void>(
+        pipe(
+          tap(() => patchState(store, { isLoadingGeneral: true })),
+          switchMap(() =>
+            service.getGeneral().pipe(
+              tap({
+                next: (general) => patchState(store, { isLoadingGeneral: false, general }),
+                error: () => patchState(store, { isLoadingGeneral: false, general: null })
+              })
+            )
+          )
+        )
+      ),
+      loadByYear: rxMethod<number>(
+        pipe(
+          tap((year) => patchState(store, { isLoadingByYear: true, selectedYear: year })),
+          switchMap((year) =>
+            service.getByYear(year).pipe(
+              tap({
+                next: (byYear) => patchState(store, { isLoadingByYear: false, byYear }),
+                error: () => patchState(store, { isLoadingByYear: false, byYear: null })
+              })
+            )
           )
         )
       )
-    ),
-    loadByYear: rxMethod<number>(
-      pipe(
-        tap((year) => patchState(store, { isLoadingByYear: true, selectedYear: year })),
-        switchMap((year) =>
-          service.getByYear(year).pipe(
-            tap({
-              next: (byYear) => patchState(store, { isLoadingByYear: false, byYear }),
-              error: () => patchState(store, { isLoadingByYear: false, byYear: null })
-            })
-          )
-        )
-      )
-    )
-  };
+    };
   })
 );

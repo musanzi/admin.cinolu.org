@@ -5,10 +5,10 @@
     avatarClasses()
   ">
   @if (image()) {
-  <img [ngSrc]="image()!" [alt]="image()!" class="w-full h-full object-cover" fill />
+    <img [ngSrc]="image()!" [alt]="image()!" class="w-full h-full object-cover" fill />
   } @else {
-  <div class="flex items-center uppercase justify-center text-primary-600 text-xl font-black">
-    {{ label()[0] }}
-  </div>
+    <div class="flex items-center uppercase justify-center text-primary-600 text-xl font-black">
+      {{ label()[0] }}
+    </div>
   }
 </div>

@@ -2,7 +2,7 @@ import { afterNextRender, inject, Injectable, NgZone } from '@angular/core';
 import { Notyf } from 'notyf';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ToastrService {
   #notyf: Notyf | null = null;
@@ -13,7 +13,7 @@ export class ToastrService {
       this.#ngZone.runOutsideAngular(() => {
         this.#notyf = new Notyf({
           duration: 4000,
-          position: { x: 'right', y: 'bottom' },
+          position: { x: 'right', y: 'bottom' }
         });
       });
     });

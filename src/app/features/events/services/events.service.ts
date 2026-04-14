@@ -87,9 +87,7 @@ export class EventsService {
   showcase(id: string): Observable<IEvent> {
     return this.http.patch<{ data: IEvent }>(`events/id/${id}/highlight`, {}).pipe(
       map(({ data }) => {
-        this.toast.showSuccess(
-          data.is_highlighted ? 'Evénement mis en avant' : 'Evénement retiré des mises en avant'
-        );
+        this.toast.showSuccess(data.is_highlighted ? 'Evénement mis en avant' : 'Evénement retiré des mises en avant');
         return data;
       }),
       catchError((error) => {

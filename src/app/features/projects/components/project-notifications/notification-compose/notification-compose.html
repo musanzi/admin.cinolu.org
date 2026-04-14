@@ -44,14 +44,8 @@
             [options]="state().phaseOptions"
             placeholder="Tous les participants" />
           <div class="flex items-center gap-5 rounded-lg border border-gray-200 bg-white px-4 py-3">
-            <app-ui-checkbox
-              [id]="'notify_mentors'"
-              formControlName="notify_mentors"
-              label="Les mentors uniquement" />
-            <app-ui-checkbox
-              [id]="'notify_staff'"
-              formControlName="notify_staff"
-              label="Les membres du staff" />
+            <app-ui-checkbox [id]="'notify_mentors'" formControlName="notify_mentors" label="Les mentors uniquement" />
+            <app-ui-checkbox [id]="'notify_staff'" formControlName="notify_staff" label="Les membres du staff" />
           </div>
         </div>
       </div>

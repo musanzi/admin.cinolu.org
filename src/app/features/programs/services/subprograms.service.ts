@@ -80,9 +80,7 @@ export class SubprogramsService {
   showcase(id: string): Observable<ISubprogram> {
     return this.http.patch<{ data: ISubprogram }>(`subprograms/id/${id}/highlight`, {}).pipe(
       map(({ data }) => {
-        this.toast.showSuccess(
-          data.is_highlighted ? 'Programme mis en avant' : 'Programme retiré de la mise en avant'
-        );
+        this.toast.showSuccess(data.is_highlighted ? 'Programme mis en avant' : 'Programme retiré de la mise en avant');
         return data;
       }),
       catchError((error) => {

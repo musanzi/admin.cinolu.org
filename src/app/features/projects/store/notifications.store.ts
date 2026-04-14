@@ -52,12 +52,12 @@ export const NotificationsStore = signalStore(
               tap({
                 next: (notifications) => {
                   const [list] = notifications;
-                const activeId = store.activeNotification()?.id;
-                patchState(store, {
-                  isLoading: false,
+                  const activeId = store.activeNotification()?.id;
+                  patchState(store, {
+                    isLoading: false,
                     notifications,
-                  activeNotification: activeId ? (list.find((item) => item.id === activeId) ?? null) : null
-                });
+                    activeNotification: activeId ? (list.find((item) => item.id === activeId) ?? null) : null
+                  });
                 },
                 error: () => patchState(store, { isLoading: false, notifications: [[], 0], activeNotification: null })
               })
@@ -133,13 +133,13 @@ export const NotificationsStore = signalStore(
             service.delete(notificationId).pipe(
               tap({
                 next: () => {
-                const [list, total] = store.notifications();
-                patchState(store, {
-                  isSaving: false,
-                  notifications: [list.filter((item) => item.id !== notificationId), Math.max(0, total - 1)],
-                  activeNotification:
-                    store.activeNotification()?.id === notificationId ? null : store.activeNotification()
-                });
+                  const [list, total] = store.notifications();
+                  patchState(store, {
+                    isSaving: false,
+                    notifications: [list.filter((item) => item.id !== notificationId), Math.max(0, total - 1)],
+                    activeNotification:
+                      store.activeNotification()?.id === notificationId ? null : store.activeNotification()
+                  });
                 },
                 error: (error) => patchState(store, { isSaving: false, error: String(error) })
               })

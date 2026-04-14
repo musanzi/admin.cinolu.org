@@ -20,93 +20,93 @@ export const TagsStore = signalStore(
     const service = inject(TagsService);
 
     return {
-    loadUpaginated: rxMethod<void>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        exhaustMap(() =>
-          service.getAllUnpaginated().pipe(
-            tap({
-              next: (allTags) => patchState(store, { isLoading: false, allTags }),
-              error: () => patchState(store, { isLoading: false, allTags: [] })
-            })
+      loadUpaginated: rxMethod<void>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          exhaustMap(() =>
+            service.getAllUnpaginated().pipe(
+              tap({
+                next: (allTags) => patchState(store, { isLoading: false, allTags }),
+                error: () => patchState(store, { isLoading: false, allTags: [] })
+              })
+            )
+          )
+        )
+      ),
+      loadAll: rxMethod<FilterArticlesTagsDto>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((queryParams) => {
+            patchState(store, { lastQuery: queryParams });
+            return service.getAll(queryParams).pipe(
+              tap({
+                next: (tags) => patchState(store, { isLoading: false, tags }),
+                error: () => patchState(store, { isLoading: false, tags: [[], 0] })
+              })
+            );
+          })
+        )
+      ),
+      create: rxMethod<{ payload: ArticleTagDto; onSuccess: (tag: ITag) => void }>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap(({ payload, onSuccess }) =>
+            service.create(payload).pipe(
+              tap({
+                next: (data) => {
+                  const [tags, count] = store.tags();
+                  const allTags = store.allTags();
+                  const hasTag = allTags.some((tag) => tag.id === data.id);
+                  patchState(store, {
+                    tags: [[data, ...tags], count + 1],
+                    allTags: hasTag ? allTags : [data, ...allTags]
+                  });
+                  patchState(store, { isLoading: false });
+                  onSuccess(data);
+                },
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
+          )
+        )
+      ),
+      update: rxMethod<{ id: string; payload: { name: string }; onSuccess: () => void }>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap(({ id, payload, onSuccess }) =>
+            service.update(id, payload).pipe(
+              tap({
+                next: (data) => {
+                  const [tags, count] = store.tags();
+                  const updated = tags.map((t) => (t.id === data.id ? data : t));
+                  patchState(store, { tags: [updated, count] });
+                  patchState(store, { isLoading: false });
+                  onSuccess();
+                },
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
+          )
+        )
+      ),
+      delete: rxMethod<{ id: string }>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap(({ id }) =>
+            service.delete(id).pipe(
+              tap({
+                next: () => {
+                  const [tags, count] = store.tags();
+                  const filtered = tags.filter((tag) => tag.id !== id);
+                  patchState(store, { tags: [filtered, count - 1] });
+                  patchState(store, { isLoading: false });
+                },
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
           )
         )
       )
-    ),
-    loadAll: rxMethod<FilterArticlesTagsDto>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((queryParams) => {
-          patchState(store, { lastQuery: queryParams });
-          return service.getAll(queryParams).pipe(
-            tap({
-              next: (tags) => patchState(store, { isLoading: false, tags }),
-              error: () => patchState(store, { isLoading: false, tags: [[], 0] })
-            })
-          );
-        })
-      )
-    ),
-    create: rxMethod<{ payload: ArticleTagDto; onSuccess: (tag: ITag) => void }>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap(({ payload, onSuccess }) =>
-          service.create(payload).pipe(
-            tap({
-              next: (data) => {
-              const [tags, count] = store.tags();
-              const allTags = store.allTags();
-              const hasTag = allTags.some((tag) => tag.id === data.id);
-              patchState(store, {
-                tags: [[data, ...tags], count + 1],
-                allTags: hasTag ? allTags : [data, ...allTags]
-              });
-              patchState(store, { isLoading: false });
-              onSuccess(data);
-              },
-              error: () => patchState(store, { isLoading: false })
-            })
-          )
-        )
-      )
-    ),
-    update: rxMethod<{ id: string; payload: { name: string }; onSuccess: () => void }>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap(({ id, payload, onSuccess }) =>
-          service.update(id, payload).pipe(
-            tap({
-              next: (data) => {
-              const [tags, count] = store.tags();
-              const updated = tags.map((t) => (t.id === data.id ? data : t));
-              patchState(store, { tags: [updated, count] });
-              patchState(store, { isLoading: false });
-              onSuccess();
-              },
-              error: () => patchState(store, { isLoading: false })
-            })
-          )
-        )
-      )
-    ),
-    delete: rxMethod<{ id: string }>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap(({ id }) =>
-          service.delete(id).pipe(
-            tap({
-              next: () => {
-              const [tags, count] = store.tags();
-              const filtered = tags.filter((tag) => tag.id !== id);
-              patchState(store, { tags: [filtered, count - 1] });
-              patchState(store, { isLoading: false });
-              },
-              error: () => patchState(store, { isLoading: false })
-            })
-          )
-        )
-      )
-    )
-  };
+    };
   })
 );

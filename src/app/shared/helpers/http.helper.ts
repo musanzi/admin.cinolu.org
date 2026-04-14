@@ -11,9 +11,7 @@ export function buildQueryParams(q: unknown): HttpParams | undefined {
     const value = queryParams[key];
     if (value == null || value === '') return;
     if (Array.isArray(value)) {
-      const values = value
-        .map((item) => (item == null ? '' : String(item).trim()))
-        .filter((item) => item.length > 0);
+      const values = value.map((item) => (item == null ? '' : String(item).trim())).filter((item) => item.length > 0);
       if (!values.length) return;
       params = params.delete(key);
       values.forEach((item) => {

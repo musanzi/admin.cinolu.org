@@ -15,19 +15,19 @@ export const UpdatePasswordStore = signalStore(
     const service = inject(AccountService);
 
     return {
-    updatePassword: rxMethod<UpdatePasswordDto>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((payload) =>
-          service.updatePassword(payload).pipe(
-            tap({
-              next: () => patchState(store, { isLoading: false }),
-              error: () => patchState(store, { isLoading: false })
-            })
+      updatePassword: rxMethod<UpdatePasswordDto>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((payload) =>
+            service.updatePassword(payload).pipe(
+              tap({
+                next: () => patchState(store, { isLoading: false }),
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
           )
         )
       )
-    )
-  };
+    };
   })
 );

@@ -23,113 +23,113 @@ export const EventsStore = signalStore(
     const service = inject(EventsService);
 
     return {
-    loadAll: rxMethod<FilterEventCategoriesDto>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((filters) =>
-          service.getAll(filters).pipe(
-            tap({
-              next: (events) => patchState(store, { isLoading: false, events }),
-              error: () => patchState(store, { isLoading: false, events: [[], 0] })
-            })
+      loadAll: rxMethod<FilterEventCategoriesDto>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((filters) =>
+            service.getAll(filters).pipe(
+              tap({
+                next: (events) => patchState(store, { isLoading: false, events }),
+                error: () => patchState(store, { isLoading: false, events: [[], 0] })
+              })
+            )
+          )
+        )
+      ),
+      loadOne: rxMethod<string>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((slug) =>
+            service.getOne(slug).pipe(
+              tap({
+                next: (event) => patchState(store, { isLoading: false, event }),
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
+          )
+        )
+      ),
+      create: rxMethod<EventDto>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((payload) =>
+            service.create(payload).pipe(
+              tap({
+                next: (event) => patchState(store, { isLoading: false, event }),
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
+          )
+        )
+      ),
+      update: rxMethod<EventDto>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((payload) =>
+            service.update(payload).pipe(
+              tap({
+                next: (data) => {
+                  const [list, count] = store.events();
+                  const updated = list.map((e) => (e.id === data.id ? data : e));
+                  patchState(store, { isLoading: false, event: data, events: [updated, count] });
+                },
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
+          )
+        )
+      ),
+      delete: rxMethod<string>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((id) =>
+            service.delete(id).pipe(
+              tap({
+                next: () => {
+                  const [list, count] = store.events();
+                  const filtered = list.filter((e) => e.id !== id);
+                  patchState(store, { isLoading: false, events: [filtered, Math.max(0, count - 1)] });
+                },
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
+          )
+        )
+      ),
+      publish: rxMethod<string>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((id) =>
+            service.publish(id).pipe(
+              tap({
+                next: (data) => {
+                  const [list, count] = store.events();
+                  const updated = list.map((e) => (e.id === data.id ? data : e));
+                  patchState(store, { isLoading: false, events: [updated, count], event: data });
+                },
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
+          )
+        )
+      ),
+      showcase: rxMethod<string>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((id) =>
+            service.showcase(id).pipe(
+              tap({
+                next: (data) => {
+                  const [list, count] = store.events();
+                  const updated = list.map((e) => (e.id === data.id ? data : e));
+                  patchState(store, { isLoading: false, events: [updated, count], event: data });
+                },
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
           )
         )
       )
-    ),
-    loadOne: rxMethod<string>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((slug) =>
-          service.getOne(slug).pipe(
-            tap({
-              next: (event) => patchState(store, { isLoading: false, event }),
-              error: () => patchState(store, { isLoading: false })
-            })
-          )
-        )
-      )
-    ),
-    create: rxMethod<EventDto>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((payload) =>
-          service.create(payload).pipe(
-            tap({
-              next: (event) => patchState(store, { isLoading: false, event }),
-              error: () => patchState(store, { isLoading: false })
-            })
-          )
-        )
-      )
-    ),
-    update: rxMethod<EventDto>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((payload) =>
-          service.update(payload).pipe(
-            tap({
-              next: (data) => {
-              const [list, count] = store.events();
-              const updated = list.map((e) => (e.id === data.id ? data : e));
-              patchState(store, { isLoading: false, event: data, events: [updated, count] });
-              },
-              error: () => patchState(store, { isLoading: false })
-            })
-          )
-        )
-      )
-    ),
-    delete: rxMethod<string>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((id) =>
-          service.delete(id).pipe(
-            tap({
-              next: () => {
-              const [list, count] = store.events();
-              const filtered = list.filter((e) => e.id !== id);
-              patchState(store, { isLoading: false, events: [filtered, Math.max(0, count - 1)] });
-              },
-              error: () => patchState(store, { isLoading: false })
-            })
-          )
-        )
-      )
-    ),
-    publish: rxMethod<string>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((id) =>
-          service.publish(id).pipe(
-            tap({
-              next: (data) => {
-              const [list, count] = store.events();
-              const updated = list.map((e) => (e.id === data.id ? data : e));
-              patchState(store, { isLoading: false, events: [updated, count], event: data });
-              },
-              error: () => patchState(store, { isLoading: false })
-            })
-          )
-        )
-      )
-    ),
-    showcase: rxMethod<string>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((id) =>
-          service.showcase(id).pipe(
-            tap({
-              next: (data) => {
-              const [list, count] = store.events();
-              const updated = list.map((e) => (e.id === data.id ? data : e));
-              patchState(store, { isLoading: false, events: [updated, count], event: data });
-              },
-              error: () => patchState(store, { isLoading: false })
-            })
-          )
-        )
-      )
-    )
-  };
+    };
   })
 );

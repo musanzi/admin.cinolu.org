@@ -93,9 +93,7 @@ export class ProgramsService {
   highlight(id: string): Observable<Program> {
     return this.http.patch<{ data: Program }>(`programs/id/${id}/highlight`, {}).pipe(
       map(({ data }) => {
-        this.toast.showSuccess(
-          data.is_highlighted ? 'Programme mis en avant' : 'Programme retiré de la mise en avant'
-        );
+        this.toast.showSuccess(data.is_highlighted ? 'Programme mis en avant' : 'Programme retiré de la mise en avant');
         return data;
       }),
       catchError((error) => {

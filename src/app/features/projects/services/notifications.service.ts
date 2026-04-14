@@ -36,7 +36,10 @@ export class NotificationsService {
         return notification;
       }),
       catchError((error) => {
-        const message = extractApiErrorMessage(error, "Une erreur s'est produite lors de la création de la notification");
+        const message = extractApiErrorMessage(
+          error,
+          "Une erreur s'est produite lors de la création de la notification"
+        );
         this.toast.showError(message);
         return throwError(() => message);
       })
@@ -52,7 +55,10 @@ export class NotificationsService {
         return notification;
       }),
       catchError((error) => {
-        const message = extractApiErrorMessage(error, "Une erreur s'est produite lors de la mise à jour de la notification");
+        const message = extractApiErrorMessage(
+          error,
+          "Une erreur s'est produite lors de la mise à jour de la notification"
+        );
         this.toast.showError(message);
         return throwError(() => message);
       })
@@ -79,7 +85,10 @@ export class NotificationsService {
         this.toast.showSuccess('La notification a été supprimée');
       }),
       catchError((error) => {
-        const message = extractApiErrorMessage(error, "Une erreur s'est produite lors de la suppression de la notification");
+        const message = extractApiErrorMessage(
+          error,
+          "Une erreur s'est produite lors de la suppression de la notification"
+        );
         this.toast.showError(message);
         return throwError(() => message);
       })

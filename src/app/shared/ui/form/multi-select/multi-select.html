@@ -1,10 +1,11 @@
 <div class="ui-select-wrapper" [class.ui-select-disabled]="disabled()">
   @if (label()) {
-  <p class="ui-select-label">
-    {{ label() }} @if (required()) {
-    <span class="text-red-500">*</span>
-    }
-  </p>
+    <p class="ui-select-label">
+      {{ label() }}
+      @if (required()) {
+        <span class="text-red-500">*</span>
+      }
+    </p>
   }
   <div class="ui-select-container">
     <div
@@ -16,88 +17,91 @@
       [id]="id()"
       [tabindex]="disabled() ? -1 : 0">
       @if (value().length === 0) {
-      <span class="ui-multi-select-placeholder">{{ placeholder() }}</span>
-      } @else { @if (display() === 'comma') {
-      <span class="ui-multi-select-value-comma">{{ displayText() }}</span>
+        <span class="ui-multi-select-placeholder">{{ placeholder() }}</span>
       } @else {
-      <div class="ui-multi-select-chips">
-        @for (label of selectedLabels(); track label) {
-        <span class="ui-multi-select-chip">
-          <span class="ui-multi-select-chip-text">{{ label }}</span>
-          <button
-            type="button"
-            class="ui-multi-select-chip-remove"
-            (click)="removeItem(normalizedOptions()[selectedLabels().indexOf(label)].value, $event)"
-            [attr.aria-label]="'Remove ' + label">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="3"
-              stroke-linecap="round"
-              stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
-        </span>
+        @if (display() === 'comma') {
+          <span class="ui-multi-select-value-comma">{{ displayText() }}</span>
+        } @else {
+          <div class="ui-multi-select-chips">
+            @for (label of selectedLabels(); track label) {
+              <span class="ui-multi-select-chip">
+                <span class="ui-multi-select-chip-text">{{ label }}</span>
+                <button
+                  type="button"
+                  class="ui-multi-select-chip-remove"
+                  (click)="removeItem(normalizedOptions()[selectedLabels().indexOf(label)].value, $event)"
+                  [attr.aria-label]="'Remove ' + label">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+              </span>
+            }
+          </div>
         }
-      </div>
-      } }
+      }
       <div class="ui-select-icon">
         <i-lucide [img]="icons.ChevronDown" class="size-4.5" [class.rotate-180]="isOpen()" />
       </div>
     </div>
 
     @if (isOpen()) {
-    <div class="ui-multi-select-panel" [id]="id() + '-listbox'" role="listbox">
-      @for (option of normalizedOptions(); track option.value) {
-      <div
-        class="ui-multi-select-option"
-        [class.ui-multi-select-option-selected]="isSelected(option.value)"
-        [class.ui-multi-select-option-disabled]="option.disabled"
-        (click)="!option.disabled && toggleOption(option.value)"
-        (keyup.enter)="!option.disabled && toggleOption(option.value)"
-        (keyup.space)="!option.disabled && toggleOption(option.value)"
-        [tabindex]="option.disabled ? -1 : 0"
-        role="option"
-        [attr.aria-selected]="isSelected(option.value)">
-        <app-ui-checkbox
-          [id]="getCheckboxId(option.value)"
-          [(ngModel)]="checkboxValues[getCheckboxId(option.value)]"
-          [disabled]="option.disabled || disabled()"
-          (ngModelChange)="onCheckboxChange(option.value, $event)"
-          (click)="$event.stopPropagation()" />
-        <span class="ui-multi-select-option-label">{{ option.label }}</span>
+      <div class="ui-multi-select-panel" [id]="id() + '-listbox'" role="listbox">
+        @for (option of normalizedOptions(); track option.value) {
+          <div
+            class="ui-multi-select-option"
+            [class.ui-multi-select-option-selected]="isSelected(option.value)"
+            [class.ui-multi-select-option-disabled]="option.disabled"
+            (click)="!option.disabled && toggleOption(option.value)"
+            (keyup.enter)="!option.disabled && toggleOption(option.value)"
+            (keyup.space)="!option.disabled && toggleOption(option.value)"
+            [tabindex]="option.disabled ? -1 : 0"
+            role="option"
+            [attr.aria-selected]="isSelected(option.value)">
+            <app-ui-checkbox
+              [id]="getCheckboxId(option.value)"
+              [(ngModel)]="checkboxValues[getCheckboxId(option.value)]"
+              [disabled]="option.disabled || disabled()"
+              (ngModelChange)="onCheckboxChange(option.value, $event)"
+              (click)="$event.stopPropagation()" />
+            <span class="ui-multi-select-option-label">{{ option.label }}</span>
+          </div>
+        }
+        @if (options().length === 0) {
+          <div class="ui-multi-select-empty">No options available</div>
+        }
+        @if (allowCreate()) {
+          <div class="ui-multi-select-create-wrapper">
+            <input
+              [id]="id() + '-create-option-input'"
+              type="text"
+              class="ui-multi-select-create-input"
+              [value]="createValue()"
+              [placeholder]="createPlaceholder()"
+              [disabled]="createDisabled()"
+              (input)="onCreateInput($event)"
+              (keydown)="onCreateKeydown($event)" />
+            <button
+              type="button"
+              class="ui-multi-select-create-button"
+              [disabled]="!canCreate()"
+              (click)="onCreateOption()">
+              <i-lucide [img]="icons.Plus" class="size-4" />
+              {{ createButtonLabel() }}
+            </button>
+          </div>
+        }
       </div>
-      } @if (options().length === 0) {
-      <div class="ui-multi-select-empty">No options available</div>
-      }
-      @if (allowCreate()) {
-      <div class="ui-multi-select-create-wrapper">
-        <input
-          [id]="id() + '-create-option-input'"
-          type="text"
-          class="ui-multi-select-create-input"
-          [value]="createValue()"
-          [placeholder]="createPlaceholder()"
-          [disabled]="createDisabled()"
-          (input)="onCreateInput($event)"
-          (keydown)="onCreateKeydown($event)" />
-        <button
-          type="button"
-          class="ui-multi-select-create-button"
-          [disabled]="!canCreate()"
-          (click)="onCreateOption()">
-          <i-lucide [img]="icons.Plus" class="size-4" />
-          {{ createButtonLabel() }}
-        </button>
-      </div>
-      }
-    </div>
     }
   </div>
 </div>

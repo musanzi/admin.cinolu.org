@@ -15,19 +15,19 @@ export const UpdateInfoStore = signalStore(
     const service = inject(AccountService);
 
     return {
-    updateInfo: rxMethod<UpdateInfoDto>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap((payload) =>
-          service.updateInfo(payload).pipe(
-            tap({
-              next: () => patchState(store, { isLoading: false }),
-              error: () => patchState(store, { isLoading: false })
-            })
+      updateInfo: rxMethod<UpdateInfoDto>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap((payload) =>
+            service.updateInfo(payload).pipe(
+              tap({
+                next: () => patchState(store, { isLoading: false }),
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
           )
         )
       )
-    )
-  };
+    };
   })
 );

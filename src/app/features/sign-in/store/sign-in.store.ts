@@ -23,22 +23,22 @@ export const SignInStore = signalStore(
     const service = inject(SignInService);
 
     return {
-    signIn: rxMethod<ISignInParams>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap(({ payload, redirectPath, onSuccess }) =>
-          service.signIn(payload, redirectPath).pipe(
-            tap({
-              next: () => {
-                patchState(store, { isLoading: false });
-                onSuccess();
-              },
-              error: () => patchState(store, { isLoading: false })
-            })
+      signIn: rxMethod<ISignInParams>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap(({ payload, redirectPath, onSuccess }) =>
+            service.signIn(payload, redirectPath).pipe(
+              tap({
+                next: () => {
+                  patchState(store, { isLoading: false });
+                  onSuccess();
+                },
+                error: () => patchState(store, { isLoading: false })
+              })
+            )
           )
         )
       )
-    )
-  };
+    };
   })
 );

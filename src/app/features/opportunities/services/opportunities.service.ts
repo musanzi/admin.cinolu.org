@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { buildQueryParams, extractApiErrorMessage } from '@shared/helpers';
 import { IOpportunity } from '@shared/models';
 import { ToastrService } from '@shared/services/toast/toastr.service';
@@ -21,10 +21,8 @@ export class OpportunitiesService {
     const params = buildQueryParams(filters);
     return this.http.get<{ data: IOpportunity[] }>('opportunities', { params }).pipe(
       map(({ data }) => data),
-      catchError((error) => {
-        const message = extractApiErrorMessage(error, 'Impossible de charger les opportunités');
-        this.toast.showError(message);
-        return throwError(() => message);
+      catchError(() => {
+        return of();
       })
     );
   }
@@ -32,10 +30,8 @@ export class OpportunitiesService {
   getOne(slug: string): Observable<IOpportunity> {
     return this.http.get<{ data: IOpportunity }>(`opportunities/by-slug/${slug}`).pipe(
       map(({ data }) => data),
-      catchError((error) => {
-        const message = extractApiErrorMessage(error, "Impossible de charger l'opportunité");
-        this.toast.showError(message);
-        return throwError(() => message);
+      catchError(() => {
+        return of();
       })
     );
   }

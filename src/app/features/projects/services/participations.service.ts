@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { Observable, catchError, map, of, throwError } from 'rxjs';
 import { buildQueryParams, extractApiErrorMessage } from '@shared/helpers';
 import { IProjectParticipation, IProjectParticipationReview } from '@shared/models';
 import { ToastrService } from '@shared/services/toast/toastr.service';
@@ -28,22 +28,14 @@ export class ParticipationsService {
       .get<{ data: [IProjectParticipation[], number] }>(`projects/id/${projectId}/participations`, { params })
       .pipe(
         map(({ data }) => ({ participations: data[0], total: data[1] })),
-        catchError((error) => {
-          const message = extractApiErrorMessage(error, 'Impossible de charger les participations');
-          this.toast.showError(message);
-          return throwError(() => message);
-        })
+        catchError(() => of())
       );
   }
 
   getOne(participationId: string): Observable<IProjectParticipation> {
     return this.http.get<{ data: IProjectParticipation }>(`projects/participations/${participationId}`).pipe(
       map(({ data }) => data),
-      catchError((error) => {
-        const message = extractApiErrorMessage(error, 'Impossible de charger la participation');
-        this.toast.showError(message);
-        return throwError(() => message);
-      })
+      catchError(() => of())
     );
   }
 

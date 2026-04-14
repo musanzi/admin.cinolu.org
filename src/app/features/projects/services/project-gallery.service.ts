@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { extractApiErrorMessage } from '@shared/helpers';
 import { IImage } from '@shared/models';
 import { ToastrService } from '@shared/services/toast/toastr.service';
@@ -13,11 +13,7 @@ export class ProjectGalleryService {
   getAll(slug: string): Observable<IImage[]> {
     return this.http.get<{ data: IImage[] }>(`projects/by-slug/${slug}/gallery`).pipe(
       map(({ data }) => data),
-      catchError((error) => {
-        const message = extractApiErrorMessage(error, 'Impossible de charger la galerie du projet');
-        this.toast.showError(message);
-        return throwError(() => message);
-      })
+      catchError(() => of())
     );
   }
 

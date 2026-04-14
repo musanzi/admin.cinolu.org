@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { extractApiErrorMessage } from '@shared/helpers';
 import { ISubprogram } from '@shared/models';
 import { ToastrService } from '@shared/services/toast/toastr.service';
@@ -14,22 +14,14 @@ export class SubprogramsService {
   getAll(programId: string): Observable<ISubprogram[]> {
     return this.http.get<{ data: ISubprogram[] }>(`subprograms/program/${programId}`).pipe(
       map(({ data }) => data),
-      catchError((error) => {
-        const message = extractApiErrorMessage(error, 'Impossible de charger les sous-programmes');
-        this.toast.showError(message);
-        return throwError(() => message);
-      })
+      catchError(() => of())
     );
   }
 
   getAllUnpaginated(): Observable<ISubprogram[]> {
     return this.http.get<{ data: ISubprogram[] }>('subprograms').pipe(
       map(({ data }) => data),
-      catchError((error) => {
-        const message = extractApiErrorMessage(error, 'Impossible de charger les sous-programmes');
-        this.toast.showError(message);
-        return throwError(() => message);
-      })
+      catchError(() => of())
     );
   }
 

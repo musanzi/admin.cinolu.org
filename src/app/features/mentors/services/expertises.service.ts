@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { buildQueryParams, extractApiErrorMessage } from '@shared/helpers';
 import { IExpertise } from '@shared/models';
 import { ToastrService } from '@shared/services/toast/toastr.service';
@@ -17,22 +17,14 @@ export class ExpertisesService {
 
     return this.http.get<{ data: [IExpertise[], number] }>('expertises/paginated', { params }).pipe(
       map(({ data }) => data),
-      catchError((error) => {
-        const message = extractApiErrorMessage(error, 'Impossible de charger les expertises');
-        this.toast.showError(message);
-        return throwError(() => message);
-      })
+      catchError(() => of())
     );
   }
 
   getAllUnpaginated(): Observable<IExpertise[]> {
     return this.http.get<{ data: IExpertise[] }>('expertises').pipe(
       map(({ data }) => data),
-      catchError((error) => {
-        const message = extractApiErrorMessage(error, 'Impossible de charger les expertises');
-        this.toast.showError(message);
-        return throwError(() => message);
-      })
+      catchError(() => of())
     );
   }
 

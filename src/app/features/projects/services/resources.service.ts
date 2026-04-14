@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { buildQueryParams, extractApiErrorMessage } from '@shared/helpers';
 import { IResource } from '@shared/models';
 import { ToastrService } from '@shared/services/toast/toastr.service';
@@ -17,11 +17,7 @@ export class ResourcesService {
 
     return this.http.get<{ data: [IResource[], number] }>(`resources/project/${projectId}`, { params }).pipe(
       map(({ data }) => data),
-      catchError((error) => {
-        const message = extractApiErrorMessage(error, 'Impossible de charger les ressources');
-        this.toast.showError(message);
-        return throwError(() => message);
-      })
+      catchError(() => of())
     );
   }
 

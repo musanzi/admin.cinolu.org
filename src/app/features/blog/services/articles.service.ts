@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { buildQueryParams, extractApiErrorMessage } from '@shared/helpers';
 import { IArticle, IImage } from '@shared/models';
 import { ToastrService } from '@shared/services/toast/toastr.service';
@@ -16,13 +16,10 @@ export class ArticlesService {
 
   getAll(filters: FilterArticlesTagsDto): Observable<[IArticle[], number]> {
     const params = buildQueryParams(filters);
-
     return this.http.get<{ data: [IArticle[], number] }>('articles', { params }).pipe(
       map(({ data }) => data),
-      catchError((error) => {
-        const message = extractApiErrorMessage(error, 'Impossible de charger les articles');
-        this.toast.showError(message);
-        return throwError(() => message);
+      catchError(() => {
+        return of();
       })
     );
   }
@@ -30,11 +27,7 @@ export class ArticlesService {
   getOne(slug: string): Observable<IArticle> {
     return this.http.get<{ data: IArticle }>(`articles/by-slug/${slug}`).pipe(
       map(({ data }) => data),
-      catchError((error) => {
-        const message = extractApiErrorMessage(error, "Impossible de charger l'article");
-        this.toast.showError(message);
-        return throwError(() => message);
-      })
+      catchError(() => of())
     );
   }
 

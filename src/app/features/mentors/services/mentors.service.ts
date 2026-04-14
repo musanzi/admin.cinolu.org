@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { buildQueryParams, extractApiErrorMessage } from '@shared/helpers';
 import { IMentorProfile } from '@shared/models';
 import { ToastrService } from '@shared/services/toast/toastr.service';
@@ -19,22 +19,14 @@ export class MentorsService {
 
     return this.http.get<{ data: [IMentorProfile[], number] }>('mentors/paginated', { params }).pipe(
       map(({ data }) => data),
-      catchError((error) => {
-        const message = extractApiErrorMessage(error, 'Impossible de charger les mentors');
-        this.toast.showError(message);
-        return throwError(() => message);
-      })
+      catchError(() => of())
     );
   }
 
   getOne(id: string): Observable<IMentorProfile> {
     return this.http.get<{ data: IMentorProfile }>(`mentors/id/${id}`).pipe(
       map(({ data }) => data),
-      catchError((error) => {
-        const message = extractApiErrorMessage(error, 'Impossible de charger le mentor');
-        this.toast.showError(message);
-        return throwError(() => message);
-      })
+      catchError(() => of())
     );
   }
 

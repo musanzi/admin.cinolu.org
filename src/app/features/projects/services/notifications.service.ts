@@ -23,11 +23,7 @@ export class NotificationsService {
 
     return this.http.get<{ data: [INotification[], number] }>(`notifications/project/${projectId}`, { params }).pipe(
       map(({ data }) => data),
-      catchError((error) => {
-        const message = extractApiErrorMessage(error, 'Impossible de charger les notifications');
-        this.toast.showError(message);
-        return throwError(() => message);
-      })
+      catchError(() => of())
     );
   }
 

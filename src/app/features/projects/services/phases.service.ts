@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { extractApiErrorMessage } from '@shared/helpers';
 import { IMentorProfile, IPhase } from '@shared/models';
 import { ToastrService } from '@shared/services/toast/toastr.service';
@@ -14,11 +14,7 @@ export class PhasesService {
   getAll(projectId: string): Observable<IPhase[]> {
     return this.http.get<{ data: IPhase[] }>(`phases/project/${projectId}`).pipe(
       map(({ data }) => data),
-      catchError((error) => {
-        const message = extractApiErrorMessage(error, 'Impossible de charger les phases');
-        this.toast.showError(message);
-        return throwError(() => message);
-      })
+      catchError(() => of())
     );
   }
 

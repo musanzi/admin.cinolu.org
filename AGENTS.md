@@ -1,0 +1,28 @@
+# Repository Guidelines
+
+## Project Structure & Module Organization
+
+This repository is an Angular 21 admin app with SSR. Application code lives in `src/`. Use `src/app/core/` for auth, guards, interceptors, and app-wide providers; `src/app/features/` for route-level domains such as `projects`, `users`, and `programs`; `src/app/shared/` for reusable UI, models, pipes, and helpers; and `src/app/layout/` for the admin shell. Static assets live in `public/`, global styles in `src/styles/`, and environment files in `src/environments/`.
+
+Within a feature, follow the `src/app/features/events/` layout: keep route containers in `pages/`, reusable feature-specific building blocks in `components/`, small presentational fragments in `ui/`, request shapes in `dto/`, API logic in `services/`, and signal stores in `store/`. Keep routes in `<feature>.routes.ts`.
+
+## Build, Test, and Development Commands
+
+Use `pnpm` for all commands.
+
+- `pnpm start`: starts the Angular dev server.
+- `pnpm build`: creates the browser and server bundles in `dist/`.
+- `pnpm watch`: rebuilds continuously with the development config.
+- `pnpm ssr`: runs the built SSR server from `dist/admin/server/server.mjs`.
+- `pnpm lint`: runs ESLint across the Angular app.
+- `pnpm format`: formats `src/**/*.{ts,html}` with Prettier.
+
+## Coding Style & Naming Conventions
+
+Follow `.editorconfig`: UTF-8, spaces, and 2-space indentation. Prettier enforces 120-character lines, single quotes, and no trailing commas. Prefer path aliases such as `@core/*`, `@shared/*`, and `@features/*` over long relative imports. Keep Angular selectors aligned with the existing conventions: components use `app-...` kebab-case and directives use `app...` camelCase.
+
+## Component and Page Structure
+
+Match the `events` feature when adding new screens. Pages such as `pages/list-events/` or `pages/event-details/` should be route-level containers: they read route params/query params, provide feature stores, trigger initial loads, and compose child components. Feature components such as `components/event-update/` should own a focused form or section and receive data through `input()` where possible. Use `ui/` only for lightweight presentational pieces like `event-details-skeleton` with little or no business logic.
+
+Keep one folder per page or component with paired `*.ts` and `*.html` files. Prefer slim pages that delegate form and section logic to components, and keep store interaction close to the container that owns the workflow.

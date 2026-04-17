@@ -10,6 +10,10 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Client
   },
   {
+    path: 'opportunities/:slug',
+    renderMode: RenderMode.Client
+  },
+  {
     path: 'events/:slug',
     renderMode: RenderMode.Client
   },
